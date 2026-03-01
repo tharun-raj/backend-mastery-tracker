@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Backend Mastery Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060b12;color:#dde8f0;font-family:'Courier New',Consolas,monospace;min-height:100vh;overflow-x:hidden}
+.gbg{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,212,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.02) 1px,transparent 1px);background-size:48px 48px}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px)}
+.wrap{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:18px 14px}
+.card{background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:13px 16px}
+.nav-btn{background:transparent;border:1px solid #1a2a40;color:#4a5a6a;padding:7px 13px;border-radius:3px;cursor:pointer;font-size:9px;letter-spacing:2px;font-family:inherit;transition:all .15s}
+.nav-btn.on{background:#0f1e38;border-color:#00D4FF50;color:#00D4FF}
+.nav-btn:hover{filter:brightness(1.3)}
+.row{display:flex;align-items:center;gap:11px;padding:11px 15px;cursor:pointer;transition:background .15s;border-bottom:1px solid #0d1624}
+.row:last-child{border-bottom:none}
+.row:hover{background:rgba(255,255,255,0.025)}
+.ptab{flex:1 1 140px;background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:9px 13px;cursor:pointer;text-align:left;transition:all .2s;font-family:inherit}
+.ptab:hover{filter:brightness(1.2)}
+.wbtn{background:#0b1422;border:1px solid #1a2a40;color:#444;padding:5px 10px;border-radius:3px;cursor:pointer;font-size:8px;letter-spacing:1px;font-family:inherit;transition:all .15s}
+.wbtn:hover{filter:brightness(1.2)}
+.fxp{position:fixed;pointer-events:none;z-index:9999;font-weight:900;font-size:17px;transform:translateX(-50%);user-select:none}
+.cel{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(6px)}
+.bar{height:100%;border-radius:2px;transition:width .5s ease}
+.rw{position:relative;flex-shrink:0}
+.ri{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.fi{animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
+code{background:#0a1220;padding:2px 7px;border-radius:2px;font-family:'Courier New',monospace}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#060b12}::-webkit-scrollbar-thumb{background:#1a3060;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="gbg"></div><div class="scan"></div>
+<div class="wrap" id="app"><div style="display:flex;align-items:center;justify-content:center;height:80vh;flex-direction:column;gap:14px"><div style="font-size:28px">⚙️</div><div style="font-size:9px;letter-spacing:4px;color:#555">LOADING...</div></div></div>
+
+<script>
+// ── CURRICULUM DATA ───────────────────────────────────────────────────────────
+const PHASES=[
+{id:"p1",label:"PHASE 1",title:"Foundations",sub:"Linux · Networking · OS",months:"Month 1–2",color:"#00D4FF",icon:"⚙️",weeks:[
+  {id:"w1",wk:"Week 1",title:"Linux Basics",tasks:[
+    {id:"w1t1",label:"Read Linux Command Line Ch 1–8",type:"learn",xp:30,day:1},
+    {id:"w1t2",label:"Set up Ubuntu VM or WSL2",type:"build",xp:40,day:2},
+    {id:"w1t3",label:"Navigate without GUI for a full day",type:"challenge",xp:50,day:3},
+    {id:"w1t4",label:"Write a file organizer bash script",type:"build",xp:60,day:5}]},
+  {id:"w2",wk:"Week 2",title:"Linux Advanced",tasks:[
+    {id:"w2t1",label:"Read Linux Command Line Ch 9–16",type:"learn",xp:30,day:1},
+    {id:"w2t2",label:"Write a CPU/memory monitoring bash script",type:"build",xp:60,day:3},
+    {id:"w2t3",label:"Set up SSH key authentication",type:"build",xp:40,day:4},
+    {id:"w2t4",label:"Create and debug a cron job",type:"build",xp:40,day:6}]},
+  {id:"w3",wk:"Week 3",title:"Networking I",tasks:[
+    {id:"w3t1",label:"Read Kurose Ch 1–2, watch Hussein Nasser TCP/IP",type:"learn",xp:35,day:1},
+    {id:"w3t2",label:"Use tcpdump to sniff your own traffic",type:"build",xp:50,day:2},
+    {id:"w3t3",label:"Trace a DNS lookup step by step",type:"build",xp:45,day:4},
+    {id:"w3t4",label:"Build a raw TCP socket server",type:"build",xp:70,day:6}]},
+  {id:"w4",wk:"Week 4",title:"Networking II",tasks:[
+    {id:"w4t1",label:"Read Kurose Ch 3–4, study HTTP/2 & TLS",type:"learn",xp:35,day:1},
+    {id:"w4t2",label:"Set up Nginx as a reverse proxy",type:"build",xp:60,day:3},
+    {id:"w4t3",label:"Simulate TLS locally with mkcert",type:"build",xp:50,day:5},
+    {id:"w4t4",label:"Test HTTP caching headers with curl",type:"build",xp:40,day:6}]},
+  {id:"w5",wk:"Week 5",title:"How Computers Work",tasks:[
+    {id:"w5t1",label:"Complete Nand2Tetris Projects 1–4",type:"build",xp:100,day:2},
+    {id:"w5t2",label:"Study how your language compiles and runs",type:"learn",xp:40,day:4},
+    {id:"w5t3",label:"Understand GC and memory model of your lang",type:"learn",xp:40,day:6}]},
+  {id:"w6",wk:"Week 6",title:"Shell Mastery",tasks:[
+    {id:"w6t1",label:"Build a full server monitoring dashboard in bash",type:"build",xp:80,day:2},
+    {id:"w6t2",label:"Simulate OOM killer and fix it",type:"challenge",xp:60,day:3},
+    {id:"w6t3",label:"Simulate disk full scenario and fix it",type:"challenge",xp:60,day:5},
+    {id:"w6t4",label:"Simulate zombie processes and understand why",type:"challenge",xp:60,day:7}]},
+  {id:"w7",wk:"Week 7",title:"OS Internals",tasks:[
+    {id:"w7t1",label:"Use strace on a running process",type:"build",xp:50,day:1},
+    {id:"w7t2",label:"Profile a program with perf",type:"build",xp:50,day:3},
+    {id:"w7t3",label:"Read /proc filesystem and understand what you see",type:"learn",xp:40,day:5},
+    {id:"w7t4",label:"Understand what malloc actually does",type:"learn",xp:40,day:6}]},
+  {id:"w8",wk:"Week 8",title:"🏆 Project 1 — Linux Monitor",tasks:[
+    {id:"w8t1",label:"Build full Linux System Monitor",type:"project",xp:120,day:1},
+    {id:"w8t2",label:"Add email alerts when CPU > 80%",type:"project",xp:60,day:3},
+    {id:"w8t3",label:"Add log rotation to your monitor",type:"project",xp:40,day:5},
+    {id:"w8t4",label:"Write a 24hr summary report generator",type:"project",xp:60,day:7}]}
+]},
+{id:"p2",label:"PHASE 2",title:"Backend Depth",sub:"Databases · Queues · APIs",months:"Month 2–3",color:"#00FF88",icon:"🗄️",weeks:[
+  {id:"w9",wk:"Week 9",title:"Database Foundations",tasks:[
+    {id:"w9t1",label:"Read DDIA Ch 1–3",type:"learn",xp:50,day:1},
+    {id:"w9t2",label:"Spin up Postgres and create 1M row table",type:"build",xp:60,day:2},
+    {id:"w9t3",label:"Run EXPLAIN ANALYZE on slow queries",type:"build",xp:60,day:4},
+    {id:"w9t4",label:"Compare indexed vs non-indexed query speed",type:"challenge",xp:70,day:6}]},
+  {id:"w10",wk:"Week 10",title:"Transactions & ACID",tasks:[
+    {id:"w10t1",label:"Read DDIA Ch 7",type:"learn",xp:50,day:1},
+    {id:"w10t2",label:"Simulate race conditions and test isolation levels",type:"challenge",xp:80,day:3},
+    {id:"w10t3",label:"Deliberately cause a deadlock and fix it",type:"challenge",xp:70,day:5},
+    {id:"w10t4",label:"Set up PgBouncer connection pooling",type:"build",xp:60,day:7}]},
+  {id:"w11",wk:"Week 11",title:"Distributed Systems I",tasks:[
+    {id:"w11t1",label:"Read DDIA Ch 5–6",type:"learn",xp:50,day:1},
+    {id:"w11t2",label:"Set up Postgres replication",type:"build",xp:80,day:3},
+    {id:"w11t3",label:"Simulate a failover and understand data loss",type:"challenge",xp:70,day:6}]},
+  {id:"w12",wk:"Week 12",title:"Caching",tasks:[
+    {id:"w12t1",label:"Read DDIA caching sections",type:"learn",xp:40,day:1},
+    {id:"w12t2",label:"Add Redis cache-aside to an app",type:"build",xp:70,day:3},
+    {id:"w12t3",label:"Benchmark before and after caching",type:"build",xp:60,day:5},
+    {id:"w12t4",label:"Simulate cache stampede and fix it",type:"challenge",xp:80,day:7}]},
+  {id:"w13",wk:"Week 13",title:"Message Queues",tasks:[
+    {id:"w13t1",label:"Read DDIA Ch 11",type:"learn",xp:40,day:1},
+    {id:"w13t2",label:"Build async job queue with Redis or RabbitMQ",type:"build",xp:80,day:2},
+    {id:"w13t3",label:"Implement retries with exponential backoff",type:"build",xp:70,day:4},
+    {id:"w13t4",label:"Handle failures and dead letter queue",type:"build",xp:60,day:6}]},
+  {id:"w14",wk:"Week 14",title:"API Design",tasks:[
+    {id:"w14t1",label:"Study REST best practices, idempotency, versioning",type:"learn",xp:40,day:1},
+    {id:"w14t2",label:"Audit an existing API and fix bad status codes",type:"challenge",xp:60,day:3},
+    {id:"w14t3",label:"Add rate limiting to an endpoint",type:"build",xp:60,day:5},
+    {id:"w14t4",label:"Implement proper pagination",type:"build",xp:50,day:7}]},
+  {id:"w15",wk:"Week 15",title:"Performance & Profiling",tasks:[
+    {id:"w15t1",label:"Profile a slow API endpoint end-to-end",type:"challenge",xp:70,day:2},
+    {id:"w15t2",label:"Find and fix an N+1 query problem",type:"challenge",xp:80,day:4},
+    {id:"w15t3",label:"Load test with k6 or wrk",type:"build",xp:70,day:6}]},
+  {id:"w16",wk:"Week 16",title:"🏆 Projects 2 & 3",tasks:[
+    {id:"w16t1",label:"Build URL Shortener with Redis caching",type:"project",xp:100,day:1},
+    {id:"w16t2",label:"Add analytics — clicks, referrer, country",type:"project",xp:70,day:3},
+    {id:"w16t3",label:"Build Async Job Queue System",type:"project",xp:100,day:5},
+    {id:"w16t4",label:"Add priority queues and dead letter queue",type:"project",xp:70,day:7}]}
+]},
+{id:"p3",label:"PHASE 3",title:"AWS & Cloud",sub:"Infrastructure · CI/CD · Cost",months:"Month 3–4",color:"#FF8C00",icon:"☁️",weeks:[
+  {id:"w17",wk:"Week 17",title:"AWS Core Services",tasks:[
+    {id:"w17t1",label:"Start Stephane Maarek SAA course",type:"learn",xp:40,day:1},
+    {id:"w17t2",label:"Launch EC2 in a custom VPC from scratch",type:"build",xp:70,day:2},
+    {id:"w17t3",label:"Set up proper security groups and IAM",type:"build",xp:60,day:4},
+    {id:"w17t4",label:"Host a static site on S3",type:"build",xp:50,day:6}]},
+  {id:"w18",wk:"Week 18",title:"Databases on AWS",tasks:[
+    {id:"w18t1",label:"Move local Postgres to RDS Multi-AZ",type:"build",xp:80,day:2},
+    {id:"w18t2",label:"Add ElastiCache Redis cluster",type:"build",xp:70,day:3},
+    {id:"w18t3",label:"Test RDS failover and measure downtime",type:"challenge",xp:70,day:5},
+    {id:"w18t4",label:"Calculate monthly cost for 3 configs",type:"challenge",xp:60,day:7}]},
+  {id:"w19",wk:"Week 19",title:"Serverless",tasks:[
+    {id:"w19t1",label:"Build Lambda that resizes S3 uploaded images",type:"build",xp:80,day:2},
+    {id:"w19t2",label:"Trigger via SQS message",type:"build",xp:60,day:4},
+    {id:"w19t3",label:"Deploy via AWS CLI not console",type:"build",xp:50,day:5},
+    {id:"w19t4",label:"Document when NOT to use Lambda",type:"learn",xp:40,day:7}]},
+  {id:"w20",wk:"Week 20",title:"Infrastructure as Code",tasks:[
+    {id:"w20t1",label:"Learn Terraform — state, providers, plan/apply",type:"learn",xp:50,day:1},
+    {id:"w20t2",label:"Rewrite Week 17 architecture in Terraform",type:"build",xp:100,day:3},
+    {id:"w20t3",label:"Destroy and rebuild infra in under 5 minutes",type:"challenge",xp:80,day:6}]},
+  {id:"w21",wk:"Week 21",title:"CI/CD Pipelines",tasks:[
+    {id:"w21t1",label:"Build GitHub Actions — test, build Docker, push ECR",type:"build",xp:90,day:2},
+    {id:"w21t2",label:"Add automated deploy to EC2",type:"build",xp:70,day:4},
+    {id:"w21t3",label:"Add rollback on failed deployment",type:"build",xp:70,day:6}]},
+  {id:"w22",wk:"Week 22",title:"Monitoring & Observability",tasks:[
+    {id:"w22t1",label:"Add structured JSON logging to an app",type:"build",xp:60,day:1},
+    {id:"w22t2",label:"Create a CloudWatch dashboard",type:"build",xp:60,day:3},
+    {id:"w22t3",label:"Set alarm that alerts on error rate spike",type:"build",xp:60,day:5},
+    {id:"w22t4",label:"Simulate a prod incident and trace it",type:"challenge",xp:80,day:7}]},
+  {id:"w23",wk:"Week 23",title:"Cost & Trade-offs",tasks:[
+    {id:"w23t1",label:"Cost model app at 1k, 100k, 1M users",type:"challenge",xp:90,day:2},
+    {id:"w23t2",label:"Find $100/mo in savings in your AWS account",type:"challenge",xp:80,day:4},
+    {id:"w23t3",label:"Understand on-demand vs reserved vs spot",type:"learn",xp:50,day:6}]},
+  {id:"w24",wk:"Week 24",title:"🏆 Project 4 + SAA Exam",tasks:[
+    {id:"w24t1",label:"Build full AWS infra for URL Shortener in Terraform",type:"project",xp:120,day:1},
+    {id:"w24t2",label:"Add CI/CD and CloudWatch monitoring",type:"project",xp:80,day:3},
+    {id:"w24t3",label:"Pass AWS SAA-C03 Exam 🎓",type:"cert",xp:200,day:7}]}
+]},
+{id:"p4",label:"PHASE 4",title:"System Design",sub:"Architecture · Security · Portfolio",months:"Month 4–6",color:"#BF5FFF",icon:"🏗️",weeks:[
+  {id:"w25",wk:"Week 25",title:"Design Patterns",tasks:[
+    {id:"w25t1",label:"Study CQRS, event sourcing, saga pattern",type:"learn",xp:50,day:1},
+    {id:"w25t2",label:"Implement circuit breaker from scratch",type:"build",xp:80,day:3},
+    {id:"w25t3",label:"Test it by killing a downstream service",type:"challenge",xp:70,day:5}]},
+  {id:"w26",wk:"Week 26",title:"Security — OWASP Top 10",tasks:[
+    {id:"w26t1",label:"Complete PortSwigger OWASP Top 10 labs",type:"learn",xp:100,day:2},
+    {id:"w26t2",label:"Audit your existing apps for OWASP Top 10",type:"challenge",xp:90,day:4},
+    {id:"w26t3",label:"Move all secrets to AWS Secrets Manager",type:"build",xp:60,day:5},
+    {id:"w26t4",label:"Scan app with OWASP ZAP",type:"challenge",xp:60,day:7}]},
+  {id:"w27",wk:"Week 27",title:"Containers",tasks:[
+    {id:"w27t1",label:"Dockerize two existing projects",type:"build",xp:80,day:1},
+    {id:"w27t2",label:"Write multi-stage Dockerfiles",type:"build",xp:60,day:3},
+    {id:"w27t3",label:"Push images to ECR",type:"build",xp:50,day:5},
+    {id:"w27t4",label:"Compare image sizes and optimize the large one",type:"challenge",xp:60,day:7}]},
+  {id:"w28",wk:"Week 28",title:"Kubernetes",tasks:[
+    {id:"w28t1",label:"Deploy an app to EKS or local minikube",type:"build",xp:90,day:2},
+    {id:"w28t2",label:"Set up Horizontal Pod Autoscaler",type:"build",xp:70,day:4},
+    {id:"w28t3",label:"Simulate pod failure and watch self-healing",type:"challenge",xp:70,day:6}]},
+  {id:"w29",wk:"Week 29–30",title:"🏆 Projects 5 & 6",tasks:[
+    {id:"w29t1",label:"Build Auth Service — JWT, OAuth2, MFA",type:"project",xp:150,day:1},
+    {id:"w29t2",label:"Build Real-time Chat API with WebSockets",type:"project",xp:120,day:4},
+    {id:"w29t3",label:"Scale chat across multiple server instances",type:"challenge",xp:80,day:7}]},
+  {id:"w31",wk:"Week 31–32",title:"🏆 Projects 7 & 8",tasks:[
+    {id:"w31t1",label:"Build Real-time Notification System",type:"project",xp:150,day:1},
+    {id:"w31t2",label:"Build E-commerce Order Processing with Saga",type:"project",xp:150,day:4},
+    {id:"w31t3",label:"Load test — 500 orders/min without corruption",type:"challenge",xp:100,day:7}]},
+  {id:"w33",wk:"Week 33–34",title:"🏆 Capstone Project",tasks:[
+    {id:"w33t1",label:"Build your signature project — something real",type:"project",xp:200,day:1},
+    {id:"w33t2",label:"Write full OpenAPI documentation",type:"project",xp:60,day:3},
+    {id:"w33t3",label:"Write architecture decision records ADRs",type:"project",xp:60,day:5},
+    {id:"w33t4",label:"Write a blog post explaining every decision",type:"project",xp:60,day:7}]},
+  {id:"w35",wk:"Week 35–36",title:"Certs & Polish",tasks:[
+    {id:"w35t1",label:"Pass AWS Developer Associate DVA-C02 🎓",type:"cert",xp:200,day:3},
+    {id:"w35t2",label:"3 merged open source PRs",type:"challenge",xp:120,day:5},
+    {id:"w35t3",label:"Do 5 system design mock interviews",type:"challenge",xp:80,day:7}]}
+]}];
+
+const ALL=PHASES.flatMap(p=>p.weeks.flatMap(w=>w.tasks.map(t=>({...t,wk:w.wk,phaseColor:p.color}))));
+const TOTAL=ALL.reduce((s,t)=>s+t.xp,0);
+const TC={learn:{c:"#00D4FF",l:"LEARN"},build:{c:"#00FF88",l:"BUILD"},challenge:{c:"#FF8C00",l:"CHALLENGE"},project:{c:"#BF5FFF",l:"PROJECT"},cert:{c:"#FFD700",l:"CERT"}};
+const RANKS=[{m:0,t:"Script Kiddie",i:"🐣",c:"#666"},{m:200,t:"Shell Warrior",i:"⚔️",c:"#00D4FF"},{m:500,t:"Backend Apprentice",i:"🔧",c:"#00FF88"},{m:900,t:"Systems Thinker",i:"🧠",c:"#FF8C00"},{m:1400,t:"Cloud Architect",i:"☁️",c:"#BF5FFF"},{m:2000,t:"Senior Engineer",i:"🚀",c:"#FFD700"},{m:2800,t:"Principal Dev",i:"👑",c:"#FF4488"},{m:3500,t:"BACKEND MASTER",i:"🏆",c:"#FFD700"}];
+const GOALS=[{x:50,l:"Casual",d:"~1 hr/day"},{x:100,l:"Focused",d:"~2 hrs/day"},{x:160,l:"Grind",d:"~3-4 hrs/day"}];
+const DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const KEY="bm-v6";
+
+// START DATE = tomorrow
+const START=(()=>{const d=new Date();d.setDate(d.getDate()+1);d.setHours(0,0,0,0);return d;})();
+const START_LABEL=START.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+
+function rank(xp){return[...RANKS].reverse().find(r=>xp>=r.m)||RANKS[0];}
+function nextRank(xp){return RANKS.find(r=>xp<r.m)||null;}
+function today(){return new Date().toDateString();}
+function dayNum(){const n=new Date();n.setHours(0,0,0,0);return Math.max(1,Math.floor((n-START)/864e5)+1);}
+function weekNum(){return Math.min(36,Math.ceil(dayNum()/7));}
+function beforeStart(){return new Date()<START;}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let S={checked:{},streak:0,lastActive:"",goal:100,dayXP:{}};
+let syncStatus="loading"; // loading | synced | offline | error
+
+async function loadData(){
+  // Try window.storage (Claude artifact cloud storage) first
+  try{
+    if(window.storage){
+      const r=await window.storage.get(KEY);
+      if(r&&r.value){S=JSON.parse(r.value);syncStatus="synced";return;}
+    }
+  }catch(e){}
+  // Fallback: localStorage
+  try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r);}catch{}
+  syncStatus=window.storage?"error":"offline";
+}
+
+async function persist(){
+  // Always write localStorage immediately (instant, no await)
+  try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}
+  // Then sync to cloud
+  if(!window.storage){syncStatus="offline";badge();return;}
+  try{
+    syncStatus="syncing";badge();
+    await window.storage.set(KEY,JSON.stringify(S));
+    syncStatus="synced";
+  }catch(e){syncStatus="error";}
+  badge();
+}
+
+function badge(){
+  const el=document.getElementById("sb");
+  if(!el)return;
+  const m={loading:["#555","loading..."],syncing:["#FF8C00","syncing…"],synced:["#00FF88","✓ synced"],offline:["#888","local only"],error:["#FF4444","sync error"]};
+  const[c,t]=m[syncStatus]||m.offline;
+  el.style.color=c;el.textContent=t;
+}
+
+function xpTotal(){return ALL.reduce((s,t)=>S.checked[t.id]?s+t.xp:s,0);}
+function xpToday(){return S.dayXP[today()]||0;}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function ring(pct,color,sz,sw,inner=""){
+  const r=sz/2-sw-2,c=2*Math.PI*r;
+  return`<div class="rw" style="width:${sz}px;height:${sz}px">
+    <svg width="${sz}" height="${sz}" style="transform:rotate(-90deg)">
+      <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#1a2a40" stroke-width="${sw}"/>
+      <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
+        stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(pct,100)/100)}" stroke-linecap="round"
+        style="transition:stroke-dashoffset .6s ease"/>
+    </svg>${inner?`<div class="ri">${inner}</div>`:""}</div>`;
+}
+
+function floatXP(xp,color,x,y){
+  const el=document.createElement("div");
+  el.className="fxp";el.style.cssText=`left:${x}px;top:${y}px;color:${color};text-shadow:0 0 12px ${color}`;
+  el.textContent=`+${xp}`;document.body.appendChild(el);
+  let t0=null;
+  (function a(ts){
+    if(!t0)t0=ts;const t=(ts-t0)/1000;
+    if(t>1.1){el.remove();return;}
+    el.style.top=`${y-t*65}px`;el.style.opacity=1-t/1.1;
+    requestAnimationFrame(a);
+  })(performance.now());
+}
+
+function celebrate(r){
+  const d=document.createElement("div");d.className="cel";
+  d.innerHTML=`<div style="text-align:center;padding:52px 72px;border:2px solid ${r.c};box-shadow:0 0 80px ${r.c};background:#07101a;border-radius:4px">
+    <div style="font-size:72px;margin-bottom:12px">${r.i}</div>
+    <div style="font-size:9px;letter-spacing:6px;color:#666;margin-bottom:8px">RANK UNLOCKED</div>
+    <div style="font-size:28px;font-weight:900;color:${r.c};letter-spacing:3px">${r.t}</div>
+  </div>`;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),3200);
+}
+
+// ── TOGGLE ────────────────────────────────────────────────────────────────────
+async function toggle(id,e){
+  const task=ALL.find(t=>t.id===id);if(!task)return;
+  const rect=e.currentTarget.getBoundingClientRect();
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  const was=!!S.checked[id], prevR=rank(xpTotal());
+  const tk=today();
+  if(was){delete S.checked[id];S.dayXP[tk]=Math.max(0,(S.dayXP[tk]||0)-task.xp);}
+  else{S.checked[id]=true;S.dayXP[tk]=(S.dayXP[tk]||0)+task.xp;
+    floatXP(task.xp,TC[task.type].c,cx,cy);
+    const nr=rank(xpTotal());
+    if(nr.t!==prevR.t)setTimeout(()=>celebrate(nr),400);
+  }
+  await persist();render();
+}
+
+// ── VIEW STATE ────────────────────────────────────────────────────────────────
+let VIEW="today",AP="p1",AW=null,GP=false;
+
+// ── RENDER VIEWS ──────────────────────────────────────────────────────────────
+function vToday(){
+  const tx=xpToday(),dp=Math.min(100,Math.round(tx/S.goal*100)),gc=dp>=100?"#FFD700":"#00FF88";
+  const fp=PHASES.find(p=>p.weeks.some(w=>w.tasks.some(t=>!S.checked[t.id])));
+  let sugg=[];
+  if(fp){const fw=fp.weeks.find(w=>w.tasks.some(t=>!S.checked[t.id]));
+    if(fw){let s=fw.tasks.filter(t=>!S.checked[t.id]);
+      if(s.length<3){const i=fp.weeks.indexOf(fw);if(i+1<fp.weeks.length)s=[...s,...fp.weeks[i+1].tasks.filter(t=>!S.checked[t.id]).slice(0,2)];}
+      sugg=s.slice(0,5).map(t=>({...t,pc:fp.color}));}}
+  const done=sugg.filter(t=>S.checked[t.id]).length;
+  const pre=beforeStart();
+  return`<div class="fi">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:9px;letter-spacing:4px;color:#555;margin-bottom:3px">${pre?"YOUR JOURNEY STARTS":"TODAY'S MISSION"}</div>
+        <div style="font-size:15px;font-weight:900">${new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</div>
+        ${pre?`<div style="font-size:9px;color:#00D4FF;margin-top:3px">🚀 Starts ${START_LABEL}</div>`:`<div style="font-size:9px;color:#555;margin-top:3px">Day ${dayNum()} · Week ${weekNum()} of 36</div>`}
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:8px;color:#444;margin-bottom:2px">daily goal</div>
+        <div style="font-size:20px;font-weight:900;color:${gc}">${tx} / ${S.goal} XP</div>
+      </div>
+    </div>
+    <div style="height:5px;background:#1a2a40;border-radius:3px;margin-bottom:18px;overflow:hidden">
+      <div class="bar" style="width:${dp}%;background:${dp>=100?"linear-gradient(90deg,#FFD700,#FFA500)":"linear-gradient(90deg,#00FF8860,#00FF88)"};box-shadow:0 0 7px ${gc}"></div>
+    </div>
+    ${dp>=100?`<div style="background:#161c00;border:1px solid #FFD70060;border-radius:4px;padding:13px 18px;margin-bottom:16px;text-align:center">
+      <div style="font-size:18px;margin-bottom:4px">🏅</div>
+      <div style="font-size:12px;color:#FFD700;font-weight:900;letter-spacing:2px">DAILY GOAL MET</div>
+    </div>`:""}
+    ${sugg.length===0?`<div style="text-align:center;padding:60px 20px;color:#555">
+      <div style="font-size:52px;margin-bottom:12px">🏆</div>
+      <div style="font-size:15px;font-weight:900;color:#FFD700">ROADMAP COMPLETE — YOU ARE A BACKEND MASTER</div>
+    </div>`:`
+    <div style="font-size:8px;letter-spacing:3px;color:#444;margin-bottom:10px">NEXT UP — ${done}/${sugg.length} done today</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      ${sugg.map(t=>{const dn=!!S.checked[t.id],tc=TC[t.type];return`
+      <div class="row" onclick="toggle('${t.id}',event)" style="background:${dn?tc.c+"07":"#0b1422"};border:1px solid ${dn?tc.c+"50":"#1a2a40"};border-radius:4px;box-shadow:${dn?`0 0 10px ${tc.c}18`:"none"}">
+        <div style="width:21px;height:21px;flex-shrink:0;border:1.5px solid ${dn?tc.c:"#2a3a50"};border-radius:3px;background:${dn?tc.c+"20":"transparent"};display:flex;align-items:center;justify-content:center;box-shadow:${dn?`0 0 8px ${tc.c}45`:"none"};transition:all .2s">
+          ${dn?`<span style="color:${tc.c};font-size:12px;font-weight:900">✓</span>`:""}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:7px;letter-spacing:2px;color:${tc.c};margin-bottom:2px;opacity:${dn?0.4:0.85}">${tc.l} · ${t.wk}</div>
+          <div style="font-size:11px;color:${dn?"#445":"#bdd0e0"};text-decoration:${dn?"line-through":"none"}">${t.label}</div>
+        </div>
+        <div style="font-size:12px;font-weight:900;color:${dn?"#2a3540":tc.c};text-shadow:${dn?"none":`0 0 7px ${tc.c}`};flex-shrink:0">+${t.xp}</div>
+      </div>`}).join("")}
+    </div>
+    <div style="margin-top:12px;font-size:9px;color:#2a3a4a;text-align:center">Check off tasks as you complete them in real life</div>`}
+  </div>`;
+}
+
+function vWeek(){
+  const last7=Array.from({length:7},(_,i)=>{const d=new Date(Date.now()-i*864e5);return{day:DN[d.getDay()],xp:S.dayXP[d.toDateString()]||0,isToday:i===0};}).reverse();
+  const mx=Math.max(...last7.map(d=>d.xp),S.goal,1);
+  const recent=ALL.filter(t=>S.checked[t.id]).slice(-8).reverse();
+  return`<div class="fi">
+    <div style="font-size:9px;letter-spacing:4px;color:#555;margin-bottom:14px">WEEKLY OVERVIEW</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:22px">
+      ${last7.map(d=>{const met=d.xp>=S.goal,h=Math.round(d.xp/mx*40);return`
+      <div style="background:#0b1422;border:1px solid ${d.isToday?"#00D4FF35":"#1a2a40"};border-radius:4px;padding:8px 5px;text-align:center">
+        <div style="font-size:7px;color:${d.isToday?"#00D4FF":"#444"};letter-spacing:1px;margin-bottom:5px">${d.day}</div>
+        <div style="height:42px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:5px">
+          <div style="width:55%;height:${Math.max(2,h)}px;background:${met?"#FFD700":d.xp>0?"#00FF88":"#111a28"};border-radius:2px 2px 0 0;transition:height .4s"></div>
+        </div>
+        <div style="font-size:10px;font-weight:900;color:${met?"#FFD700":d.xp>0?"#00FF88":"#2a3a4a"}">${d.xp||"—"}</div>
+        ${met?`<div style="font-size:9px;margin-top:2px">🏅</div>`:""}
+      </div>`}).join("")}
+    </div>
+    <div style="font-size:9px;letter-spacing:3px;color:#555;margin-bottom:10px">PHASE PROGRESS</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-bottom:22px">
+      ${PHASES.map(p=>{let e=0,t=0;p.weeks.forEach(w=>w.tasks.forEach(k=>{t+=k.xp;if(S.checked[k.id])e+=k.xp;}));const pct=t?Math.round(e/t*100):0;return`
+      <div onclick="setPhase('${p.id}')" style="background:#0b1422;border:1px solid ${pct>0?p.color+"35":"#1a2a40"};border-radius:4px;padding:13px 15px;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <div style="font-size:8px;color:${p.color};letter-spacing:2px">${p.label}</div>
+          <div style="font-size:12px;font-weight:900;color:${p.color}">${pct}%</div>
+        </div>
+        <div style="font-size:11px;font-weight:900;margin-bottom:6px">${p.title}</div>
+        <div style="height:3px;background:#1a2a40;border-radius:2px;overflow:hidden">
+          <div class="bar" style="width:${pct}%;background:${p.color}"></div>
+        </div>
+        <div style="font-size:8px;color:#444;margin-top:5px">${e} / ${t} XP</div>
+      </div>`}).join("")}
+    </div>
+    ${recent.length?`<div style="font-size:9px;letter-spacing:3px;color:#555;margin-bottom:8px">RECENTLY COMPLETED</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      ${recent.map(t=>{const tc=TC[t.type];return`<div style="display:flex;align-items:center;gap:9px;padding:7px 13px;background:#0b1422;border:1px solid ${tc.c}25;border-radius:3px">
+        <span style="color:${tc.c};font-size:11px">✓</span>
+        <span style="font-size:8px;color:${tc.c};letter-spacing:1px;flex-shrink:0">${tc.l}</span>
+        <span style="font-size:10px;flex:1;color:#7a8a9a">${t.label}</span>
+        <span style="font-size:10px;color:${tc.c};font-weight:900;flex-shrink:0">+${t.xp}</span>
+      </div>`;}).join("")}
+    </div>`:""}
+  </div>`;
+}
+
+function vAll(){
+  const ph=PHASES.find(p=>p.id===AP)||PHASES[0];
+  const sw=ph.weeks.find(w=>w.id===AW)||ph.weeks[0];
+  return`<div class="fi">
+    <div style="display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap">
+      ${PHASES.map(p=>{let e=0,t=0;p.weeks.forEach(w=>w.tasks.forEach(k=>{t+=k.xp;if(S.checked[k.id])e+=k.xp;}));const pct=t?Math.round(e/t*100):0,on=p.id===AP;return`
+      <button class="ptab" onclick="setPhaseTab('${p.id}')" style="color:${on?p.color:"#555"};background:${on?p.color+"10":"#0b1422"};border:1px solid ${on?p.color:"#1a2a40"};box-shadow:${on?`0 0 14px ${p.color}40`:"none"}">
+        <div style="display:flex;justify-content:space-between;font-size:8px;letter-spacing:2px;margin-bottom:3px"><span>${p.label}</span><span style="font-weight:900">${pct}%</span></div>
+        <div style="font-size:11px;font-weight:900">${p.title}</div>
+        <div style="margin-top:5px;height:2px;background:#1a2a40;border-radius:2px;overflow:hidden"><div class="bar" style="width:${pct}%;background:${p.color}"></div></div>
+      </button>`}).join("")}
+    </div>
+    <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">
+      ${ph.weeks.map(w=>{const wd=w.tasks.filter(t=>S.checked[t.id]).length,sel=w.id===sw.id,done=wd===w.tasks.length;return`
+      <button class="wbtn" onclick="setWeek('${w.id}')" style="background:${sel?ph.color+"12":"#0b1422"};border:1px solid ${sel?ph.color:done?ph.color+"35":"#1a2a40"};color:${sel?ph.color:done?"#666":"#444"}">
+        ${done?"✓ ":""}${w.wk}
+      </button>`}).join("")}
+    </div>
+    <div style="background:#090f1a;border:1px solid ${ph.color}25;border-radius:4px;overflow:hidden">
+      <div style="padding:11px 15px;border-bottom:1px solid #1a2a40;display:flex;justify-content:space-between;align-items:center;background:${ph.color}06">
+        <div>
+          <div style="font-size:8px;color:${ph.color};letter-spacing:2px;margin-bottom:2px">${sw.wk}</div>
+          <div style="font-size:14px;font-weight:900">${sw.title}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:#555">${sw.tasks.filter(t=>S.checked[t.id]).length}/${sw.tasks.length}</div>
+          <div style="width:70px;height:3px;background:#1a2a40;border-radius:2px;margin-top:3px;overflow:hidden">
+            <div class="bar" style="width:${Math.round(sw.tasks.filter(t=>S.checked[t.id]).length/sw.tasks.length*100)}%;background:${ph.color}"></div>
+          </div>
+        </div>
+      </div>
+      ${sw.tasks.map((t,i)=>{const dn=!!S.checked[t.id],tc=TC[t.type];return`
+      <div class="row" onclick="toggle('${t.id}',event)" style="background:${dn?tc.c+"05":"transparent"};border-bottom:${i<sw.tasks.length-1?"1px solid #0d1624":"none"}">
+        <div style="width:19px;height:19px;flex-shrink:0;border:1.5px solid ${dn?tc.c:"#2a3a50"};border-radius:2px;background:${dn?tc.c+"18":"transparent"};display:flex;align-items:center;justify-content:center;box-shadow:${dn?`0 0 7px ${tc.c}40`:"none"};transition:all .2s">
+          ${dn?`<span style="color:${tc.c};font-size:10px;font-weight:900">✓</span>`:""}
+        </div>
+        <div style="font-size:7px;letter-spacing:1.5px;padding:2px 5px;border:1px solid ${tc.c}40;color:${tc.c};border-radius:2px;flex-shrink:0;opacity:${dn?0.45:0.85}">${tc.l}</div>
+        <div style="flex:1;font-size:10px;color:${dn?"#3a4a5a":"#b8cad8"};text-decoration:${dn?"line-through":"none"}">${t.label}</div>
+        ${t.day?`<div style="font-size:7px;color:#2a3a4a;flex-shrink:0">D${t.day}</div>`:""}
+        <div style="font-size:11px;font-weight:900;color:${dn?"#243040":tc.c};text-shadow:${dn?"none":`0 0 7px ${tc.c}`};flex-shrink:0">+${t.xp}</div>
+      </div>`}).join("")}
+    </div>
+  </div>`;
+}
+
+function step(n,color,title,sub,body){
+  return`<div style="background:#0b1422;border:1px solid ${color}35;border-radius:4px;overflow:hidden;margin-bottom:10px">
+    <div style="background:${color}08;padding:11px 16px;border-bottom:1px solid #1a2a40;display:flex;align-items:center;gap:12px">
+      <div class="step-num" style="background:${color}20;border:1px solid ${color};color:${color}">${n}</div>
+      <div><div style="font-size:8px;letter-spacing:3px;color:${color};margin-bottom:2px">${sub}</div><div style="font-size:14px;font-weight:900">${title}</div></div>
+    </div>
+    <div style="padding:13px 16px;font-size:10px;color:#888;line-height:1.85">${body}</div>
+  </div>`;
+}
+
+function vDeploy(){
+  const pre=beforeStart();
+  return`<div class="fi">
+    <div style="font-size:9px;letter-spacing:4px;color:#555;margin-bottom:6px">DEPLOY & SYNC GUIDE</div>
+
+    <div style="background:#0b1422;border:1px solid #00D4FF35;border-radius:4px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px">
+      <div style="font-size:28px">🗓️</div>
+      <div>
+        <div style="font-size:9px;letter-spacing:3px;color:#00D4FF;margin-bottom:3px">YOUR START DATE</div>
+        <div style="font-size:15px;font-weight:900">${START_LABEL}</div>
+        <div style="font-size:9px;color:#555;margin-top:2px">${pre?`Countdown: ${Math.ceil((START-new Date())/864e5)} day(s) — get the roadmap doc ready`:`Day ${dayNum()} of 252 · Week ${weekNum()} of 36`}</div>
+      </div>
+    </div>
+
+    <div style="font-size:9px;letter-spacing:3px;color:#00FF88;margin-bottom:10px">── PART 1: DEPLOY THE TRACKER (15 minutes, free) ──</div>
+
+    ${step(1,"#00D4FF","Download this file","STEP ONE",
+      `Click the <strong style="color:#dde8f0">download/share icon</strong> at the top of this panel, or right-click this page and choose <strong style="color:#dde8f0">Save As</strong>.<br>Save it as <code>tracker.html</code> on your desktop.`)}
+
+    ${step(2,"#BF5FFF","Create a GitHub account","STEP TWO — FREE",
+      `Go to <code style="color:#BF5FFF">github.com</code> and sign up for a free account if you don't have one.<br>
+      Your username will be part of your live URL, so pick something clean like your name.`)}
+
+    ${step(3,"#00FF88","Create a new repository","STEP THREE",
+      `1. Click the <strong style="color:#dde8f0">+</strong> icon in the top-right corner of GitHub<br>
+      2. Click <strong style="color:#dde8f0">New repository</strong><br>
+      3. Name it <code style="color:#00FF88">backend-tracker</code><br>
+      4. Set it to <strong style="color:#dde8f0">Public</strong> (required for free GitHub Pages hosting)<br>
+      5. Click <strong style="color:#dde8f0">Create repository</strong>`)}
+
+    ${step(4,"#FF8C00","Upload your file","STEP FOUR",
+      `1. On the new repo page, click <strong style="color:#dde8f0">uploading an existing file</strong> (there's a small link that says this)<br>
+      2. Drag your <code style="color:#FF8C00">tracker.html</code> file into the upload box<br>
+      3. Scroll down and click <strong style="color:#dde8f0">Commit changes</strong> (the green button)<br>
+      4. Your file is now on GitHub`)}
+
+    ${step(5,"#FFD700","Enable GitHub Pages — go live","STEP FIVE",
+      `1. In your repository, click <strong style="color:#dde8f0">Settings</strong> (the gear tab at the top)<br>
+      2. In the left sidebar, click <strong style="color:#dde8f0">Pages</strong><br>
+      3. Under <strong style="color:#dde8f0">Source</strong>, select <strong style="color:#dde8f0">Deploy from a branch</strong><br>
+      4. Branch dropdown: select <strong style="color:#dde8f0">main</strong> — Folder: <strong style="color:#dde8f0">/ (root)</strong><br>
+      5. Click <strong style="color:#dde8f0">Save</strong><br>
+      6. Wait about 60 seconds, then visit:<br>
+      <code style="color:#FFD700;display:inline-block;margin-top:6px;font-size:11px">https://YOURUSERNAME.github.io/backend-tracker</code><br>
+      <span style="color:#FFD700;font-size:9px">✓ This URL works on your phone, laptop, tablet — any device, any browser</span>`)}
+
+    <div style="font-size:9px;letter-spacing:3px;color:#FF8C00;margin:16px 0 10px">── PART 2: CROSS-DEVICE SYNC (build this in Month 3) ──</div>
+
+    <div style="background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:13px 16px;margin-bottom:10px">
+      <div style="font-size:9px;color:#888;line-height:1.85;margin-bottom:12px">
+        Right now, your progress saves in your browser's <strong style="color:#dde8f0">localStorage</strong>. That means if you open the tracker on your phone, it starts fresh — it doesn't know what you checked on your laptop.<br><br>
+        To fix this, you need a <strong style="color:#dde8f0">backend API + database</strong>. The tracker already has the storage calls written — you just need to point it at your own server. <strong style="color:#FF8C00">This is your Month 3 project.</strong> You'll build it using every skill from Phase 3.
+      </div>
+      <div style="font-size:8px;letter-spacing:2px;color:#FF8C00;margin-bottom:10px">WHAT YOU BUILD</div>
+      ${[
+        ["Node.js + Express","Your REST API — handles all the tracker data requests"],
+        ["PostgreSQL","One table: user_id, task_id, checked_at, day_xp. Runs on AWS RDS."],
+        ["JWT Auth","Login with email + password, get a token. Exactly what Project 5 teaches."],
+        ["4 endpoints","POST /login · GET /progress · POST /progress/:id · DELETE /progress/:id"],
+        ["AWS EC2","Your API runs on a t2.micro (free tier). You SSH in and deploy it yourself."],
+        ["Frontend update","In this HTML file, replace the localStorage calls with fetch() to your API URL."],
+      ].map(([k,v])=>`<div style="display:flex;gap:10px;margin-bottom:7px;align-items:flex-start">
+        <div style="font-size:8px;color:#FF8C00;flex-shrink:0;min-width:110px;letter-spacing:1px;padding-top:1px">${k}</div>
+        <div style="font-size:9px;color:#5a6a7a;line-height:1.6">${v}</div>
+      </div>`).join("")}
+      <div style="background:#1a1200;border:1px solid #FF8C0030;border-radius:3px;padding:9px 12px;margin-top:10px">
+        <div style="font-size:8px;color:#FF8C00;letter-spacing:2px;margin-bottom:3px">WHY THIS IS THE BEST LEARNING PROJECT</div>
+        <div style="font-size:9px;color:#666;line-height:1.75">You are motivated because you use this tracker every single day. You will debug real bugs. You will be annoyed when it breaks. When you finally open it on your phone after lunch and see the task you checked this morning already ticked — you will feel what it means to build a real system. That feeling is worth more than any tutorial.</div>
+      </div>
+    </div>
+
+    <div style="background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:12px 16px">
+      <div style="font-size:8px;letter-spacing:3px;color:#555;margin-bottom:4px">FASTEST OPTION IF YOU JUST WANT IT LIVE NOW</div>
+      <div style="font-size:13px;font-weight:900;margin-bottom:6px">Netlify Drop — 30 seconds, no account needed</div>
+      <div style="font-size:10px;color:#666;line-height:1.85">
+        Go to <code style="color:#00D4FF">netlify.com/drop</code> in your browser.<br>
+        Drag and drop your <code>tracker.html</code> file directly onto the page.<br>
+        Netlify gives you a random live URL instantly — no login, no config, no terminal.<br>
+        Progress still saves locally, but you can share the URL and open it on any browser you're already signed in to.
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────────────────────
+function render(){
+  const xp=xpTotal(),r=rank(xp),nr=nextRank(xp);
+  const op=Math.round(xp/TOTAL*100);
+  const tx=xpToday(),dp=Math.min(100,Math.round(tx/S.goal*100)),gc=dp>=100?"#FFD700":"#00FF88";
+  const last7=Array.from({length:7},(_,i)=>{const d=new Date(Date.now()-i*864e5);return{day:DN[d.getDay()],xp:S.dayXP[d.toDateString()]||0,isToday:i===0};}).reverse();
+  const mx=Math.max(...last7.map(d=>d.xp),S.goal,1);
+  const content=VIEW==="today"?vToday():VIEW==="week"?vWeek():VIEW==="all"?vAll():vDeploy();
+
+  const gpHtml=GP?`<div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);background:#0d1828;border:1px solid #1a3060;border-radius:4px;padding:10px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.8);margin-top:4px;min-width:175px">
+    ${GOALS.map(g=>`<div onclick="setGoal(${g.x})" style="padding:7px 10px;cursor:pointer;color:${S.goal===g.x?g.x===50?"#00D4FF":g.x===100?"#00FF88":"#FF8C00":"#666"};border-left:${S.goal===g.x?"2px solid currentColor":"2px solid transparent"};margin-bottom:2px">
+      <span style="font-weight:900;font-size:11px">${g.l}</span><span style="font-size:9px;color:#555;margin-left:6px">${g.d} · ${g.x} XP</span>
+    </div>`).join("")}
+  </div>`:"";
+
+  document.getElementById("app").innerHTML=`
+    <!-- HUD -->
+    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:stretch">
+
+      <!-- Rank -->
+      <div class="card" style="flex:1 1 185px;border-color:${r.c}35;box-shadow:0 0 20px ${r.c}15">
+        <div style="font-size:8px;letter-spacing:4px;color:#555;margin-bottom:5px">RANK</div>
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="font-size:26px">${r.i}</span>
+          <div>
+            <div style="font-size:13px;font-weight:900;color:${r.c}">${r.t}</div>
+            <div style="font-size:19px;font-weight:900">${xp.toLocaleString()}<span style="font-size:9px;color:#555;margin-left:4px">XP</span></div>
+          </div>
+        </div>
+        ${nr?`<div style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between;font-size:8px;color:#444;margin-bottom:3px">
+            <span>→ ${nr.i} ${nr.t}</span><span>${(nr.m-xp).toLocaleString()} XP</span>
+          </div>
+          <div style="height:3px;background:#1a2a40;border-radius:2px;overflow:hidden">
+            <div class="bar" style="width:${Math.min(100,Math.round(xp/nr.m*100))}%;background:${r.c}"></div>
+          </div>
+        </div>`:""}
+      </div>
+
+      <!-- Daily ring -->
+      <div class="card" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative">
+        <div style="font-size:8px;letter-spacing:3px;color:#555">TODAY</div>
+        ${ring(dp,gc,70,5,`<div style="text-align:center"><div style="font-size:13px;font-weight:900;color:${gc}">${tx}</div><div style="font-size:7px;color:#444">/${S.goal}</div></div>`)}
+        <div style="font-size:8px;color:${dp>=100?"#FFD700":"#555"};letter-spacing:1px">${dp>=100?"🏅 DONE!":"XP TODAY"}</div>
+        <button onclick="toggleGP()" style="font-size:7px;letter-spacing:2px;color:#444;background:none;border:1px solid #1a2240;padding:2px 7px;border-radius:2px;cursor:pointer;font-family:inherit">SET GOAL</button>
+        ${gpHtml}
+      </div>
+
+      <!-- 7-day bars -->
+      <div class="card" style="flex:1 1 195px">
+        <div style="font-size:8px;letter-spacing:3px;color:#555;margin-bottom:10px">LAST 7 DAYS</div>
+        <div style="display:flex;align-items:flex-end;gap:4px;height:62px">
+          ${last7.map(d=>{const h=Math.round(d.xp/mx*46),met=d.xp>=S.goal;return`
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="font-size:7px;color:${d.xp>0?(met?"#FFD700":"#00FF88"):"#222"};min-height:12px;text-align:center">${d.xp||""}</div>
+            <div style="width:100%;height:46px;display:flex;align-items:flex-end">
+              <div style="width:100%;height:${Math.max(2,h)}px;background:${d.isToday?(met?"#FFD700":"#00FF88"):d.xp>0?(met?"#8a7000":"#0e5030"):"#0f1828"};border-radius:2px 2px 0 0;transition:height .4s"></div>
+            </div>
+            <div style="font-size:7px;color:${d.isToday?"#00D4FF":"#3a4a5a"}">${d.day}</div>
+          </div>`}).join("")}
+        </div>
+      </div>
+
+      <!-- Streak -->
+      <div class="card" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:72px;border-color:#2a1800">
+        <div style="font-size:28px">🔥</div>
+        <div style="font-size:24px;font-weight:900;color:#FF8C00">${S.streak}</div>
+        <div style="font-size:8px;letter-spacing:2px;color:#555">DAYS</div>
+      </div>
+
+      <!-- Overall -->
+      <div class="card" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+        ${ring(op,r.c,62,5,`<span style="font-size:11px;font-weight:900;color:${r.c}">${op}%</span>`)}
+        <div style="font-size:8px;letter-spacing:2px;color:#555">OVERALL</div>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div style="display:flex;gap:5px;margin-bottom:18px;border-bottom:1px solid #1a2a40;padding-bottom:12px;flex-wrap:wrap">
+      ${[["today","📅 TODAY"],["week","📆 THIS WEEK"],["all","🗂️ ALL PHASES"],["deploy","🌐 DEPLOY"]]
+        .map(([v,l])=>`<button class="nav-btn ${VIEW===v?"on":""}" onclick="setView('${v}')">${l}</button>`).join("")}
+    </div>
+
+    <!-- CONTENT -->
+    <div>${content}</div>
+
+    <!-- FOOTER -->
+    <div style="margin-top:24px;padding-top:14px;border-top:1px solid #1a2a40;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        ${Object.entries(TC).map(([k,v])=>`<div style="display:flex;align-items:center;gap:4px;font-size:8px;color:#3a4a5a">
+          <div style="width:5px;height:5px;border-radius:50%;background:${v.c}"></div>${v.l}
+        </div>`).join("")}
+        <span id="sb" style="font-size:8px;letter-spacing:2px;margin-left:6px;color:#555">loading...</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:9px;color:#2a3a40">${Object.keys(S.checked).length}/${ALL.length} tasks · starts ${START_LABEL}</div>
+        <button onclick="doReset()" style="background:transparent;border:1px solid #1a1414;color:#2a1616;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:7px;letter-spacing:2px;font-family:inherit">RESET</button>
+      </div>
+    </div>`;
+  badge();
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function setView(v){VIEW=v;GP=false;render();}
+function setPhase(id){AP=id;AW=null;VIEW="all";render();}
+function setPhaseTab(id){AP=id;AW=null;render();}
+function setWeek(id){AW=id;render();}
+function toggleGP(){GP=!GP;render();}
+async function setGoal(x){S.goal=x;GP=false;await persist();render();}
+async function doReset(){if(confirm("Reset ALL progress? Cannot be undone.")){S={checked:{},streak:0,lastActive:"",goal:100,dayXP:{}};await persist();render();}}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+(async()=>{
+  await loadData();
+  // Streak check
+  const td=today();
+  if(S.lastActive!==td){
+    const yest=new Date(Date.now()-864e5).toDateString();
+    S.streak=S.lastActive===yest?S.streak+1:S.lastActive?1:S.streak;
+    S.lastActive=td;
+    await persist();
+  }
+  render();
+})();
+</script>
+</body>
+</html>

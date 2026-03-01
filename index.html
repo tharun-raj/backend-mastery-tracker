@@ -1,675 +1,1643 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Backend Mastery Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECT 90 — Total Transformation</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#060b12;color:#dde8f0;font-family:'Courier New',Consolas,monospace;min-height:100vh;overflow-x:hidden}
-.gbg{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,212,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.02) 1px,transparent 1px);background-size:48px 48px}
-.scan{position:fixed;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px)}
-.wrap{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:18px 14px}
-.card{background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:13px 16px}
-.nav-btn{background:transparent;border:1px solid #1a2a40;color:#4a5a6a;padding:7px 13px;border-radius:3px;cursor:pointer;font-size:9px;letter-spacing:2px;font-family:inherit;transition:all .15s}
-.nav-btn.on{background:#0f1e38;border-color:#00D4FF50;color:#00D4FF}
-.nav-btn:hover{filter:brightness(1.3)}
-.row{display:flex;align-items:center;gap:11px;padding:11px 15px;cursor:pointer;transition:background .15s;border-bottom:1px solid #0d1624}
-.row:last-child{border-bottom:none}
-.row:hover{background:rgba(255,255,255,0.025)}
-.ptab{flex:1 1 140px;background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:9px 13px;cursor:pointer;text-align:left;transition:all .2s;font-family:inherit}
-.ptab:hover{filter:brightness(1.2)}
-.wbtn{background:#0b1422;border:1px solid #1a2a40;color:#444;padding:5px 10px;border-radius:3px;cursor:pointer;font-size:8px;letter-spacing:1px;font-family:inherit;transition:all .15s}
-.wbtn:hover{filter:brightness(1.2)}
-.fxp{position:fixed;pointer-events:none;z-index:9999;font-weight:900;font-size:17px;transform:translateX(-50%);user-select:none}
-.cel{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(6px)}
-.bar{height:100%;border-radius:2px;transition:width .5s ease}
-.rw{position:relative;flex-shrink:0}
-.ri{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.fi{animation:fi .3s ease}
-@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
-code{background:#0a1220;padding:2px 7px;border-radius:2px;font-family:'Courier New',monospace}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#060b12}::-webkit-scrollbar-thumb{background:#1a3060;border-radius:2px}
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #e8ff47;
+    --accent2: #47ffb8;
+    --accent3: #ff6b35;
+    --accent4: #b847ff;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --red: #ff4757;
+    --green: #2ed573;
+    --orange: #ffa502;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* SIDEBAR NAV */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    padding: 0 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo span { color: var(--muted); font-size: 11px; display: block; letter-spacing: 2px; font-family: 'DM Mono', monospace; margin-top: 3px; }
+
+  .nav-section {
+    padding: 18px 12px 6px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    border-radius: 0 6px 6px 0;
+    margin: 1px 0;
+  }
+
+  .nav-btn:hover { color: var(--text); background: var(--surface2); }
+  .nav-btn.active { color: var(--accent); border-left-color: var(--accent); background: rgba(232,255,71,0.06); font-weight: 500; }
+
+  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+  .day-counter {
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .day-counter .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .day-counter .day-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 2px; margin-top: 2px; }
+
+  .progress-ring { margin-top: 10px; width: 100%; height: 4px; background: var(--border); border-radius: 2px; }
+  .progress-ring-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.5s ease; }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: 220px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page { display: none; padding: 40px 40px 80px; }
+  .page.active { display: block; }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 36px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .page-sub { font-size: 13px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 6px; letter-spacing: 1px; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* CHECKLIST ITEMS */
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    margin-bottom: 6px;
+    user-select: none;
+  }
+
+  .check-item:hover { background: var(--surface2); border-color: var(--border); }
+  .check-item.done { opacity: 0.5; }
+  .check-item.done .check-label { text-decoration: line-through; color: var(--muted); }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 11px;
+  }
+
+  .check-item.done .check-box { background: var(--accent); border-color: var(--accent); color: #000; }
+  .check-label { font-size: 14px; }
+  .check-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: 'DM Mono', monospace; }
+
+  /* STATS CELLS */
+  .stat-cell {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; margin-top: 4px; }
+
+  /* WORKOUT TABLE */
+  .wtable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .wtable th { text-align: left; padding: 8px 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 400; text-transform: uppercase; }
+  .wtable td { padding: 11px 12px; border-bottom: 1px solid rgba(42,42,58,0.5); }
+  .wtable tr:last-child td { border-bottom: none; }
+  .wtable tr:hover td { background: var(--surface2); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .badge-easy { background: rgba(46,213,115,0.15); color: var(--green); }
+  .badge-medium { background: rgba(255,165,2,0.15); color: var(--orange); }
+  .badge-done { background: rgba(232,255,71,0.15); color: var(--accent); }
+  .badge-hints { background: rgba(184,71,255,0.15); color: var(--accent4); }
+  .badge-push { background: rgba(71,171,255,0.15); color: #47abff; }
+  .badge-pull { background: rgba(46,213,115,0.15); color: var(--green); }
+  .badge-legs { background: rgba(255,107,53,0.15); color: var(--accent3); }
+  .badge-cond { background: rgba(255,165,2,0.15); color: var(--orange); }
+
+  /* MACRO BARS */
+  .macro-row { margin-bottom: 14px; }
+  .macro-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+  .macro-label span:first-child { color: var(--text); }
+  .macro-label span:last-child { color: var(--muted); font-family: 'DM Mono', monospace; }
+  .macro-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .macro-fill { height: 100%; border-radius: 3px; }
+
+  /* TIMELINE */
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .timeline-dot {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  .timeline-content { flex: 1; }
+  .timeline-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .timeline-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* REWARD CARDS */
+  .reward-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reward-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .reward-card:nth-child(1)::before { background: var(--accent); }
+  .reward-card:nth-child(2)::before { background: var(--accent2); }
+  .reward-card:nth-child(3)::before { background: var(--accent3); }
+  .reward-card:nth-child(4)::before { background: var(--accent4); }
+  .reward-card:nth-child(5)::before { background: var(--green); }
+  .reward-card:nth-child(6)::before { background: #47abff; }
+
+  .reward-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .reward-icon { font-size: 28px; margin-bottom: 8px; }
+  .reward-milestone { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 2px; margin-bottom: 6px; }
+  .reward-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .reward-desc { font-size: 12px; color: var(--muted); }
+  .reward-cost { margin-top: 8px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent2); }
+
+  /* FINANCE TABLE */
+  .fin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: var(--surface2);
+    font-size: 13px;
+  }
+
+  .fin-row .label { color: var(--text); }
+  .fin-row .amount { font-family: 'DM Mono', monospace; color: var(--accent); }
+  .fin-row .amount.bad { color: var(--red); }
+  .fin-row .amount.neutral { color: var(--orange); }
+
+  /* INPUT FIELDS */
+  .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  input[type="text"], input[type="number"], textarea, select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #d4eb00; }
+  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* HABIT GRID */
+  .habit-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .habit-dot {
+    width: 18px; height: 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .habit-dot:hover { opacity: 0.8; transform: scale(1.2); }
+  .habit-dot.empty { background: var(--border); }
+  .habit-dot.filled { background: var(--accent); }
+  .habit-dot .tooltip {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-family: 'DM Mono', monospace;
+  }
+  .habit-dot:hover .tooltip { opacity: 1; }
+
+  /* MINDSET PAGE SPECIFICS */
+  .book-item { 
+    display: flex; align-items: center; gap: 12px; 
+    padding: 12px 14px; border-radius: 8px; 
+    background: var(--surface2); margin-bottom: 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .book-item:hover { border-color: var(--border); }
+  .book-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--accent); width: 28px; text-align: center; flex-shrink: 0; }
+  .book-title { font-size: 13px; font-weight: 500; }
+  .book-why { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* WEEKLY OVERVIEW BANNER */
+  .week-banner {
+    background: linear-gradient(135deg, rgba(232,255,71,0.08), rgba(71,255,184,0.05));
+    border: 1px solid rgba(232,255,71,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .week-banner .big { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--accent); line-height: 1; }
+  .week-banner .small { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 2px; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .page.active { animation: fadeIn 0.3s ease; }
+
+  /* HIGHLIGHT ROW */
+  .highlight { background: rgba(232,255,71,0.06); border-left: 3px solid var(--accent); padding-left: 10px; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* PROGRESS BAR HORIZONTAL */
+  .prog-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+  .prog-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+  /* DAY PLAN COLUMN */
+  .day-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .day-block-header {
+    padding: 12px 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .day-block-body { padding: 12px 16px 16px; }
+  .day-item { font-size: 12px; padding: 4px 0; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+  .day-item::before { content: '–'; color: var(--border); }
+
 </style>
 </head>
 <body>
-<div class="gbg"></div><div class="scan"></div>
-<div class="wrap" id="app"><div style="display:flex;align-items:center;justify-content:center;height:80vh;flex-direction:column;gap:14px"><div style="font-size:28px">⚙️</div><div style="font-size:9px;letter-spacing:4px;color:#555">LOADING...</div></div></div>
 
-<script>
-// ── CURRICULUM DATA ───────────────────────────────────────────────────────────
-const PHASES=[
-{id:"p1",label:"PHASE 1",title:"Foundations",sub:"Linux · Networking · OS",months:"Month 1–2",color:"#00D4FF",icon:"⚙️",weeks:[
-  {id:"w1",wk:"Week 1",title:"Linux Basics",tasks:[
-    {id:"w1t1",label:"Read Linux Command Line Ch 1–8",type:"learn",xp:30,day:1},
-    {id:"w1t2",label:"Set up Ubuntu VM or WSL2",type:"build",xp:40,day:2},
-    {id:"w1t3",label:"Navigate without GUI for a full day",type:"challenge",xp:50,day:3},
-    {id:"w1t4",label:"Write a file organizer bash script",type:"build",xp:60,day:5}]},
-  {id:"w2",wk:"Week 2",title:"Linux Advanced",tasks:[
-    {id:"w2t1",label:"Read Linux Command Line Ch 9–16",type:"learn",xp:30,day:1},
-    {id:"w2t2",label:"Write a CPU/memory monitoring bash script",type:"build",xp:60,day:3},
-    {id:"w2t3",label:"Set up SSH key authentication",type:"build",xp:40,day:4},
-    {id:"w2t4",label:"Create and debug a cron job",type:"build",xp:40,day:6}]},
-  {id:"w3",wk:"Week 3",title:"Networking I",tasks:[
-    {id:"w3t1",label:"Read Kurose Ch 1–2, watch Hussein Nasser TCP/IP",type:"learn",xp:35,day:1},
-    {id:"w3t2",label:"Use tcpdump to sniff your own traffic",type:"build",xp:50,day:2},
-    {id:"w3t3",label:"Trace a DNS lookup step by step",type:"build",xp:45,day:4},
-    {id:"w3t4",label:"Build a raw TCP socket server",type:"build",xp:70,day:6}]},
-  {id:"w4",wk:"Week 4",title:"Networking II",tasks:[
-    {id:"w4t1",label:"Read Kurose Ch 3–4, study HTTP/2 & TLS",type:"learn",xp:35,day:1},
-    {id:"w4t2",label:"Set up Nginx as a reverse proxy",type:"build",xp:60,day:3},
-    {id:"w4t3",label:"Simulate TLS locally with mkcert",type:"build",xp:50,day:5},
-    {id:"w4t4",label:"Test HTTP caching headers with curl",type:"build",xp:40,day:6}]},
-  {id:"w5",wk:"Week 5",title:"How Computers Work",tasks:[
-    {id:"w5t1",label:"Complete Nand2Tetris Projects 1–4",type:"build",xp:100,day:2},
-    {id:"w5t2",label:"Study how your language compiles and runs",type:"learn",xp:40,day:4},
-    {id:"w5t3",label:"Understand GC and memory model of your lang",type:"learn",xp:40,day:6}]},
-  {id:"w6",wk:"Week 6",title:"Shell Mastery",tasks:[
-    {id:"w6t1",label:"Build a full server monitoring dashboard in bash",type:"build",xp:80,day:2},
-    {id:"w6t2",label:"Simulate OOM killer and fix it",type:"challenge",xp:60,day:3},
-    {id:"w6t3",label:"Simulate disk full scenario and fix it",type:"challenge",xp:60,day:5},
-    {id:"w6t4",label:"Simulate zombie processes and understand why",type:"challenge",xp:60,day:7}]},
-  {id:"w7",wk:"Week 7",title:"OS Internals",tasks:[
-    {id:"w7t1",label:"Use strace on a running process",type:"build",xp:50,day:1},
-    {id:"w7t2",label:"Profile a program with perf",type:"build",xp:50,day:3},
-    {id:"w7t3",label:"Read /proc filesystem and understand what you see",type:"learn",xp:40,day:5},
-    {id:"w7t4",label:"Understand what malloc actually does",type:"learn",xp:40,day:6}]},
-  {id:"w8",wk:"Week 8",title:"🏆 Project 1 — Linux Monitor",tasks:[
-    {id:"w8t1",label:"Build full Linux System Monitor",type:"project",xp:120,day:1},
-    {id:"w8t2",label:"Add email alerts when CPU > 80%",type:"project",xp:60,day:3},
-    {id:"w8t3",label:"Add log rotation to your monitor",type:"project",xp:40,day:5},
-    {id:"w8t4",label:"Write a 24hr summary report generator",type:"project",xp:60,day:7}]}
-]},
-{id:"p2",label:"PHASE 2",title:"Backend Depth",sub:"Databases · Queues · APIs",months:"Month 2–3",color:"#00FF88",icon:"🗄️",weeks:[
-  {id:"w9",wk:"Week 9",title:"Database Foundations",tasks:[
-    {id:"w9t1",label:"Read DDIA Ch 1–3",type:"learn",xp:50,day:1},
-    {id:"w9t2",label:"Spin up Postgres and create 1M row table",type:"build",xp:60,day:2},
-    {id:"w9t3",label:"Run EXPLAIN ANALYZE on slow queries",type:"build",xp:60,day:4},
-    {id:"w9t4",label:"Compare indexed vs non-indexed query speed",type:"challenge",xp:70,day:6}]},
-  {id:"w10",wk:"Week 10",title:"Transactions & ACID",tasks:[
-    {id:"w10t1",label:"Read DDIA Ch 7",type:"learn",xp:50,day:1},
-    {id:"w10t2",label:"Simulate race conditions and test isolation levels",type:"challenge",xp:80,day:3},
-    {id:"w10t3",label:"Deliberately cause a deadlock and fix it",type:"challenge",xp:70,day:5},
-    {id:"w10t4",label:"Set up PgBouncer connection pooling",type:"build",xp:60,day:7}]},
-  {id:"w11",wk:"Week 11",title:"Distributed Systems I",tasks:[
-    {id:"w11t1",label:"Read DDIA Ch 5–6",type:"learn",xp:50,day:1},
-    {id:"w11t2",label:"Set up Postgres replication",type:"build",xp:80,day:3},
-    {id:"w11t3",label:"Simulate a failover and understand data loss",type:"challenge",xp:70,day:6}]},
-  {id:"w12",wk:"Week 12",title:"Caching",tasks:[
-    {id:"w12t1",label:"Read DDIA caching sections",type:"learn",xp:40,day:1},
-    {id:"w12t2",label:"Add Redis cache-aside to an app",type:"build",xp:70,day:3},
-    {id:"w12t3",label:"Benchmark before and after caching",type:"build",xp:60,day:5},
-    {id:"w12t4",label:"Simulate cache stampede and fix it",type:"challenge",xp:80,day:7}]},
-  {id:"w13",wk:"Week 13",title:"Message Queues",tasks:[
-    {id:"w13t1",label:"Read DDIA Ch 11",type:"learn",xp:40,day:1},
-    {id:"w13t2",label:"Build async job queue with Redis or RabbitMQ",type:"build",xp:80,day:2},
-    {id:"w13t3",label:"Implement retries with exponential backoff",type:"build",xp:70,day:4},
-    {id:"w13t4",label:"Handle failures and dead letter queue",type:"build",xp:60,day:6}]},
-  {id:"w14",wk:"Week 14",title:"API Design",tasks:[
-    {id:"w14t1",label:"Study REST best practices, idempotency, versioning",type:"learn",xp:40,day:1},
-    {id:"w14t2",label:"Audit an existing API and fix bad status codes",type:"challenge",xp:60,day:3},
-    {id:"w14t3",label:"Add rate limiting to an endpoint",type:"build",xp:60,day:5},
-    {id:"w14t4",label:"Implement proper pagination",type:"build",xp:50,day:7}]},
-  {id:"w15",wk:"Week 15",title:"Performance & Profiling",tasks:[
-    {id:"w15t1",label:"Profile a slow API endpoint end-to-end",type:"challenge",xp:70,day:2},
-    {id:"w15t2",label:"Find and fix an N+1 query problem",type:"challenge",xp:80,day:4},
-    {id:"w15t3",label:"Load test with k6 or wrk",type:"build",xp:70,day:6}]},
-  {id:"w16",wk:"Week 16",title:"🏆 Projects 2 & 3",tasks:[
-    {id:"w16t1",label:"Build URL Shortener with Redis caching",type:"project",xp:100,day:1},
-    {id:"w16t2",label:"Add analytics — clicks, referrer, country",type:"project",xp:70,day:3},
-    {id:"w16t3",label:"Build Async Job Queue System",type:"project",xp:100,day:5},
-    {id:"w16t4",label:"Add priority queues and dead letter queue",type:"project",xp:70,day:7}]}
-]},
-{id:"p3",label:"PHASE 3",title:"AWS & Cloud",sub:"Infrastructure · CI/CD · Cost",months:"Month 3–4",color:"#FF8C00",icon:"☁️",weeks:[
-  {id:"w17",wk:"Week 17",title:"AWS Core Services",tasks:[
-    {id:"w17t1",label:"Start Stephane Maarek SAA course",type:"learn",xp:40,day:1},
-    {id:"w17t2",label:"Launch EC2 in a custom VPC from scratch",type:"build",xp:70,day:2},
-    {id:"w17t3",label:"Set up proper security groups and IAM",type:"build",xp:60,day:4},
-    {id:"w17t4",label:"Host a static site on S3",type:"build",xp:50,day:6}]},
-  {id:"w18",wk:"Week 18",title:"Databases on AWS",tasks:[
-    {id:"w18t1",label:"Move local Postgres to RDS Multi-AZ",type:"build",xp:80,day:2},
-    {id:"w18t2",label:"Add ElastiCache Redis cluster",type:"build",xp:70,day:3},
-    {id:"w18t3",label:"Test RDS failover and measure downtime",type:"challenge",xp:70,day:5},
-    {id:"w18t4",label:"Calculate monthly cost for 3 configs",type:"challenge",xp:60,day:7}]},
-  {id:"w19",wk:"Week 19",title:"Serverless",tasks:[
-    {id:"w19t1",label:"Build Lambda that resizes S3 uploaded images",type:"build",xp:80,day:2},
-    {id:"w19t2",label:"Trigger via SQS message",type:"build",xp:60,day:4},
-    {id:"w19t3",label:"Deploy via AWS CLI not console",type:"build",xp:50,day:5},
-    {id:"w19t4",label:"Document when NOT to use Lambda",type:"learn",xp:40,day:7}]},
-  {id:"w20",wk:"Week 20",title:"Infrastructure as Code",tasks:[
-    {id:"w20t1",label:"Learn Terraform — state, providers, plan/apply",type:"learn",xp:50,day:1},
-    {id:"w20t2",label:"Rewrite Week 17 architecture in Terraform",type:"build",xp:100,day:3},
-    {id:"w20t3",label:"Destroy and rebuild infra in under 5 minutes",type:"challenge",xp:80,day:6}]},
-  {id:"w21",wk:"Week 21",title:"CI/CD Pipelines",tasks:[
-    {id:"w21t1",label:"Build GitHub Actions — test, build Docker, push ECR",type:"build",xp:90,day:2},
-    {id:"w21t2",label:"Add automated deploy to EC2",type:"build",xp:70,day:4},
-    {id:"w21t3",label:"Add rollback on failed deployment",type:"build",xp:70,day:6}]},
-  {id:"w22",wk:"Week 22",title:"Monitoring & Observability",tasks:[
-    {id:"w22t1",label:"Add structured JSON logging to an app",type:"build",xp:60,day:1},
-    {id:"w22t2",label:"Create a CloudWatch dashboard",type:"build",xp:60,day:3},
-    {id:"w22t3",label:"Set alarm that alerts on error rate spike",type:"build",xp:60,day:5},
-    {id:"w22t4",label:"Simulate a prod incident and trace it",type:"challenge",xp:80,day:7}]},
-  {id:"w23",wk:"Week 23",title:"Cost & Trade-offs",tasks:[
-    {id:"w23t1",label:"Cost model app at 1k, 100k, 1M users",type:"challenge",xp:90,day:2},
-    {id:"w23t2",label:"Find $100/mo in savings in your AWS account",type:"challenge",xp:80,day:4},
-    {id:"w23t3",label:"Understand on-demand vs reserved vs spot",type:"learn",xp:50,day:6}]},
-  {id:"w24",wk:"Week 24",title:"🏆 Project 4 + SAA Exam",tasks:[
-    {id:"w24t1",label:"Build full AWS infra for URL Shortener in Terraform",type:"project",xp:120,day:1},
-    {id:"w24t2",label:"Add CI/CD and CloudWatch monitoring",type:"project",xp:80,day:3},
-    {id:"w24t3",label:"Pass AWS SAA-C03 Exam 🎓",type:"cert",xp:200,day:7}]}
-]},
-{id:"p4",label:"PHASE 4",title:"System Design",sub:"Architecture · Security · Portfolio",months:"Month 4–6",color:"#BF5FFF",icon:"🏗️",weeks:[
-  {id:"w25",wk:"Week 25",title:"Design Patterns",tasks:[
-    {id:"w25t1",label:"Study CQRS, event sourcing, saga pattern",type:"learn",xp:50,day:1},
-    {id:"w25t2",label:"Implement circuit breaker from scratch",type:"build",xp:80,day:3},
-    {id:"w25t3",label:"Test it by killing a downstream service",type:"challenge",xp:70,day:5}]},
-  {id:"w26",wk:"Week 26",title:"Security — OWASP Top 10",tasks:[
-    {id:"w26t1",label:"Complete PortSwigger OWASP Top 10 labs",type:"learn",xp:100,day:2},
-    {id:"w26t2",label:"Audit your existing apps for OWASP Top 10",type:"challenge",xp:90,day:4},
-    {id:"w26t3",label:"Move all secrets to AWS Secrets Manager",type:"build",xp:60,day:5},
-    {id:"w26t4",label:"Scan app with OWASP ZAP",type:"challenge",xp:60,day:7}]},
-  {id:"w27",wk:"Week 27",title:"Containers",tasks:[
-    {id:"w27t1",label:"Dockerize two existing projects",type:"build",xp:80,day:1},
-    {id:"w27t2",label:"Write multi-stage Dockerfiles",type:"build",xp:60,day:3},
-    {id:"w27t3",label:"Push images to ECR",type:"build",xp:50,day:5},
-    {id:"w27t4",label:"Compare image sizes and optimize the large one",type:"challenge",xp:60,day:7}]},
-  {id:"w28",wk:"Week 28",title:"Kubernetes",tasks:[
-    {id:"w28t1",label:"Deploy an app to EKS or local minikube",type:"build",xp:90,day:2},
-    {id:"w28t2",label:"Set up Horizontal Pod Autoscaler",type:"build",xp:70,day:4},
-    {id:"w28t3",label:"Simulate pod failure and watch self-healing",type:"challenge",xp:70,day:6}]},
-  {id:"w29",wk:"Week 29–30",title:"🏆 Projects 5 & 6",tasks:[
-    {id:"w29t1",label:"Build Auth Service — JWT, OAuth2, MFA",type:"project",xp:150,day:1},
-    {id:"w29t2",label:"Build Real-time Chat API with WebSockets",type:"project",xp:120,day:4},
-    {id:"w29t3",label:"Scale chat across multiple server instances",type:"challenge",xp:80,day:7}]},
-  {id:"w31",wk:"Week 31–32",title:"🏆 Projects 7 & 8",tasks:[
-    {id:"w31t1",label:"Build Real-time Notification System",type:"project",xp:150,day:1},
-    {id:"w31t2",label:"Build E-commerce Order Processing with Saga",type:"project",xp:150,day:4},
-    {id:"w31t3",label:"Load test — 500 orders/min without corruption",type:"challenge",xp:100,day:7}]},
-  {id:"w33",wk:"Week 33–34",title:"🏆 Capstone Project",tasks:[
-    {id:"w33t1",label:"Build your signature project — something real",type:"project",xp:200,day:1},
-    {id:"w33t2",label:"Write full OpenAPI documentation",type:"project",xp:60,day:3},
-    {id:"w33t3",label:"Write architecture decision records ADRs",type:"project",xp:60,day:5},
-    {id:"w33t4",label:"Write a blog post explaining every decision",type:"project",xp:60,day:7}]},
-  {id:"w35",wk:"Week 35–36",title:"Certs & Polish",tasks:[
-    {id:"w35t1",label:"Pass AWS Developer Associate DVA-C02 🎓",type:"cert",xp:200,day:3},
-    {id:"w35t2",label:"3 merged open source PRs",type:"challenge",xp:120,day:5},
-    {id:"w35t3",label:"Do 5 system design mock interviews",type:"challenge",xp:80,day:7}]}
-]}];
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">PROJECT 90<span>TOTAL TRANSFORMATION</span></div>
 
-const ALL=PHASES.flatMap(p=>p.weeks.flatMap(w=>w.tasks.map(t=>({...t,wk:w.wk,phaseColor:p.color}))));
-const TOTAL=ALL.reduce((s,t)=>s+t.xp,0);
-const TC={learn:{c:"#00D4FF",l:"LEARN"},build:{c:"#00FF88",l:"BUILD"},challenge:{c:"#FF8C00",l:"CHALLENGE"},project:{c:"#BF5FFF",l:"PROJECT"},cert:{c:"#FFD700",l:"CERT"}};
-const RANKS=[{m:0,t:"Script Kiddie",i:"🐣",c:"#666"},{m:200,t:"Shell Warrior",i:"⚔️",c:"#00D4FF"},{m:500,t:"Backend Apprentice",i:"🔧",c:"#00FF88"},{m:900,t:"Systems Thinker",i:"🧠",c:"#FF8C00"},{m:1400,t:"Cloud Architect",i:"☁️",c:"#BF5FFF"},{m:2000,t:"Senior Engineer",i:"🚀",c:"#FFD700"},{m:2800,t:"Principal Dev",i:"👑",c:"#FF4488"},{m:3500,t:"BACKEND MASTER",i:"🏆",c:"#FFD700"}];
-const GOALS=[{x:50,l:"Casual",d:"~1 hr/day"},{x:100,l:"Focused",d:"~2 hrs/day"},{x:160,l:"Grind",d:"~3-4 hrs/day"}];
-const DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const KEY="bm-v6";
+  <div class="nav-section">DAILY</div>
+  <button class="nav-btn active" onclick="showPage('dashboard')">
+    <span class="nav-icon">⚡</span> Dashboard
+  </button>
+  <button class="nav-btn" onclick="showPage('daily')">
+    <span class="nav-icon">☀️</span> Daily Checklist
+  </button>
 
-// START DATE = tomorrow
-const START=(()=>{const d=new Date();d.setDate(d.getDate()+1);d.setHours(0,0,0,0);return d;})();
-const START_LABEL=START.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  <div class="nav-section">BODY</div>
+  <button class="nav-btn" onclick="showPage('workout')">
+    <span class="nav-icon">💪</span> Workout Plan
+  </button>
+  <button class="nav-btn" onclick="showPage('nutrition')">
+    <span class="nav-icon">🥗</span> Nutrition
+  </button>
 
-function rank(xp){return[...RANKS].reverse().find(r=>xp>=r.m)||RANKS[0];}
-function nextRank(xp){return RANKS.find(r=>xp<r.m)||null;}
-function today(){return new Date().toDateString();}
-function dayNum(){const n=new Date();n.setHours(0,0,0,0);return Math.max(1,Math.floor((n-START)/864e5)+1);}
-function weekNum(){return Math.min(36,Math.ceil(dayNum()/7));}
-function beforeStart(){return new Date()<START;}
+  <div class="nav-section">MIND</div>
+  <button class="nav-btn" onclick="showPage('leetcode')">
+    <span class="nav-icon">💻</span> LeetCode
+  </button>
+  <button class="nav-btn" onclick="showPage('reading')">
+    <span class="nav-icon">📚</span> Reading + Mindset
+  </button>
+  <button class="nav-btn" onclick="showPage('startup')">
+    <span class="nav-icon">🚀</span> Startup Clarity
+  </button>
 
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let S={checked:{},streak:0,lastActive:"",goal:100,dayXP:{}};
-let syncStatus="loading"; // loading | synced | offline | error
+  <div class="nav-section">WEALTH</div>
+  <button class="nav-btn" onclick="showPage('finance')">
+    <span class="nav-icon">💰</span> Finance
+  </button>
 
-async function loadData(){
-  // Try window.storage (Claude artifact cloud storage) first
-  try{
-    if(window.storage){
-      const r=await window.storage.get(KEY);
-      if(r&&r.value){S=JSON.parse(r.value);syncStatus="synced";return;}
-    }
-  }catch(e){}
-  // Fallback: localStorage
-  try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r);}catch{}
-  syncStatus=window.storage?"error":"offline";
-}
+  <div class="nav-section">JOURNEY</div>
+  <button class="nav-btn" onclick="showPage('milestones')">
+    <span class="nav-icon">🏆</span> Milestones
+  </button>
+  <button class="nav-btn" onclick="showPage('rewards')">
+    <span class="nav-icon">🎁</span> Rewards
+  </button>
+  <button class="nav-btn" onclick="showPage('habits')">
+    <span class="nav-icon">📊</span> Habit Tracker
+  </button>
 
-async function persist(){
-  // Always write localStorage immediately (instant, no await)
-  try{localStorage.setItem(KEY,JSON.stringify(S));}catch{}
-  // Then sync to cloud
-  if(!window.storage){syncStatus="offline";badge();return;}
-  try{
-    syncStatus="syncing";badge();
-    await window.storage.set(KEY,JSON.stringify(S));
-    syncStatus="synced";
-  }catch(e){syncStatus="error";}
-  badge();
-}
+  <div class="day-counter">
+    <div class="day-num" id="currentDay">1</div>
+    <div class="day-label">OF 90 DAYS</div>
+    <div class="progress-ring"><div class="progress-ring-fill" id="mainProgress" style="width:1%"></div></div>
+  </div>
+</nav>
 
-function badge(){
-  const el=document.getElementById("sb");
-  if(!el)return;
-  const m={loading:["#555","loading..."],syncing:["#FF8C00","syncing…"],synced:["#00FF88","✓ synced"],offline:["#888","local only"],error:["#FF4444","sync error"]};
-  const[c,t]=m[syncStatus]||m.offline;
-  el.style.color=c;el.textContent=t;
-}
+<!-- MAIN -->
+<main class="main">
 
-function xpTotal(){return ALL.reduce((s,t)=>S.checked[t.id]?s+t.xp:s,0);}
-function xpToday(){return S.dayXP[today()]||0;}
-
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-function ring(pct,color,sz,sw,inner=""){
-  const r=sz/2-sw-2,c=2*Math.PI*r;
-  return`<div class="rw" style="width:${sz}px;height:${sz}px">
-    <svg width="${sz}" height="${sz}" style="transform:rotate(-90deg)">
-      <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#1a2a40" stroke-width="${sw}"/>
-      <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
-        stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(pct,100)/100)}" stroke-linecap="round"
-        style="transition:stroke-dashoffset .6s ease"/>
-    </svg>${inner?`<div class="ri">${inner}</div>`:""}</div>`;
-}
-
-function floatXP(xp,color,x,y){
-  const el=document.createElement("div");
-  el.className="fxp";el.style.cssText=`left:${x}px;top:${y}px;color:${color};text-shadow:0 0 12px ${color}`;
-  el.textContent=`+${xp}`;document.body.appendChild(el);
-  let t0=null;
-  (function a(ts){
-    if(!t0)t0=ts;const t=(ts-t0)/1000;
-    if(t>1.1){el.remove();return;}
-    el.style.top=`${y-t*65}px`;el.style.opacity=1-t/1.1;
-    requestAnimationFrame(a);
-  })(performance.now());
-}
-
-function celebrate(r){
-  const d=document.createElement("div");d.className="cel";
-  d.innerHTML=`<div style="text-align:center;padding:52px 72px;border:2px solid ${r.c};box-shadow:0 0 80px ${r.c};background:#07101a;border-radius:4px">
-    <div style="font-size:72px;margin-bottom:12px">${r.i}</div>
-    <div style="font-size:9px;letter-spacing:6px;color:#666;margin-bottom:8px">RANK UNLOCKED</div>
-    <div style="font-size:28px;font-weight:900;color:${r.c};letter-spacing:3px">${r.t}</div>
-  </div>`;
-  document.body.appendChild(d);setTimeout(()=>d.remove(),3200);
-}
-
-// ── TOGGLE ────────────────────────────────────────────────────────────────────
-async function toggle(id,e){
-  const task=ALL.find(t=>t.id===id);if(!task)return;
-  const rect=e.currentTarget.getBoundingClientRect();
-  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
-  const was=!!S.checked[id], prevR=rank(xpTotal());
-  const tk=today();
-  if(was){delete S.checked[id];S.dayXP[tk]=Math.max(0,(S.dayXP[tk]||0)-task.xp);}
-  else{S.checked[id]=true;S.dayXP[tk]=(S.dayXP[tk]||0)+task.xp;
-    floatXP(task.xp,TC[task.type].c,cx,cy);
-    const nr=rank(xpTotal());
-    if(nr.t!==prevR.t)setTimeout(()=>celebrate(nr),400);
-  }
-  await persist();render();
-}
-
-// ── VIEW STATE ────────────────────────────────────────────────────────────────
-let VIEW="today",AP="p1",AW=null,GP=false;
-
-// ── RENDER VIEWS ──────────────────────────────────────────────────────────────
-function vToday(){
-  const tx=xpToday(),dp=Math.min(100,Math.round(tx/S.goal*100)),gc=dp>=100?"#FFD700":"#00FF88";
-  const fp=PHASES.find(p=>p.weeks.some(w=>w.tasks.some(t=>!S.checked[t.id])));
-  let sugg=[];
-  if(fp){const fw=fp.weeks.find(w=>w.tasks.some(t=>!S.checked[t.id]));
-    if(fw){let s=fw.tasks.filter(t=>!S.checked[t.id]);
-      if(s.length<3){const i=fp.weeks.indexOf(fw);if(i+1<fp.weeks.length)s=[...s,...fp.weeks[i+1].tasks.filter(t=>!S.checked[t.id]).slice(0,2)];}
-      sugg=s.slice(0,5).map(t=>({...t,pc:fp.color}));}}
-  const done=sugg.filter(t=>S.checked[t.id]).length;
-  const pre=beforeStart();
-  return`<div class="fi">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+  <!-- ======================== DASHBOARD ======================== -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
       <div>
-        <div style="font-size:9px;letter-spacing:4px;color:#555;margin-bottom:3px">${pre?"YOUR JOURNEY STARTS":"TODAY'S MISSION"}</div>
-        <div style="font-size:15px;font-weight:900">${new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</div>
-        ${pre?`<div style="font-size:9px;color:#00D4FF;margin-top:3px">🚀 Starts ${START_LABEL}</div>`:`<div style="font-size:9px;color:#555;margin-top:3px">Day ${dayNum()} · Week ${weekNum()} of 36</div>`}
+        <div class="page-title" style="color:var(--accent)">DASHBOARD</div>
+        <div class="page-sub">// YOUR COMMAND CENTER — DAY <span id="dashDay">1</span> OF 90</div>
       </div>
       <div style="text-align:right">
-        <div style="font-size:8px;color:#444;margin-bottom:2px">daily goal</div>
-        <div style="font-size:20px;font-weight:900;color:${gc}">${tx} / ${S.goal} XP</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)" id="todayDate"></div>
+        <div style="font-size:13px;color:var(--accent2);margin-top:4px" id="todayWeekDay"></div>
       </div>
     </div>
-    <div style="height:5px;background:#1a2a40;border-radius:3px;margin-bottom:18px;overflow:hidden">
-      <div class="bar" style="width:${dp}%;background:${dp>=100?"linear-gradient(90deg,#FFD700,#FFA500)":"linear-gradient(90deg,#00FF8860,#00FF88)"};box-shadow:0 0 7px ${gc}"></div>
-    </div>
-    ${dp>=100?`<div style="background:#161c00;border:1px solid #FFD70060;border-radius:4px;padding:13px 18px;margin-bottom:16px;text-align:center">
-      <div style="font-size:18px;margin-bottom:4px">🏅</div>
-      <div style="font-size:12px;color:#FFD700;font-weight:900;letter-spacing:2px">DAILY GOAL MET</div>
-    </div>`:""}
-    ${sugg.length===0?`<div style="text-align:center;padding:60px 20px;color:#555">
-      <div style="font-size:52px;margin-bottom:12px">🏆</div>
-      <div style="font-size:15px;font-weight:900;color:#FFD700">ROADMAP COMPLETE — YOU ARE A BACKEND MASTER</div>
-    </div>`:`
-    <div style="font-size:8px;letter-spacing:3px;color:#444;margin-bottom:10px">NEXT UP — ${done}/${sugg.length} done today</div>
-    <div style="display:flex;flex-direction:column;gap:7px">
-      ${sugg.map(t=>{const dn=!!S.checked[t.id],tc=TC[t.type];return`
-      <div class="row" onclick="toggle('${t.id}',event)" style="background:${dn?tc.c+"07":"#0b1422"};border:1px solid ${dn?tc.c+"50":"#1a2a40"};border-radius:4px;box-shadow:${dn?`0 0 10px ${tc.c}18`:"none"}">
-        <div style="width:21px;height:21px;flex-shrink:0;border:1.5px solid ${dn?tc.c:"#2a3a50"};border-radius:3px;background:${dn?tc.c+"20":"transparent"};display:flex;align-items:center;justify-content:center;box-shadow:${dn?`0 0 8px ${tc.c}45`:"none"};transition:all .2s">
-          ${dn?`<span style="color:${tc.c};font-size:12px;font-weight:900">✓</span>`:""}
-        </div>
-        <div style="flex:1">
-          <div style="font-size:7px;letter-spacing:2px;color:${tc.c};margin-bottom:2px;opacity:${dn?0.4:0.85}">${tc.l} · ${t.wk}</div>
-          <div style="font-size:11px;color:${dn?"#445":"#bdd0e0"};text-decoration:${dn?"line-through":"none"}">${t.label}</div>
-        </div>
-        <div style="font-size:12px;font-weight:900;color:${dn?"#2a3540":tc.c};text-shadow:${dn?"none":`0 0 7px ${tc.c}`};flex-shrink:0">+${t.xp}</div>
-      </div>`}).join("")}
-    </div>
-    <div style="margin-top:12px;font-size:9px;color:#2a3a4a;text-align:center">Check off tasks as you complete them in real life</div>`}
-  </div>`;
-}
 
-function vWeek(){
-  const last7=Array.from({length:7},(_,i)=>{const d=new Date(Date.now()-i*864e5);return{day:DN[d.getDay()],xp:S.dayXP[d.toDateString()]||0,isToday:i===0};}).reverse();
-  const mx=Math.max(...last7.map(d=>d.xp),S.goal,1);
-  const recent=ALL.filter(t=>S.checked[t.id]).slice(-8).reverse();
-  return`<div class="fi">
-    <div style="font-size:9px;letter-spacing:4px;color:#555;margin-bottom:14px">WEEKLY OVERVIEW</div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:22px">
-      ${last7.map(d=>{const met=d.xp>=S.goal,h=Math.round(d.xp/mx*40);return`
-      <div style="background:#0b1422;border:1px solid ${d.isToday?"#00D4FF35":"#1a2a40"};border-radius:4px;padding:8px 5px;text-align:center">
-        <div style="font-size:7px;color:${d.isToday?"#00D4FF":"#444"};letter-spacing:1px;margin-bottom:5px">${d.day}</div>
-        <div style="height:42px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:5px">
-          <div style="width:55%;height:${Math.max(2,h)}px;background:${met?"#FFD700":d.xp>0?"#00FF88":"#111a28"};border-radius:2px 2px 0 0;transition:height .4s"></div>
-        </div>
-        <div style="font-size:10px;font-weight:900;color:${met?"#FFD700":d.xp>0?"#00FF88":"#2a3a4a"}">${d.xp||"—"}</div>
-        ${met?`<div style="font-size:9px;margin-top:2px">🏅</div>`:""}
-      </div>`}).join("")}
-    </div>
-    <div style="font-size:9px;letter-spacing:3px;color:#555;margin-bottom:10px">PHASE PROGRESS</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-bottom:22px">
-      ${PHASES.map(p=>{let e=0,t=0;p.weeks.forEach(w=>w.tasks.forEach(k=>{t+=k.xp;if(S.checked[k.id])e+=k.xp;}));const pct=t?Math.round(e/t*100):0;return`
-      <div onclick="setPhase('${p.id}')" style="background:#0b1422;border:1px solid ${pct>0?p.color+"35":"#1a2a40"};border-radius:4px;padding:13px 15px;cursor:pointer">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-          <div style="font-size:8px;color:${p.color};letter-spacing:2px">${p.label}</div>
-          <div style="font-size:12px;font-weight:900;color:${p.color}">${pct}%</div>
-        </div>
-        <div style="font-size:11px;font-weight:900;margin-bottom:6px">${p.title}</div>
-        <div style="height:3px;background:#1a2a40;border-radius:2px;overflow:hidden">
-          <div class="bar" style="width:${pct}%;background:${p.color}"></div>
-        </div>
-        <div style="font-size:8px;color:#444;margin-top:5px">${e} / ${t} XP</div>
-      </div>`}).join("")}
-    </div>
-    ${recent.length?`<div style="font-size:9px;letter-spacing:3px;color:#555;margin-bottom:8px">RECENTLY COMPLETED</div>
-    <div style="display:flex;flex-direction:column;gap:5px">
-      ${recent.map(t=>{const tc=TC[t.type];return`<div style="display:flex;align-items:center;gap:9px;padding:7px 13px;background:#0b1422;border:1px solid ${tc.c}25;border-radius:3px">
-        <span style="color:${tc.c};font-size:11px">✓</span>
-        <span style="font-size:8px;color:${tc.c};letter-spacing:1px;flex-shrink:0">${tc.l}</span>
-        <span style="font-size:10px;flex:1;color:#7a8a9a">${t.label}</span>
-        <span style="font-size:10px;color:${tc.c};font-weight:900;flex-shrink:0">+${t.xp}</span>
-      </div>`;}).join("")}
-    </div>`:""}
-  </div>`;
-}
-
-function vAll(){
-  const ph=PHASES.find(p=>p.id===AP)||PHASES[0];
-  const sw=ph.weeks.find(w=>w.id===AW)||ph.weeks[0];
-  return`<div class="fi">
-    <div style="display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap">
-      ${PHASES.map(p=>{let e=0,t=0;p.weeks.forEach(w=>w.tasks.forEach(k=>{t+=k.xp;if(S.checked[k.id])e+=k.xp;}));const pct=t?Math.round(e/t*100):0,on=p.id===AP;return`
-      <button class="ptab" onclick="setPhaseTab('${p.id}')" style="color:${on?p.color:"#555"};background:${on?p.color+"10":"#0b1422"};border:1px solid ${on?p.color:"#1a2a40"};box-shadow:${on?`0 0 14px ${p.color}40`:"none"}">
-        <div style="display:flex;justify-content:space-between;font-size:8px;letter-spacing:2px;margin-bottom:3px"><span>${p.label}</span><span style="font-weight:900">${pct}%</span></div>
-        <div style="font-size:11px;font-weight:900">${p.title}</div>
-        <div style="margin-top:5px;height:2px;background:#1a2a40;border-radius:2px;overflow:hidden"><div class="bar" style="width:${pct}%;background:${p.color}"></div></div>
-      </button>`}).join("")}
-    </div>
-    <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">
-      ${ph.weeks.map(w=>{const wd=w.tasks.filter(t=>S.checked[t.id]).length,sel=w.id===sw.id,done=wd===w.tasks.length;return`
-      <button class="wbtn" onclick="setWeek('${w.id}')" style="background:${sel?ph.color+"12":"#0b1422"};border:1px solid ${sel?ph.color:done?ph.color+"35":"#1a2a40"};color:${sel?ph.color:done?"#666":"#444"}">
-        ${done?"✓ ":""}${w.wk}
-      </button>`}).join("")}
-    </div>
-    <div style="background:#090f1a;border:1px solid ${ph.color}25;border-radius:4px;overflow:hidden">
-      <div style="padding:11px 15px;border-bottom:1px solid #1a2a40;display:flex;justify-content:space-between;align-items:center;background:${ph.color}06">
-        <div>
-          <div style="font-size:8px;color:${ph.color};letter-spacing:2px;margin-bottom:2px">${sw.wk}</div>
-          <div style="font-size:14px;font-weight:900">${sw.title}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:9px;color:#555">${sw.tasks.filter(t=>S.checked[t.id]).length}/${sw.tasks.length}</div>
-          <div style="width:70px;height:3px;background:#1a2a40;border-radius:2px;margin-top:3px;overflow:hidden">
-            <div class="bar" style="width:${Math.round(sw.tasks.filter(t=>S.checked[t.id]).length/sw.tasks.length*100)}%;background:${ph.color}"></div>
-          </div>
-        </div>
-      </div>
-      ${sw.tasks.map((t,i)=>{const dn=!!S.checked[t.id],tc=TC[t.type];return`
-      <div class="row" onclick="toggle('${t.id}',event)" style="background:${dn?tc.c+"05":"transparent"};border-bottom:${i<sw.tasks.length-1?"1px solid #0d1624":"none"}">
-        <div style="width:19px;height:19px;flex-shrink:0;border:1.5px solid ${dn?tc.c:"#2a3a50"};border-radius:2px;background:${dn?tc.c+"18":"transparent"};display:flex;align-items:center;justify-content:center;box-shadow:${dn?`0 0 7px ${tc.c}40`:"none"};transition:all .2s">
-          ${dn?`<span style="color:${tc.c};font-size:10px;font-weight:900">✓</span>`:""}
-        </div>
-        <div style="font-size:7px;letter-spacing:1.5px;padding:2px 5px;border:1px solid ${tc.c}40;color:${tc.c};border-radius:2px;flex-shrink:0;opacity:${dn?0.45:0.85}">${tc.l}</div>
-        <div style="flex:1;font-size:10px;color:${dn?"#3a4a5a":"#b8cad8"};text-decoration:${dn?"line-through":"none"}">${t.label}</div>
-        ${t.day?`<div style="font-size:7px;color:#2a3a4a;flex-shrink:0">D${t.day}</div>`:""}
-        <div style="font-size:11px;font-weight:900;color:${dn?"#243040":tc.c};text-shadow:${dn?"none":`0 0 7px ${tc.c}`};flex-shrink:0">+${t.xp}</div>
-      </div>`}).join("")}
-    </div>
-  </div>`;
-}
-
-function step(n,color,title,sub,body){
-  return`<div style="background:#0b1422;border:1px solid ${color}35;border-radius:4px;overflow:hidden;margin-bottom:10px">
-    <div style="background:${color}08;padding:11px 16px;border-bottom:1px solid #1a2a40;display:flex;align-items:center;gap:12px">
-      <div class="step-num" style="background:${color}20;border:1px solid ${color};color:${color}">${n}</div>
-      <div><div style="font-size:8px;letter-spacing:3px;color:${color};margin-bottom:2px">${sub}</div><div style="font-size:14px;font-weight:900">${title}</div></div>
-    </div>
-    <div style="padding:13px 16px;font-size:10px;color:#888;line-height:1.85">${body}</div>
-  </div>`;
-}
-
-function vDeploy(){
-  const pre=beforeStart();
-  return`<div class="fi">
-    <div style="font-size:9px;letter-spacing:4px;color:#555;margin-bottom:6px">DEPLOY & SYNC GUIDE</div>
-
-    <div style="background:#0b1422;border:1px solid #00D4FF35;border-radius:4px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px">
-      <div style="font-size:28px">🗓️</div>
+    <div class="week-banner">
       <div>
-        <div style="font-size:9px;letter-spacing:3px;color:#00D4FF;margin-bottom:3px">YOUR START DATE</div>
-        <div style="font-size:15px;font-weight:900">${START_LABEL}</div>
-        <div style="font-size:9px;color:#555;margin-top:2px">${pre?`Countdown: ${Math.ceil((START-new Date())/864e5)} day(s) — get the roadmap doc ready`:`Day ${dayNum()} of 252 · Week ${weekNum()} of 36`}</div>
+        <div class="big" id="dashWeek">1</div>
+        <div class="small">CURRENT WEEK</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:500;margin-bottom:4px">Week Focus</div>
+        <div style="font-size:13px;color:var(--muted)" id="weekFocus">Arrays + Strings · Push/Pull · Establish Habits · No Cheat Zone</div>
+      </div>
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px">OVERALL PROGRESS</div>
+        <div class="prog-bar" style="width:180px"><div class="prog-fill" id="dashProgress" style="width:1%"></div></div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-top:6px" id="dashPercent">1%</div>
       </div>
     </div>
 
-    <div style="font-size:9px;letter-spacing:3px;color:#00FF88;margin-bottom:10px">── PART 1: DEPLOY THE TRACKER (15 minutes, free) ──</div>
-
-    ${step(1,"#00D4FF","Download this file","STEP ONE",
-      `Click the <strong style="color:#dde8f0">download/share icon</strong> at the top of this panel, or right-click this page and choose <strong style="color:#dde8f0">Save As</strong>.<br>Save it as <code>tracker.html</code> on your desktop.`)}
-
-    ${step(2,"#BF5FFF","Create a GitHub account","STEP TWO — FREE",
-      `Go to <code style="color:#BF5FFF">github.com</code> and sign up for a free account if you don't have one.<br>
-      Your username will be part of your live URL, so pick something clean like your name.`)}
-
-    ${step(3,"#00FF88","Create a new repository","STEP THREE",
-      `1. Click the <strong style="color:#dde8f0">+</strong> icon in the top-right corner of GitHub<br>
-      2. Click <strong style="color:#dde8f0">New repository</strong><br>
-      3. Name it <code style="color:#00FF88">backend-tracker</code><br>
-      4. Set it to <strong style="color:#dde8f0">Public</strong> (required for free GitHub Pages hosting)<br>
-      5. Click <strong style="color:#dde8f0">Create repository</strong>`)}
-
-    ${step(4,"#FF8C00","Upload your file","STEP FOUR",
-      `1. On the new repo page, click <strong style="color:#dde8f0">uploading an existing file</strong> (there's a small link that says this)<br>
-      2. Drag your <code style="color:#FF8C00">tracker.html</code> file into the upload box<br>
-      3. Scroll down and click <strong style="color:#dde8f0">Commit changes</strong> (the green button)<br>
-      4. Your file is now on GitHub`)}
-
-    ${step(5,"#FFD700","Enable GitHub Pages — go live","STEP FIVE",
-      `1. In your repository, click <strong style="color:#dde8f0">Settings</strong> (the gear tab at the top)<br>
-      2. In the left sidebar, click <strong style="color:#dde8f0">Pages</strong><br>
-      3. Under <strong style="color:#dde8f0">Source</strong>, select <strong style="color:#dde8f0">Deploy from a branch</strong><br>
-      4. Branch dropdown: select <strong style="color:#dde8f0">main</strong> — Folder: <strong style="color:#dde8f0">/ (root)</strong><br>
-      5. Click <strong style="color:#dde8f0">Save</strong><br>
-      6. Wait about 60 seconds, then visit:<br>
-      <code style="color:#FFD700;display:inline-block;margin-top:6px;font-size:11px">https://YOURUSERNAME.github.io/backend-tracker</code><br>
-      <span style="color:#FFD700;font-size:9px">✓ This URL works on your phone, laptop, tablet — any device, any browser</span>`)}
-
-    <div style="font-size:9px;letter-spacing:3px;color:#FF8C00;margin:16px 0 10px">── PART 2: CROSS-DEVICE SYNC (build this in Month 3) ──</div>
-
-    <div style="background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:13px 16px;margin-bottom:10px">
-      <div style="font-size:9px;color:#888;line-height:1.85;margin-bottom:12px">
-        Right now, your progress saves in your browser's <strong style="color:#dde8f0">localStorage</strong>. That means if you open the tracker on your phone, it starts fresh — it doesn't know what you checked on your laptop.<br><br>
-        To fix this, you need a <strong style="color:#dde8f0">backend API + database</strong>. The tracker already has the storage calls written — you just need to point it at your own server. <strong style="color:#FF8C00">This is your Month 3 project.</strong> You'll build it using every skill from Phase 3.
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-cell">
+        <div class="stat-val" style="color:var(--accent2)" id="statsChecked">0</div>
+        <div class="stat-label">TODAY DONE</div>
       </div>
-      <div style="font-size:8px;letter-spacing:2px;color:#FF8C00;margin-bottom:10px">WHAT YOU BUILD</div>
-      ${[
-        ["Node.js + Express","Your REST API — handles all the tracker data requests"],
-        ["PostgreSQL","One table: user_id, task_id, checked_at, day_xp. Runs on AWS RDS."],
-        ["JWT Auth","Login with email + password, get a token. Exactly what Project 5 teaches."],
-        ["4 endpoints","POST /login · GET /progress · POST /progress/:id · DELETE /progress/:id"],
-        ["AWS EC2","Your API runs on a t2.micro (free tier). You SSH in and deploy it yourself."],
-        ["Frontend update","In this HTML file, replace the localStorage calls with fetch() to your API URL."],
-      ].map(([k,v])=>`<div style="display:flex;gap:10px;margin-bottom:7px;align-items:flex-start">
-        <div style="font-size:8px;color:#FF8C00;flex-shrink:0;min-width:110px;letter-spacing:1px;padding-top:1px">${k}</div>
-        <div style="font-size:9px;color:#5a6a7a;line-height:1.6">${v}</div>
-      </div>`).join("")}
-      <div style="background:#1a1200;border:1px solid #FF8C0030;border-radius:3px;padding:9px 12px;margin-top:10px">
-        <div style="font-size:8px;color:#FF8C00;letter-spacing:2px;margin-bottom:3px">WHY THIS IS THE BEST LEARNING PROJECT</div>
-        <div style="font-size:9px;color:#666;line-height:1.75">You are motivated because you use this tracker every single day. You will debug real bugs. You will be annoyed when it breaks. When you finally open it on your phone after lunch and see the task you checked this morning already ticked — you will feel what it means to build a real system. That feeling is worth more than any tutorial.</div>
+      <div class="stat-cell">
+        <div class="stat-val" style="color:var(--accent3)" id="statsTotal">14</div>
+        <div class="stat-label">TOTAL TASKS</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-val" id="statsLeet">4</div>
+        <div class="stat-label">LC SOLVED</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-val" style="color:var(--accent4)" id="statsStreak">0</div>
+        <div class="stat-label">DAY STREAK</div>
       </div>
     </div>
 
-    <div style="background:#0b1422;border:1px solid #1a2a40;border-radius:4px;padding:12px 16px">
-      <div style="font-size:8px;letter-spacing:3px;color:#555;margin-bottom:4px">FASTEST OPTION IF YOU JUST WANT IT LIVE NOW</div>
-      <div style="font-size:13px;font-weight:900;margin-bottom:6px">Netlify Drop — 30 seconds, no account needed</div>
-      <div style="font-size:10px;color:#666;line-height:1.85">
-        Go to <code style="color:#00D4FF">netlify.com/drop</code> in your browser.<br>
-        Drag and drop your <code>tracker.html</code> file directly onto the page.<br>
-        Netlify gives you a random live URL instantly — no login, no config, no terminal.<br>
-        Progress still saves locally, but you can share the URL and open it on any browser you're already signed in to.
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">📅 TODAY'S SCHEDULE</div>
+        <div id="todaySchedule"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚡ QUICK CHECKLIST</div>
+        <div id="quickChecks"></div>
+        <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">COMPLETION</div>
+          <div style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace" id="completionPct">0%</div>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="checkProg" style="width:0%"></div></div>
       </div>
     </div>
-  </div>`;
+
+    <div class="card">
+      <div class="card-title">🔥 90-DAY TRANSFORMATION TIMELINE</div>
+      <div style="display:flex;gap:0;flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px">
+        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
+          <div class="timeline-dot" style="background:rgba(232,255,71,0.15);color:var(--accent)">1</div>
+          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
+          <div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace">WEEK 1-2</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">DOMS · Strength jumps · Habits forming</div>
+        </div>
+        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
+          <div class="timeline-dot" style="background:rgba(71,255,184,0.15);color:var(--accent2)">2</div>
+          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
+          <div style="font-size:11px;color:var(--accent2);font-family:'DM Mono',monospace">WEEK 3-4</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Waist shrinks · Chest/arms firm · Energy up</div>
+        </div>
+        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
+          <div class="timeline-dot" style="background:rgba(255,107,53,0.15);color:var(--accent3)">3</div>
+          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
+          <div style="font-size:11px;color:var(--accent3);font-family:'DM Mono',monospace">MONTH 2</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Muscle shape · Looser clothes · LC patterns click</div>
+        </div>
+        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
+          <div class="timeline-dot" style="background:rgba(184,71,255,0.15);color:var(--accent4)">4</div>
+          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
+          <div style="font-size:11px;color:var(--accent4);font-family:'DM Mono',monospace">MONTH 3</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">People notice · Body fat lower · Startup clarity</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg,rgba(255,107,53,0.06),rgba(255,71,87,0.04));border-color:rgba(255,107,53,0.3)">
+      <div class="card-title" style="color:var(--accent3)">⚠️ HARD TRUTH — READ DAILY</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="font-size:13px;padding:10px 14px;background:rgba(255,71,87,0.07);border-radius:8px">Miss workouts → <strong style="color:var(--red)">results slow</strong></div>
+        <div style="font-size:13px;padding:10px 14px;background:rgba(255,71,87,0.07);border-radius:8px">Skip protein → <strong style="color:var(--red)">muscle won't show</strong></div>
+        <div style="font-size:13px;padding:10px 14px;background:rgba(255,71,87,0.07);border-radius:8px">Overtrain → <strong style="color:var(--red)">burnout</strong></div>
+        <div style="font-size:13px;padding:10px 14px;background:rgba(46,213,115,0.07);border-radius:8px">Consistency > <strong style="color:var(--green)">perfection</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== DAILY CHECKLIST ======================== -->
+  <div class="page" id="page-daily">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent2)">DAILY CHECKLIST</div>
+        <div class="page-sub">// 14 NON-NEGOTIABLES · EVERY. SINGLE. DAY.</div>
+      </div>
+      <button class="btn btn-ghost" onclick="resetDay()">↺ Reset Day</button>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-title">🧠 MIND</div>
+          <div id="checks-mind"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💪 BODY</div>
+          <div id="checks-body"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">🥗 NUTRITION</div>
+          <div id="checks-nutrition"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📚 GROWTH</div>
+          <div id="checks-growth"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg,rgba(71,255,184,0.05),rgba(232,255,71,0.03))">
+      <div class="card-title" style="color:var(--accent2)">📝 DAILY JOURNAL</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">WIN OF THE DAY</div>
+          <textarea style="height:80px;resize:none" placeholder="What did you do well today?"></textarea>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">TOMORROW I WILL</div>
+          <textarea style="height:80px;resize:none" placeholder="One specific intention for tomorrow..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">GRATEFUL FOR</div>
+          <textarea style="height:60px;resize:none" placeholder="3 things you're grateful for..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">ENERGY LEVEL (1-10)</div>
+          <input type="number" min="1" max="10" placeholder="7" style="width:80px">
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:10px;margin-bottom:6px;letter-spacing:1px">MOOD (1-10)</div>
+          <input type="number" min="1" max="10" placeholder="8" style="width:80px">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== WORKOUT ======================== -->
+  <div class="page" id="page-workout">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent3)">WORKOUT PLAN</div>
+        <div class="page-sub">// PROJECT 30 · PUSH · PULL · LEGS · CONDITIONING</div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-cell"><div class="stat-val" style="color:#47abff">D1</div><div class="stat-label">PUSH</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--green)">D2</div><div class="stat-label">PULL</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--muted)">D3</div><div class="stat-label">REST/WALK</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent3)">D4</div><div class="stat-label">LEGS+CORE</div></div>
+    </div>
+
+    <div class="card" style="border-left:4px solid #47abff">
+      <div class="card-title" style="color:#47abff">🟦 DAY 1 — PUSH (Chest · Shoulders · Triceps)</div>
+      <table class="wtable">
+        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Form Cue</th></tr>
+        <tr><td>Machine Chest Press</td><td>3</td><td>12</td><td>20–30 kg</td><td>Back flat, chest up</td></tr>
+        <tr><td>Incline DB Press</td><td>3</td><td>10</td><td>7.5–10 kg</td><td>Bench ~30°, slow</td></tr>
+        <tr><td>Shoulder Press (Machine/DB)</td><td>3</td><td>10</td><td>10–15 kg</td><td>Core tight</td></tr>
+        <tr><td>Lateral Raise</td><td>3</td><td>15</td><td>4–6 kg</td><td>Lift to shoulder</td></tr>
+        <tr><td>Tricep Pushdown</td><td>3</td><td>12</td><td>15–20 kg</td><td>Elbows fixed</td></tr>
+        <tr><td>Push-ups</td><td>2</td><td>8–12</td><td>Bodyweight</td><td>Straight body</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--green)">
+      <div class="card-title" style="color:var(--green)">🟩 DAY 2 — PULL (Back · Biceps)</div>
+      <table class="wtable">
+        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Form Cue</th></tr>
+        <tr><td>Lat Pulldown</td><td>3</td><td>12</td><td>25–35 kg</td><td>Pull to chest</td></tr>
+        <tr><td>Seated Cable Row</td><td>3</td><td>12</td><td>20–30 kg</td><td>Squeeze back</td></tr>
+        <tr><td>One-arm DB Row</td><td>3</td><td>10</td><td>10–12.5 kg</td><td>Flat back</td></tr>
+        <tr><td>Face Pull</td><td>3</td><td>15</td><td>10–15 kg</td><td>Elbows high</td></tr>
+        <tr><td>DB Curl</td><td>3</td><td>12</td><td>6–8 kg</td><td>Slow reps</td></tr>
+        <tr><td>Hammer Curl</td><td>2</td><td>12</td><td>6–8 kg</td><td>Neutral grip</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--accent3)">
+      <div class="card-title" style="color:var(--accent3)">🟥 DAY 4 — LEGS + CORE</div>
+      <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">LEGS</div>
+      <table class="wtable" style="margin-bottom:18px">
+        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Form Cue</th></tr>
+        <tr><td>Goblet Squat</td><td>4</td><td>10</td><td>10–15 kg</td><td>Knees out</td></tr>
+        <tr><td>Leg Press</td><td>3</td><td>12</td><td>60–80 kg</td><td>Full depth</td></tr>
+        <tr><td>Hip Thrust</td><td>3</td><td>12</td><td>20–30 kg</td><td>Squeeze glutes</td></tr>
+        <tr><td>Seated/Lying Leg Curl</td><td>3</td><td>12</td><td>20–30 kg</td><td>Slow control</td></tr>
+        <tr><td>Walking Lunges</td><td>3</td><td>12/leg</td><td>Bodyweight</td><td>Upright torso</td></tr>
+        <tr><td>Standing Calf Raise</td><td>4</td><td>15</td><td>BW / +20 kg</td><td>Full stretch</td></tr>
+      </table>
+      <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">CORE</div>
+      <table class="wtable">
+        <tr><th>Exercise</th><th>Sets</th><th>Reps/Time</th></tr>
+        <tr><td>Plank</td><td>3</td><td>40–60 sec</td></tr>
+        <tr><td>Lying Leg Raises</td><td>3</td><td>12</td></tr>
+        <tr><td>Cable / Machine Crunch</td><td>3</td><td>15</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--orange)">
+      <div class="card-title" style="color:var(--orange)">🟨 DAY 5 — CONDITIONING + ABS</div>
+      <table class="wtable">
+        <tr><th>Exercise</th><th>Duration/Reps</th></tr>
+        <tr><td>Incline Walk / Cycling</td><td>20 min</td></tr>
+        <tr><td>Rowing / Battle Rope</td><td>8–10 min</td></tr>
+        <tr><td>Russian Twists</td><td>3×20</td></tr>
+        <tr><td>Leg Raises</td><td>3×12</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="background:rgba(232,255,71,0.05);border-color:rgba(232,255,71,0.3)">
+      <div class="card-title">📈 PROGRESSION RULE — DO NOT IGNORE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)">+2.5kg</div>
+          <div style="font-size:12px;color:var(--muted)">OR add each week</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent2)">+2 REPS</div>
+          <div style="font-size:12px;color:var(--muted)">Never BOTH together</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange)">48HRS</div>
+          <div style="font-size:12px;color:var(--muted)">Sore? Keep same weight</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== NUTRITION ======================== -->
+  <div class="page" id="page-nutrition">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent2)">NUTRITION</div>
+        <div class="page-sub">// 1500 KCAL · 120-130G PROTEIN · 90-DAY CUT</div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-cell"><div class="stat-val">1500</div><div class="stat-label">KCAL TARGET</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent2)">125g</div><div class="stat-label">PROTEIN TARGET</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--green)">32g</div><div class="stat-label">FIBER MIN</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent3)">3L</div><div class="stat-label">WATER TARGET</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 DAILY MACROS</div>
+      <div class="macro-row">
+        <div class="macro-label"><span>Protein (120–130g)</span><span>~55g from shakes + 70g food</span></div>
+        <div class="macro-bar"><div class="macro-fill" style="width:85%;background:linear-gradient(90deg,var(--accent2),var(--accent))"></div></div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-label"><span>Calories (~1500 kcal)</span><span>Target</span></div>
+        <div class="macro-bar"><div class="macro-fill" style="width:100%;background:linear-gradient(90deg,var(--accent),var(--orange))"></div></div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-label"><span>Fiber (28–35g)</span><span>From thorans + legumes</span></div>
+        <div class="macro-bar"><div class="macro-fill" style="width:75%;background:linear-gradient(90deg,var(--green),var(--accent2))"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🥤 PROTEIN SHAKES (DAILY — NON-NEGOTIABLE)</div>
+      <table class="wtable">
+        <tr><th>When</th><th>What</th><th>Qty</th><th>Calories</th><th>Protein</th></tr>
+        <tr class="highlight"><td>Morning</td><td>Whey + skim milk</td><td>1 scoop + 200ml</td><td>~190 kcal</td><td>30–32g</td></tr>
+        <tr class="highlight"><td>Post-workout</td><td>Whey + water</td><td>1 scoop</td><td>~120 kcal</td><td>24–25g</td></tr>
+        <tr style="font-weight:600"><td>TOTAL</td><td></td><td></td><td>~310 kcal</td><td>55–57g</td></tr>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🍳 BREAKFAST</div>
+        <table class="wtable">
+          <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
+          <tr><td>Whole egg</td><td>1</td><td>~70</td><td>6g</td></tr>
+          <tr><td>Egg whites</td><td>2</td><td>~34</td><td>7g</td></tr>
+          <tr><td>Spinach thoran</td><td>70–80g</td><td>~35</td><td>2–3g</td></tr>
+        </table>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px;font-family:'DM Mono',monospace">Oil ≤ ½ tsp · Coconut ≤ ½–1 tsp</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🌙 DINNER</div>
+        <table class="wtable">
+          <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
+          <tr><td>Chicken (grilled/boiled)</td><td>150–180g</td><td>240–300</td><td>35–40g</td></tr>
+          <tr><td>Mixed vegetables</td><td>Free</td><td>~50</td><td>3–4g</td></tr>
+          <tr><td>Pumpkin seeds</td><td>10g</td><td>~55</td><td>3g</td></tr>
+        </table>
+        <div style="font-size:11px;color:var(--red);margin-top:10px;font-family:'DM Mono',monospace">❌ No rice · ❌ No roti</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🍚 LUNCH — PROTEIN ROTATION</div>
+      <table class="wtable">
+        <tr><th>Protein</th><th>Qty</th><th>Cal</th><th>Protein</th><th>Frequency</th></tr>
+        <tr><td>Chicken / Fish</td><td>150g</td><td>240–260</td><td>32–35g</td><td style="color:var(--green)">Most days</td></tr>
+        <tr><td>Paneer</td><td>100g</td><td>~260</td><td>18–20g</td><td style="color:var(--orange)">2–3× / week</td></tr>
+        <tr><td>Eggs (1 whole + 2 whites)</td><td></td><td>~105</td><td>~13g</td><td style="color:var(--muted)">Rare / backup</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🥗 THORAN / LEGUME COMBOS — PICK ONE PER DAY</div>
+      <table class="wtable">
+        <tr><th>Combo</th><th>Portions</th><th>Cal</th><th>Protein</th><th>Fiber</th><th>Best For</th></tr>
+        <tr><td>Beetroot + Horse gram</td><td>80g + 70g</td><td>130–150</td><td>8–10g</td><td>10–12g</td><td>Iron, fat loss</td></tr>
+        <tr><td>Spinach + Horse gram</td><td>80g + 70g</td><td>120–140</td><td>9–11g</td><td>11–13g</td><td>Micronutrients</td></tr>
+        <tr><td>Beetroot + Payar</td><td>80g + 80g</td><td>140–160</td><td>9–11g</td><td>9–11g</td><td>Easier digestion</td></tr>
+        <tr><td>Spinach + Payar</td><td>80g + 80g</td><td>130–150</td><td>9–10g</td><td>10–12g</td><td>Gut health</td></tr>
+      </table>
+      <div style="font-size:11px;color:var(--muted);margin-top:10px;font-family:'DM Mono',monospace">Oil + coconut ≤ 1 tsp combined · Soak legumes 8-10hrs · Add lemon for iron absorption</div>
+    </div>
+
+    <div class="card" style="background:rgba(232,255,71,0.04);border-color:rgba(232,255,71,0.2)">
+      <div class="card-title">⚠️ NON-NEGOTIABLE RULES</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">Measure oil, coconut, seeds <div style="font-size:11px;color:var(--muted);margin-top:3px">Biggest hidden calorie source</div></div>
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">Protein every meal <div style="font-size:11px;color:var(--muted);margin-top:3px">Muscle preservation on cut</div></div>
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">Chicken > paneer frequency <div style="font-size:11px;color:var(--muted);margin-top:3px">Lower fat, better cut</div></div>
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">No weekend cheats (first 30 days) <div style="font-size:11px;color:var(--muted);margin-top:3px">Hormones + discipline lock-in</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== LEETCODE ======================== -->
+  <div class="page" id="page-leetcode">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--orange)">LEETCODE</div>
+        <div class="page-sub">// 45 PROBLEMS · 3 WEEKS · 10 PAGES/DAY READING</div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-cell"><div class="stat-val" style="color:var(--green)">4</div><div class="stat-label">SOLVED</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--orange)">41</div><div class="stat-label">REMAINING</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent)">45</div><div class="stat-label">TOTAL</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent4)">8.9%</div><div class="stat-label">COMPLETE</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 3-WEEK STUDY PLAN</div>
+      <div class="grid-3">
+        <div style="background:var(--surface2);border-radius:10px;padding:16px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent);letter-spacing:2px;margin-bottom:10px">WEEK 1</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Days 1-3: Arrays #1–8</div>
+          <div style="font-size:12px;color:var(--muted)">Days 4-7: Strings #1–8</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent2);letter-spacing:2px;margin-bottom:10px">WEEK 2</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Days 1-2: Arrays #9–15</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Days 3-4: Strings #9–15</div>
+          <div style="font-size:12px;color:var(--muted)">Days 5-7: Hash Tables #1–10</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent3);letter-spacing:2px;margin-bottom:10px">WEEK 3</div>
+          <div style="font-size:12px;color:var(--muted)">Days 1-5: Hash Tables #11–15 + Review tough ones</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔢 ARRAYS (15 Problems)</div>
+      <table class="wtable" id="lcArrayTable"></table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📝 STRINGS (15 Problems)</div>
+      <table class="wtable" id="lcStringTable"></table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗂️ HASH TABLES / HASH MAPS (15 Problems)</div>
+      <table class="wtable" id="lcHashTable"></table>
+    </div>
+  </div>
+
+  <!-- ======================== READING + MINDSET ======================== -->
+  <div class="page" id="page-reading">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent4)">READING + MINDSET</div>
+        <div class="page-sub">// 10 PAGES/DAY · MEDITATION · COLD SHOWERS · MINDSET REWIRE</div>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent4)">900</div><div class="stat-label">PAGES IN 90 DAYS</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent2)">10</div><div class="stat-label">PAGES/DAY MIN</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent)">5</div><div class="stat-label">BOOKS TARGET</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📚 READING LIST — 90 DAY STACK</div>
+      <div class="book-item">
+        <div class="book-num">1</div>
+        <div>
+          <div class="book-title">Atomic Habits — James Clear</div>
+          <div class="book-why">Your foundation. Systems > goals. Understand how habits are built and broken.</div>
+        </div>
+        <span class="badge badge-done" style="margin-left:auto">START HERE</span>
+      </div>
+      <div class="book-item">
+        <div class="book-num">2</div>
+        <div>
+          <div class="book-title">Deep Work — Cal Newport</div>
+          <div class="book-why">LeetCode, coding, and startup thinking all require deep focus. This rewires your attention.</div>
+        </div>
+      </div>
+      <div class="book-item">
+        <div class="book-num">3</div>
+        <div>
+          <div class="book-title">The Lean Startup — Eric Ries</div>
+          <div class="book-why">Build, measure, learn. Core startup thinking for your future projects.</div>
+        </div>
+      </div>
+      <div class="book-item">
+        <div class="book-num">4</div>
+        <div>
+          <div class="book-title">Can't Hurt Me — David Goggins</div>
+          <div class="book-why">Mental toughness during hard training days. Callus your mind when it wants to quit.</div>
+        </div>
+      </div>
+      <div class="book-item">
+        <div class="book-num">5</div>
+        <div>
+          <div class="book-title">Zero to One — Peter Thiel</div>
+          <div class="book-why">Startup clarity and original thinking. What does the world need that doesn't exist yet?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🧘 MEDITATION PRACTICE</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">10 minutes every morning before your phone. Non-negotiable. Use an app (Headspace, Waking Up, or just a timer). This is the single highest-ROI habit for mental clarity, personality, and startup thinking.</div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px">
+          <div style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:8px">WEEK 1-2</div>
+          <div style="font-size:13px;color:var(--muted)">5 min body scan → notice your thoughts without acting on them</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;margin-top:8px">
+          <div style="font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace;margin-bottom:8px">WEEK 3+</div>
+          <div style="font-size:13px;color:var(--muted)">10 min breath focus → use for problem solving clarity on hard LC problems</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🚿 COLD SHOWERS</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">Builds mental toughness. Boosts dopamine +250% (sustained, not spike). Improves skin. Pairs perfectly with workout recovery.</div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px">
+          <div style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:8px">PROTOCOL</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">Day 1-7: End warm shower with 30sec cold<br>Day 8-21: 1 full minute cold<br>Day 22+: Full cold shower (3–5 min)</div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace">THE RULE: Get in before you can talk yourself out of it.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧠 SCREEN TIME RULES</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.2);border-radius:10px;padding:16px">
+          <div style="font-size:12px;color:var(--red);font-family:'DM Mono',monospace;margin-bottom:8px">❌ BANNED</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">Phone first 30 min after waking<br>Phone in bed<br>Mindless scroll after 10pm<br>Reels/TikTok > 15 min/day<br>News doom scrolling</div>
+        </div>
+        <div style="background:rgba(46,213,115,0.06);border:1px solid rgba(46,213,115,0.2);border-radius:10px;padding:16px">
+          <div style="font-size:12px;color:var(--green);font-family:'DM Mono',monospace;margin-bottom:8px">✅ ALLOWED</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">LeetCode, coding, learning<br>Podcast while walking/cooking<br>YouTube — educational only<br>Reading (physical or e-reader)<br>Finance tracking</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px 16px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--muted)">
+        <strong style="color:var(--accent)">Target:</strong> Screen time under 3hrs/day (excluding productive work). Track in phone settings weekly.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💬 PERSONALITY + SOCIAL DEVELOPMENT</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="background:var(--surface2);border-radius:10px;padding:14px">
+          <div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:6px">CONVERSATION</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Ask questions you genuinely want answered. Listen more than you speak. Pause before responding. Never interrupt.</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:14px">
+          <div style="font-size:11px;color:var(--accent2);font-family:'DM Mono',monospace;margin-bottom:6px">POSTURE + PRESENCE</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Stand tall. Shoulders back. Eye contact. Slow deliberate movements. Your body changes how others see you — and how you see yourself.</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:14px">
+          <div style="font-size:11px;color:var(--accent3);font-family:'DM Mono',monospace;margin-bottom:6px">DISCIPLINE = ATTRACTIVENESS</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Show up on time. Do what you said you'd do. Have opinions. Be consistent. People are drawn to those who master themselves.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== STARTUP CLARITY ======================== -->
+  <div class="page" id="page-startup">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent)">STARTUP CLARITY</div>
+        <div class="page-sub">// THINK LIKE A FOUNDER · BUILD SKILLS · FIND THE PROBLEM</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg,rgba(232,255,71,0.06),rgba(71,255,184,0.04));border-color:rgba(232,255,71,0.25)">
+      <div class="card-title">🎯 THE BIG QUESTION</div>
+      <div style="font-size:16px;line-height:1.8;color:var(--muted);margin-bottom:16px">
+        You don't need to know <em style="color:var(--text)">what</em> to build yet. You need to build the person who can build anything.
+        That's what the next 90 days are for.
+      </div>
+      <div style="font-size:13px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:1px">YOUR 90-DAY BUILDER MISSION:</div>
+      <div style="margin-top:10px;font-size:14px;color:var(--text);line-height:1.8">
+        → Master DSA fundamentals (LeetCode plan)<br>
+        → Build backend skills (your existing tracker)<br>
+        → Read startup books (Lean Startup, Zero to One)<br>
+        → Observe problems in daily life — write them down<br>
+        → Talk to 3+ people per week about their frustrations
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🔬 PROBLEM JOURNAL</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Every day, notice one frustrating thing in your life or people around you. These are startup ideas waiting to exist.</div>
+        <textarea style="height:120px;resize:none" placeholder="Day 1: Problem I noticed today...&#10;&#10;Who has this problem?&#10;How do they solve it now?&#10;How could it be 10x better?"></textarea>
+        <button class="btn btn-primary" style="margin-top:10px;width:100%">Save Problem</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🛠️ FOUNDER SKILL STACK</div>
+        <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:10px">Track what you're building</div>
+        <div id="founderSkills"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧭 90-DAY FOUNDER ROADMAP</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;border-top:3px solid var(--accent)">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:10px">MONTH 1 — FOUNDATION</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.8">✓ Lock in all habits<br>✓ Arrays + Strings in LC<br>✓ Read Atomic Habits<br>✓ Journal daily problems<br>✓ 10 pages/day reading</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;border-top:3px solid var(--accent2)">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent2);margin-bottom:10px">MONTH 2 — BUILD</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.8">✓ Hash Tables + more LC<br>✓ Read Deep Work + Lean Startup<br>✓ Pick ONE problem to explore<br>✓ Talk to potential users<br>✓ Prototype in your head / paper</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;border-top:3px solid var(--accent3)">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent3);margin-bottom:10px">MONTH 3 — CLARITY</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.8">✓ Read Zero to One<br>✓ Have a clear problem statement<br>✓ Know your target user<br>✓ Backend skill + LC strong<br>✓ Body transformed → confidence high</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== FINANCE ======================== -->
+  <div class="page" id="page-finance">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--green)">FINANCE</div>
+        <div class="page-sub">// TRACK · SAVE · INVEST · BUILD FINANCIAL DISCIPLINE</div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-cell"><div class="stat-val" style="color:var(--green)" id="finIncome">—</div><div class="stat-label">INCOME</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--red)" id="finSpend">—</div><div class="stat-label">SPENT</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent)" id="finSaved">—</div><div class="stat-label">SAVED</div></div>
+      <div class="stat-cell"><div class="stat-val" style="color:var(--accent2)" id="finPct">—</div><div class="stat-label">SAVE %</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">💰 MONTHLY BUDGET SETUP</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px">MONTHLY INCOME (₹)</div>
+          <input type="number" id="inputIncome" placeholder="e.g. 30000" oninput="calcFinance()">
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px">MONTHLY SPEND (₹)</div>
+          <input type="number" id="inputSpend" placeholder="e.g. 18000" oninput="calcFinance()">
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px">SAVINGS GOAL (%)</div>
+          <input type="number" id="inputGoalPct" placeholder="e.g. 30" oninput="calcFinance()">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📊 SPEND CATEGORIES</div>
+        <div class="fin-row"><span class="label">Food / Nutrition</span><span class="amount">Necessary</span></div>
+        <div class="fin-row"><span class="label">Gym membership</span><span class="amount">Necessary</span></div>
+        <div class="fin-row"><span class="label">Transport</span><span class="amount neutral">Track</span></div>
+        <div class="fin-row"><span class="label">Entertainment / eating out</span><span class="amount bad">Cut 80%</span></div>
+        <div class="fin-row"><span class="label">Alcohol / smoking</span><span class="amount bad">ZERO</span></div>
+        <div class="fin-row"><span class="label">Impulse shopping</span><span class="amount bad">48hr rule</span></div>
+        <div class="fin-row"><span class="label">Books / courses</span><span class="amount">Invest</span></div>
+        <div class="fin-row"><span class="label">Emergency fund</span><span class="amount">3 months</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📏 THE 50/30/20 ADAPTED FOR YOUR PHASE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div style="background:rgba(46,213,115,0.08);border:1px solid rgba(46,213,115,0.2);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--green)">50%</div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:6px">NEEDS</div>
+          <div style="font-size:12px;color:var(--muted)">Rent, food, gym, transport, phone</div>
+        </div>
+        <div style="background:rgba(232,255,71,0.06);border:1px solid rgba(232,255,71,0.2);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent)">30%</div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:6px">SAVE + INVEST</div>
+          <div style="font-size:12px;color:var(--muted)">Emergency fund first, then SIP/index fund</div>
+        </div>
+        <div style="background:rgba(184,71,255,0.06);border:1px solid rgba(184,71,255,0.2);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent4)">20%</div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:6px">GROWTH</div>
+          <div style="font-size:12px;color:var(--muted)">Books, courses, rewards, skills</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 THE 48-HOUR RULE</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.8">Before any non-essential purchase: <strong style="color:var(--text)">wait 48 hours.</strong> If you still want it and it fits your budget, buy it. 90% of impulse wants disappear. This one rule alone can save you thousands per year.</div>
+    </div>
+  </div>
+
+  <!-- ======================== MILESTONES ======================== -->
+  <div class="page" id="page-milestones">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent3)">MILESTONES</div>
+        <div class="page-sub">// YOUR ACHIEVEMENT MAP — 90 DAYS TO A NEW YOU</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗺️ TRANSFORMATION MILESTONES</div>
+      <div id="milestoneList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📸 BODY CHECK-IN SCHEDULE</div>
+      <table class="wtable">
+        <tr><th>Checkpoint</th><th>Day</th><th>What to Track</th><th>Status</th></tr>
+        <tr><td>Starting point</td><td>Day 1</td><td>Weight, measurements, 1 photo</td><td><span class="badge badge-done">NOW</span></td></tr>
+        <tr><td>Check-in 1</td><td>Day 14</td><td>Weight, energy, habit streak</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
+        <tr><td>Check-in 2</td><td>Day 30</td><td>Weight, measurements, photo</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
+        <tr><td>Mid-point</td><td>Day 45</td><td>Full assessment + reward</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
+        <tr><td>Check-in 3</td><td>Day 60</td><td>Weight, measurements, photo</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
+        <tr><td>FINISH LINE</td><td>Day 90</td><td>Full transformation comparison</td><td><span class="badge" style="background:rgba(232,255,71,0.1);color:var(--accent)">Goal</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ======================== REWARDS ======================== -->
+  <div class="page" id="page-rewards">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent)">REWARDS</div>
+        <div class="page-sub">// BUDGET-FRIENDLY · MILESTONE-LOCKED · YOU EARNED IT</div>
+      </div>
+    </div>
+
+    <div style="background:rgba(232,255,71,0.05);border:1px solid rgba(232,255,71,0.15);border-radius:12px;padding:18px 24px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.7">
+      <strong style="color:var(--accent)">The Rule:</strong> Rewards are locked until the milestone is achieved. No shortcuts. Each reward is chosen to <em style="color:var(--text)">reinforce your identity</em> — you're not celebrating by going back to old habits. You're leveling up as a new person.
+    </div>
+
+    <div class="grid-3" id="rewardGrid"></div>
+  </div>
+
+  <!-- ======================== HABIT TRACKER ======================== -->
+  <div class="page" id="page-habits">
+    <div class="page-header">
+      <div>
+        <div class="page-title" style="color:var(--accent2)">HABIT TRACKER</div>
+        <div class="page-sub">// 90 DAYS · EVERY DOT IS A DECISION</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">Click each day to mark it complete. The visual momentum of filling this grid is one of the most powerful psychological tools you have. Don't break the chain.</div>
+
+    <div id="habitTrackerGrid"></div>
+  </div>
+
+</main>
+
+<script>
+// ===== STATE =====
+let dayNumber = 1;
+let checks = {};
+let lcStatus = {};
+
+// Day counter from localStorage-like memory
+function init() {
+  const today = new Date();
+  document.getElementById('todayDate').textContent = today.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('todayWeekDay').textContent = today.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+
+  updateDayDisplay();
+  buildChecks();
+  buildLeetcode();
+  buildMilestones();
+  buildRewards();
+  buildHabitTracker();
+  buildStartupSkills();
+  buildDashboard();
 }
 
-// ── MAIN RENDER ───────────────────────────────────────────────────────────────
-function render(){
-  const xp=xpTotal(),r=rank(xp),nr=nextRank(xp);
-  const op=Math.round(xp/TOTAL*100);
-  const tx=xpToday(),dp=Math.min(100,Math.round(tx/S.goal*100)),gc=dp>=100?"#FFD700":"#00FF88";
-  const last7=Array.from({length:7},(_,i)=>{const d=new Date(Date.now()-i*864e5);return{day:DN[d.getDay()],xp:S.dayXP[d.toDateString()]||0,isToday:i===0};}).reverse();
-  const mx=Math.max(...last7.map(d=>d.xp),S.goal,1);
-  const content=VIEW==="today"?vToday():VIEW==="week"?vWeek():VIEW==="all"?vAll():vDeploy();
+function updateDayDisplay() {
+  document.getElementById('currentDay').textContent = dayNumber;
+  document.getElementById('dashDay').textContent = dayNumber;
+  const pct = Math.round((dayNumber/90)*100);
+  document.getElementById('mainProgress').style.width = pct + '%';
+  document.getElementById('dashProgress').style.width = pct + '%';
+  document.getElementById('dashPercent').textContent = pct + '%';
+  const week = Math.ceil(dayNumber/7);
+  document.getElementById('dashWeek').textContent = week;
+}
 
-  const gpHtml=GP?`<div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);background:#0d1828;border:1px solid #1a3060;border-radius:4px;padding:10px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.8);margin-top:4px;min-width:175px">
-    ${GOALS.map(g=>`<div onclick="setGoal(${g.x})" style="padding:7px 10px;cursor:pointer;color:${S.goal===g.x?g.x===50?"#00D4FF":g.x===100?"#00FF88":"#FF8C00":"#666"};border-left:${S.goal===g.x?"2px solid currentColor":"2px solid transparent"};margin-bottom:2px">
-      <span style="font-weight:900;font-size:11px">${g.l}</span><span style="font-size:9px;color:#555;margin-left:6px">${g.d} · ${g.x} XP</span>
-    </div>`).join("")}
-  </div>`:"";
+// ===== NAV =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(id === 'dashboard') buildDashboard();
+}
 
-  document.getElementById("app").innerHTML=`
-    <!-- HUD -->
-    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:stretch">
+// ===== CHECKS DATA =====
+const checkData = {
+  mind: [
+    {id:'meditation', label:'Morning Meditation', sub:'10 min before phone — no excuses'},
+    {id:'journal', label:'Daily Journal Entry', sub:'Wins, tomorrow, gratitude'},
+    {id:'noScroll', label:'No mindless scrolling', sub:'Reels/TikTok < 15 min'},
+    {id:'reading', label:'10 pages read', sub:'Atomic Habits → Deep Work → Lean Startup'},
+    {id:'coldShower', label:'Cold Shower', sub:'Build mental toughness daily'},
+  ],
+  body: [
+    {id:'workout', label:'Workout completed', sub:'Push / Pull / Legs / Conditioning'},
+    {id:'steps', label:'8,000–10,000 steps', sub:'Walk if no workout day'},
+    {id:'sleep', label:'7–8 hrs sleep', sub:'Phone out of room, 10pm wind down'},
+    {id:'noSmoke', label:'No smoking', sub:'Zero. Non-negotiable.'},
+    {id:'noAlcohol', label:'Alcohol minimal / none', sub:'First 30 days: ZERO'},
+  ],
+  nutrition: [
+    {id:'protein', label:'120–130g protein hit', sub:'Shake + food sources'},
+    {id:'water', label:'2.5–3L water', sub:'Track with bottle marks'},
+    {id:'veggies', label:'Vegetables eaten', sub:'Thoran + dinner veggies'},
+    {id:'noCheat', label:'No off-plan eating', sub:'Meal prepped and controlled'},
+  ],
+  growth: [
+    {id:'leetcode', label:'LeetCode problem done', sub:'1 per day minimum'},
+    {id:'finance', label:'Finance tracked', sub:'Log any spending today'},
+    {id:'problem', label:'Noticed 1 real-world problem', sub:'Startup thinking habit'},
+    {id:'posture', label:'Posture check', sub:'Shoulders back, stand tall all day'},
+    {id:'screens', label:'Screen time < 3hrs', sub:'Check phone settings tonight'},
+  ]
+};
 
-      <!-- Rank -->
-      <div class="card" style="flex:1 1 185px;border-color:${r.c}35;box-shadow:0 0 20px ${r.c}15">
-        <div style="font-size:8px;letter-spacing:4px;color:#555;margin-bottom:5px">RANK</div>
-        <div style="display:flex;align-items:center;gap:9px">
-          <span style="font-size:26px">${r.i}</span>
+function buildChecks() {
+  ['mind','body','nutrition','growth'].forEach(cat => {
+    const el = document.getElementById('checks-' + cat);
+    if(!el) return;
+    el.innerHTML = '';
+    checkData[cat].forEach(item => {
+      el.innerHTML += `
+        <div class="check-item ${checks[item.id] ? 'done' : ''}" onclick="toggleCheck('${item.id}', this)">
+          <div class="check-box">${checks[item.id] ? '✓' : ''}</div>
           <div>
-            <div style="font-size:13px;font-weight:900;color:${r.c}">${r.t}</div>
-            <div style="font-size:19px;font-weight:900">${xp.toLocaleString()}<span style="font-size:9px;color:#555;margin-left:4px">XP</span></div>
+            <div class="check-label">${item.label}</div>
+            <div class="check-sub">${item.sub}</div>
           </div>
-        </div>
-        ${nr?`<div style="margin-top:8px">
-          <div style="display:flex;justify-content:space-between;font-size:8px;color:#444;margin-bottom:3px">
-            <span>→ ${nr.i} ${nr.t}</span><span>${(nr.m-xp).toLocaleString()} XP</span>
-          </div>
-          <div style="height:3px;background:#1a2a40;border-radius:2px;overflow:hidden">
-            <div class="bar" style="width:${Math.min(100,Math.round(xp/nr.m*100))}%;background:${r.c}"></div>
-          </div>
-        </div>`:""}
-      </div>
-
-      <!-- Daily ring -->
-      <div class="card" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative">
-        <div style="font-size:8px;letter-spacing:3px;color:#555">TODAY</div>
-        ${ring(dp,gc,70,5,`<div style="text-align:center"><div style="font-size:13px;font-weight:900;color:${gc}">${tx}</div><div style="font-size:7px;color:#444">/${S.goal}</div></div>`)}
-        <div style="font-size:8px;color:${dp>=100?"#FFD700":"#555"};letter-spacing:1px">${dp>=100?"🏅 DONE!":"XP TODAY"}</div>
-        <button onclick="toggleGP()" style="font-size:7px;letter-spacing:2px;color:#444;background:none;border:1px solid #1a2240;padding:2px 7px;border-radius:2px;cursor:pointer;font-family:inherit">SET GOAL</button>
-        ${gpHtml}
-      </div>
-
-      <!-- 7-day bars -->
-      <div class="card" style="flex:1 1 195px">
-        <div style="font-size:8px;letter-spacing:3px;color:#555;margin-bottom:10px">LAST 7 DAYS</div>
-        <div style="display:flex;align-items:flex-end;gap:4px;height:62px">
-          ${last7.map(d=>{const h=Math.round(d.xp/mx*46),met=d.xp>=S.goal;return`
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-            <div style="font-size:7px;color:${d.xp>0?(met?"#FFD700":"#00FF88"):"#222"};min-height:12px;text-align:center">${d.xp||""}</div>
-            <div style="width:100%;height:46px;display:flex;align-items:flex-end">
-              <div style="width:100%;height:${Math.max(2,h)}px;background:${d.isToday?(met?"#FFD700":"#00FF88"):d.xp>0?(met?"#8a7000":"#0e5030"):"#0f1828"};border-radius:2px 2px 0 0;transition:height .4s"></div>
-            </div>
-            <div style="font-size:7px;color:${d.isToday?"#00D4FF":"#3a4a5a"}">${d.day}</div>
-          </div>`}).join("")}
-        </div>
-      </div>
-
-      <!-- Streak -->
-      <div class="card" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:72px;border-color:#2a1800">
-        <div style="font-size:28px">🔥</div>
-        <div style="font-size:24px;font-weight:900;color:#FF8C00">${S.streak}</div>
-        <div style="font-size:8px;letter-spacing:2px;color:#555">DAYS</div>
-      </div>
-
-      <!-- Overall -->
-      <div class="card" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
-        ${ring(op,r.c,62,5,`<span style="font-size:11px;font-weight:900;color:${r.c}">${op}%</span>`)}
-        <div style="font-size:8px;letter-spacing:2px;color:#555">OVERALL</div>
-      </div>
-    </div>
-
-    <!-- NAV -->
-    <div style="display:flex;gap:5px;margin-bottom:18px;border-bottom:1px solid #1a2a40;padding-bottom:12px;flex-wrap:wrap">
-      ${[["today","📅 TODAY"],["week","📆 THIS WEEK"],["all","🗂️ ALL PHASES"],["deploy","🌐 DEPLOY"]]
-        .map(([v,l])=>`<button class="nav-btn ${VIEW===v?"on":""}" onclick="setView('${v}')">${l}</button>`).join("")}
-    </div>
-
-    <!-- CONTENT -->
-    <div>${content}</div>
-
-    <!-- FOOTER -->
-    <div style="margin-top:24px;padding-top:14px;border-top:1px solid #1a2a40;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        ${Object.entries(TC).map(([k,v])=>`<div style="display:flex;align-items:center;gap:4px;font-size:8px;color:#3a4a5a">
-          <div style="width:5px;height:5px;border-radius:50%;background:${v.c}"></div>${v.l}
-        </div>`).join("")}
-        <span id="sb" style="font-size:8px;letter-spacing:2px;margin-left:6px;color:#555">loading...</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="font-size:9px;color:#2a3a40">${Object.keys(S.checked).length}/${ALL.length} tasks · starts ${START_LABEL}</div>
-        <button onclick="doReset()" style="background:transparent;border:1px solid #1a1414;color:#2a1616;padding:3px 10px;border-radius:2px;cursor:pointer;font-size:7px;letter-spacing:2px;font-family:inherit">RESET</button>
-      </div>
-    </div>`;
-  badge();
+        </div>`;
+    });
+  });
+  updateCheckStats();
 }
 
-// ── ACTIONS ───────────────────────────────────────────────────────────────────
-function setView(v){VIEW=v;GP=false;render();}
-function setPhase(id){AP=id;AW=null;VIEW="all";render();}
-function setPhaseTab(id){AP=id;AW=null;render();}
-function setWeek(id){AW=id;render();}
-function toggleGP(){GP=!GP;render();}
-async function setGoal(x){S.goal=x;GP=false;await persist();render();}
-async function doReset(){if(confirm("Reset ALL progress? Cannot be undone.")){S={checked:{},streak:0,lastActive:"",goal:100,dayXP:{}};await persist();render();}}
+function toggleCheck(id, el) {
+  checks[id] = !checks[id];
+  el.classList.toggle('done');
+  el.querySelector('.check-box').textContent = checks[id] ? '✓' : '';
+  el.querySelector('.check-label').style.textDecoration = checks[id] ? 'line-through' : '';
+  updateCheckStats();
+  buildQuickChecks();
+}
 
-// ── BOOT ──────────────────────────────────────────────────────────────────────
-(async()=>{
-  await loadData();
-  // Streak check
-  const td=today();
-  if(S.lastActive!==td){
-    const yest=new Date(Date.now()-864e5).toDateString();
-    S.streak=S.lastActive===yest?S.streak+1:S.lastActive?1:S.streak;
-    S.lastActive=td;
-    await persist();
+function updateCheckStats() {
+  const total = Object.keys(checkData).reduce((a, c) => a + checkData[c].length, 0);
+  const done = Object.values(checks).filter(Boolean).length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('statsChecked').textContent = done;
+  document.getElementById('statsTotal').textContent = total;
+  const p = document.getElementById('completionPct');
+  const b = document.getElementById('checkProg');
+  if(p) p.textContent = pct + '%';
+  if(b) b.style.width = pct + '%';
+}
+
+function buildQuickChecks() {
+  const el = document.getElementById('quickChecks');
+  if(!el) return;
+  const allItems = Object.values(checkData).flat().slice(0,6);
+  el.innerHTML = allItems.map(item => `
+    <div class="check-item ${checks[item.id] ? 'done' : ''}" onclick="toggleCheck('${item.id}', this)" style="padding:8px 12px">
+      <div class="check-box">${checks[item.id] ? '✓' : ''}</div>
+      <div class="check-label" style="font-size:13px;${checks[item.id] ? 'text-decoration:line-through;' : ''}">${item.label}</div>
+    </div>`).join('');
+}
+
+function resetDay() {
+  checks = {};
+  buildChecks();
+}
+
+// ===== DASHBOARD =====
+function buildDashboard() {
+  const schedules = {
+    0: [{t:'Legs + Core', c:'#ff6b35'},{t:'Conditioning + Abs', c:'#ffa502'},{t:'Rest / Optional Walk', c:'#6b6b80'}],
+    1: [{t:'Push Day', c:'#47abff'},{t:'Workout', c:'#47abff'}],
+    2: [{t:'Pull Day', c:'#2ed573'},{t:'Workout', c:'#2ed573'}],
+    3: [{t:'Rest / Walk', c:'#6b6b80'}],
+    4: [{t:'Legs + Core', c:'#ff6b35'}],
+    5: [{t:'Conditioning + Abs', c:'#ffa502'}],
+    6: [{t:'Optional Walk / Mobility', c:'#6b6b80'}],
+  };
+  const dow = new Date().getDay();
+  const el = document.getElementById('todaySchedule');
+  if(el) {
+    const items = [
+      {time:'6:00 AM', task:'Wake up → Meditation → Cold shower', color: 'var(--accent)'},
+      {time:'6:30 AM', task:'Morning whey + breakfast', color: 'var(--accent2)'},
+      {time:'7:00 AM', task:'Workout / Walk', color: 'var(--accent3)'},
+      {time:'9:00 AM', task:'LeetCode problem (1 minimum)', color: 'var(--orange)'},
+      {time:'12:00 PM', task:'Lunch — protein + thoran combo', color: 'var(--green)'},
+      {time:'4:00 PM', task:'10 pages reading', color: 'var(--accent4)'},
+      {time:'5:00 PM', task:'Evening fruit + walk', color: 'var(--green)'},
+      {time:'7:00 PM', task:'Post-workout whey + dinner prep', color: 'var(--accent2)'},
+      {time:'9:00 PM', task:'Journal + finance log + plan tomorrow', color: 'var(--accent)'},
+      {time:'10:00 PM', task:'Phone off / reading only / sleep', color: 'var(--muted)'},
+    ];
+    el.innerHTML = items.map(i => `
+      <div style="display:flex;gap:12px;padding:7px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:${i.color};width:60px;flex-shrink:0;padding-top:2px">${i.time}</div>
+        <div style="font-size:12px;color:var(--muted)">${i.task}</div>
+      </div>`).join('');
   }
-  render();
-})();
+  buildQuickChecks();
+}
+
+// ===== LEETCODE =====
+const lcArrays = [
+  {num:'#1', name:'Two Sum', diff:'easy', status:'done'},
+  {num:'#121', name:'Best Time to Buy and Sell Stock', diff:'easy', status:'done'},
+  {num:'#217', name:'Contains Duplicate', diff:'easy', status:'done'},
+  {num:'#238', name:'Product of Array Except Self', diff:'medium', status:'hints'},
+  {num:'#53', name:'Maximum Subarray', diff:'medium', status:''},
+  {num:'#88', name:'Merge Sorted Array', diff:'easy', status:''},
+  {num:'#26', name:'Remove Duplicates from Sorted Array', diff:'easy', status:''},
+  {num:'#66', name:'Plus One', diff:'easy', status:''},
+  {num:'#283', name:'Move Zeroes', diff:'easy', status:''},
+  {num:'#724', name:'Find Pivot Index', diff:'easy', status:''},
+  {num:'#169', name:'Majority Element', diff:'easy', status:''},
+  {num:'#189', name:'Rotate Array', diff:'medium', status:''},
+  {num:'#136', name:'Single Number', diff:'easy', status:''},
+  {num:'#350', name:'Intersection of Two Arrays II', diff:'easy', status:''},
+  {num:'#118', name:"Pascal's Triangle", diff:'easy', status:''},
+];
+
+const lcStrings = [
+  {num:'#242', name:'Valid Anagram', diff:'easy', status:''},
+  {num:'#125', name:'Valid Palindrome', diff:'easy', status:''},
+  {num:'#344', name:'Reverse String', diff:'easy', status:''},
+  {num:'#387', name:'First Unique Character in a String', diff:'easy', status:''},
+  {num:'#14', name:'Longest Common Prefix', diff:'easy', status:''},
+  {num:'#20', name:'Valid Parentheses', diff:'easy', status:''},
+  {num:'#28', name:'Implement strStr()', diff:'easy', status:''},
+  {num:'#58', name:'Length of Last Word', diff:'easy', status:''},
+  {num:'#3', name:'Longest Substring Without Repeating Characters', diff:'medium', status:''},
+  {num:'#8', name:'String to Integer (atoi)', diff:'medium', status:''},
+  {num:'#151', name:'Reverse Words in a String', diff:'medium', status:''},
+  {num:'#49', name:'Group Anagrams', diff:'medium', status:''},
+  {num:'#5', name:'Longest Palindromic Substring', diff:'medium', status:''},
+  {num:'#205', name:'Isomorphic Strings', diff:'easy', status:''},
+  {num:'#13', name:'Roman to Integer', diff:'easy', status:''},
+];
+
+const lcHash = [
+  {num:'#1', name:'Two Sum (hash map approach)', diff:'easy', status:''},
+  {num:'#49', name:'Group Anagrams (hash map approach)', diff:'medium', status:''},
+  {num:'#217', name:'Contains Duplicate', diff:'easy', status:''},
+  {num:'#242', name:'Valid Anagram', diff:'easy', status:''},
+  {num:'#771', name:'Jewels and Stones', diff:'easy', status:''},
+  {num:'#383', name:'Ransom Note', diff:'easy', status:''},
+  {num:'#205', name:'Isomorphic Strings', diff:'easy', status:''},
+  {num:'#290', name:'Word Pattern', diff:'easy', status:''},
+  {num:'#202', name:'Happy Number', diff:'easy', status:''},
+  {num:'#219', name:'Contains Duplicate II', diff:'easy', status:''},
+  {num:'#349', name:'Intersection of Two Arrays', diff:'easy', status:''},
+  {num:'#36', name:'Valid Sudoku', diff:'medium', status:''},
+  {num:'#347', name:'Top K Frequent Elements', diff:'medium', status:''},
+  {num:'#560', name:'Subarray Sum Equals K', diff:'medium', status:''},
+  {num:'#128', name:'Longest Consecutive Sequence', diff:'medium', status:''},
+];
+
+function buildLCTable(tableId, data) {
+  const el = document.getElementById(tableId);
+  if(!el) return;
+  el.innerHTML = `<tr><th>#</th><th>Problem</th><th>Difficulty</th><th>Status</th><th>Action</th></tr>`;
+  data.forEach((p, i) => {
+    const key = tableId + i;
+    const done = lcStatus[key] || p.status === 'done';
+    const hints = p.status === 'hints';
+    el.innerHTML += `
+      <tr>
+        <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${p.num}</td>
+        <td style="${done ? 'text-decoration:line-through;color:var(--muted)' : ''}">${p.name}</td>
+        <td><span class="badge badge-${p.diff}">${p.diff}</span></td>
+        <td>${done ? '<span class="badge badge-done">DONE</span>' : hints ? '<span class="badge badge-hints">DONE (hints)</span>' : '<span style="color:var(--muted);font-size:11px;font-family:\'DM Mono\',monospace">pending</span>'}</td>
+        <td><button class="btn btn-ghost" style="padding:4px 12px;font-size:11px" onclick="toggleLC('${key}', this, ${i})">
+          ${done ? '↺ Undo' : '✓ Done'}
+        </button></td>
+      </tr>`;
+  });
+}
+
+function toggleLC(key, btn, i) {
+  lcStatus[key] = !lcStatus[key];
+  const total = Object.values(lcStatus).filter(Boolean).length + 4; // 4 already done
+  document.getElementById('statsLeet').textContent = total;
+  buildLeetcode();
+}
+
+function buildLeetcode() {
+  buildLCTable('lcArrayTable', lcArrays);
+  buildLCTable('lcStringTable', lcStrings);
+  buildLCTable('lcHashTable', lcHash);
+}
+
+// ===== MILESTONES =====
+const milestones = [
+  {day:7, icon:'🌱', title:'First Week Survived', body:'7 straight days of workouts, checklist, and cold showers. DOMS is real — so is your toughness.', color:'var(--accent)'},
+  {day:14, icon:'💥', title:'2 Weeks — Strength Visible', body:'Weight on your exercises is climbing. Morning routine feels automatic. Sleep quality improved.', color:'var(--accent2)'},
+  {day:21, icon:'🧠', title:'21-Day Habit Lock', body:'Science says 21 days to start a habit. You\'ve done it. LeetCode patterns starting to click. Waist reducing.', color:'var(--accent3)'},
+  {day:30, icon:'🏋️', title:'Month 1 Complete', body:'Chest, arms feeling firmer. Protein-first eating is now instinct. No weekend cheats unlocks Month 2 freedom.', color:'var(--accent4)'},
+  {day:45, icon:'⚡', title:'Halfway — Unstoppable', body:'Mid-point check. 8kg+ fat loss possible. Clothes visibly looser. LeetCode arrays + strings done. Founder thinking active.', color:'var(--orange)'},
+  {day:60, icon:'🔥', title:'Month 2 Done — People Notice', body:'Friends asking what you\'re doing. Body fat clearly lower. Backend + LC stack solid. Problem journal has ideas.', color:'var(--green)'},
+  {day:75, icon:'🚀', title:'75 Days — Almost There', body:'Visible muscle shape. Confidence changed how you walk into rooms. Startup problem identified and validated.', color:'#47abff'},
+  {day:90, icon:'👑', title:'DAY 90 — TRANSFORMED', body:'Lean, athletic, disciplined, brilliant. You did what 95% of people only talk about. This is who you are now.', color:'var(--accent)'},
+];
+
+function buildMilestones() {
+  const el = document.getElementById('milestoneList');
+  if(!el) return;
+  el.innerHTML = milestones.map(m => `
+    <div class="timeline-item" style="padding:16px 0;border-bottom:1px solid var(--border);${dayNumber >= m.day ? 'opacity:1' : 'opacity:0.5'}">
+      <div class="timeline-dot" style="background:${dayNumber >= m.day ? m.color.replace('var(','rgba(').replace(')',',0.2)') : 'var(--surface2)'};color:${m.color};font-size:18px;width:44px;height:44px">${m.icon}</div>
+      <div class="timeline-content">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div class="timeline-title">${m.title}</div>
+          <span class="badge" style="background:rgba(107,107,128,0.15);color:var(--muted)">Day ${m.day}</span>
+          ${dayNumber >= m.day ? '<span class="badge badge-done">✓ ACHIEVED</span>' : ''}
+        </div>
+        <div class="timeline-text">${m.body}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== REWARDS =====
+const rewards = [
+  {milestone:'Day 7', icon:'🎧', title:'New Playlist / Spotify Premium', desc:'Build your ultimate workout and focus playlist. Music is fuel.', cost:'₹119/month or free trial'},
+  {milestone:'Day 21', icon:'📖', title:'Buy Your Next Book', desc:'Reward consistent reading with the next book from your stack. Knowledge compounds.', cost:'₹300–600'},
+  {milestone:'Day 30', icon:'👕', title:'One New Gym Outfit', desc:'You\'ve earned one quality piece. Feel the part you\'re becoming. No splurge — one item.', cost:'₹800–1500'},
+  {milestone:'Day 45', icon:'🍱', title:'One Cheat Meal (Not Day)', desc:'One planned, enjoyed meal at a place you love. Then back to the plan. Guilt-free.', cost:'₹200–500'},
+  {milestone:'Day 60', icon:'📸', title:'Professional Photo Shoot', desc:'Document your transformation. Before/after. Confidence captured. Motivation to continue.', cost:'₹500–1500 or phone + good light'},
+  {milestone:'Day 75', icon:'🎮', title:'One Entertainment Day', desc:'Movie, game, hang out with friends guilt-free. You\'ve built the discipline to bounce back.', cost:'₹200–800'},
+  {milestone:'Day 90', icon:'👟', title:'New Shoes or Gear', desc:'You ran the race. New shoes for the next one. Quality item that lasts and reminds you of this achievement.', cost:'₹2000–4000'},
+  {milestone:'Day 90+', icon:'🚀', title:'Invest in a Course/Skill', desc:'DSA course, backend bootcamp, or startup resource. Your most valuable asset is your skills.', cost:'₹1000–5000'},
+];
+
+function buildRewards() {
+  const el = document.getElementById('rewardGrid');
+  if(!el) return;
+  el.innerHTML = rewards.map(r => `
+    <div class="reward-card">
+      <div class="reward-milestone">${r.milestone}</div>
+      <div class="reward-icon">${r.icon}</div>
+      <div class="reward-title">${r.title}</div>
+      <div class="reward-desc">${r.desc}</div>
+      <div class="reward-cost">${r.cost}</div>
+    </div>`).join('');
+}
+
+// ===== HABIT TRACKER =====
+let habitDots = {};
+
+function buildHabitTracker() {
+  const el = document.getElementById('habitTrackerGrid');
+  if(!el) return;
+  const habits = [
+    {id:'h_workout', name:'Workout', color:'var(--accent3)'},
+    {id:'h_meditation', name:'Meditation', color:'var(--accent4)'},
+    {id:'h_coldshower', name:'Cold Shower', color:'#47abff'},
+    {id:'h_protein', name:'Protein Goal', color:'var(--accent2)'},
+    {id:'h_reading', name:'10 Pages', color:'var(--accent)'},
+    {id:'h_leetcode', name:'LeetCode', color:'var(--orange)'},
+    {id:'h_steps', name:'10k Steps', color:'var(--green)'},
+    {id:'h_journal', name:'Journaling', color:'var(--accent4)'},
+    {id:'h_noscroll', name:'No Scroll', color:'var(--red)'},
+    {id:'h_sleep', name:'8hr Sleep', color:'var(--accent2)'},
+  ];
+
+  el.innerHTML = habits.map(h => {
+    const dots = Array.from({length:90}, (_,i) => {
+      const key = h.id + '_' + i;
+      const filled = habitDots[key];
+      return `<div class="habit-dot ${filled ? 'filled' : 'empty'}" onclick="toggleHabit('${key}', this)" title="Day ${i+1}">
+        <div class="tooltip">Day ${i+1}</div>
+      </div>`;
+    }).join('');
+    const count = Array.from({length:90},(_,i)=>habitDots[h.id+'_'+i]).filter(Boolean).length;
+    return `
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="font-weight:500;font-size:14px">${h.name}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:${h.color}">${count}/90</div>
+        </div>
+        <div class="habit-grid">${dots}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleHabit(key, el) {
+  habitDots[key] = !habitDots[key];
+  el.classList.toggle('filled');
+  el.classList.toggle('empty');
+  // update count
+  buildHabitTracker();
+}
+
+// ===== FINANCE =====
+function calcFinance() {
+  const income = parseFloat(document.getElementById('inputIncome').value) || 0;
+  const spend = parseFloat(document.getElementById('inputSpend').value) || 0;
+  const saved = income - spend;
+  const pct = income > 0 ? Math.round((saved/income)*100) : 0;
+  document.getElementById('finIncome').textContent = income > 0 ? '₹' + income.toLocaleString('en-IN') : '—';
+  document.getElementById('finSpend').textContent = spend > 0 ? '₹' + spend.toLocaleString('en-IN') : '—';
+  document.getElementById('finSaved').textContent = saved > 0 ? '₹' + saved.toLocaleString('en-IN') : '—';
+  document.getElementById('finPct').textContent = pct > 0 ? pct + '%' : '—';
+}
+
+// ===== STARTUP SKILLS =====
+function buildStartupSkills() {
+  const el = document.getElementById('founderSkills');
+  if(!el) return;
+  const skills = [
+    {name:'DSA / LeetCode', pct:9, color:'var(--orange)'},
+    {name:'Backend Development', pct:30, color:'var(--accent2)'},
+    {name:'System Design', pct:5, color:'var(--accent)'},
+    {name:'Product Thinking', pct:10, color:'var(--accent3)'},
+    {name:'Communication', pct:40, color:'var(--accent4)'},
+    {name:'Financial Literacy', pct:15, color:'var(--green)'},
+  ];
+  el.innerHTML = skills.map(s => `
+    <div class="macro-row">
+      <div class="macro-label"><span>${s.name}</span><span>${s.pct}%</span></div>
+      <div class="macro-bar"><div class="macro-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
+    </div>`).join('');
+}
+
+// ===== DAY CONTROLS =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Add day controls to sidebar
+  const dc = document.querySelector('.day-counter');
+  const ctrl = document.createElement('div');
+  ctrl.style = 'display:flex;gap:6px;margin-top:10px';
+  ctrl.innerHTML = `
+    <button class="btn btn-ghost" style="flex:1;padding:6px;font-size:11px" onclick="dayNumber=Math.max(1,dayNumber-1);updateDayDisplay();buildMilestones()">◀</button>
+    <button class="btn btn-primary" style="flex:1;padding:6px;font-size:11px" onclick="dayNumber=Math.min(90,dayNumber+1);updateDayDisplay();buildMilestones()">▶</button>`;
+  dc.appendChild(ctrl);
+});
+
+init();
 </script>
 </body>
 </html>
