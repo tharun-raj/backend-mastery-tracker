@@ -3,1641 +3,878 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJECT 90 — Total Transformation</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<title>PROJECT 90</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --border: #2a2a3a;
-    --accent: #e8ff47;
-    --accent2: #47ffb8;
-    --accent3: #ff6b35;
-    --accent4: #b847ff;
-    --text: #e8e8f0;
-    --muted: #6b6b80;
-    --red: #ff4757;
-    --green: #2ed573;
-    --orange: #ffa502;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* NOISE TEXTURE */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  /* SIDEBAR NAV */
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 220px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 28px 0;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    padding: 0 20px 28px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .logo span { color: var(--muted); font-size: 11px; display: block; letter-spacing: 2px; font-family: 'DM Mono', monospace; margin-top: 3px; }
-
-  .nav-section {
-    padding: 18px 12px 6px;
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    text-transform: uppercase;
-  }
-
-  .nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 20px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--muted);
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    transition: all 0.2s;
-    border-left: 3px solid transparent;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 400;
-    border-radius: 0 6px 6px 0;
-    margin: 1px 0;
-  }
-
-  .nav-btn:hover { color: var(--text); background: var(--surface2); }
-  .nav-btn.active { color: var(--accent); border-left-color: var(--accent); background: rgba(232,255,71,0.06); font-weight: 500; }
-
-  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
-
-  .day-counter {
-    margin-top: auto;
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-  }
-
-  .day-counter .day-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    line-height: 1;
-    color: var(--accent);
-  }
-
-  .day-counter .day-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 2px; margin-top: 2px; }
-
-  .progress-ring { margin-top: 10px; width: 100%; height: 4px; background: var(--border); border-radius: 2px; }
-  .progress-ring-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.5s ease; }
-
-  /* MAIN CONTENT */
-  .main {
-    margin-left: 220px;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1;
-  }
-
-  .page { display: none; padding: 40px 40px 80px; }
-  .page.active { display: block; }
-
-  /* PAGE HEADER */
-  .page-header {
-    margin-bottom: 36px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-
-  .page-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
-  .page-sub { font-size: 13px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 6px; letter-spacing: 1px; }
-
-  /* CARDS */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-
-  .card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 2px;
-    color: var(--accent);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-
-  /* CHECKLIST ITEMS */
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-    margin-bottom: 6px;
-    user-select: none;
-  }
-
-  .check-item:hover { background: var(--surface2); border-color: var(--border); }
-  .check-item.done { opacity: 0.5; }
-  .check-item.done .check-label { text-decoration: line-through; color: var(--muted); }
-
-  .check-box {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-    font-size: 11px;
-  }
-
-  .check-item.done .check-box { background: var(--accent); border-color: var(--accent); color: #000; }
-  .check-label { font-size: 14px; }
-  .check-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: 'DM Mono', monospace; }
-
-  /* STATS CELLS */
-  .stat-cell {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 16px;
-    text-align: center;
-  }
-
-  .stat-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; margin-top: 4px; }
-
-  /* WORKOUT TABLE */
-  .wtable { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .wtable th { text-align: left; padding: 8px 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 400; text-transform: uppercase; }
-  .wtable td { padding: 11px 12px; border-bottom: 1px solid rgba(42,42,58,0.5); }
-  .wtable tr:last-child td { border-bottom: none; }
-  .wtable tr:hover td { background: var(--surface2); }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 1px;
-  }
-
-  .badge-easy { background: rgba(46,213,115,0.15); color: var(--green); }
-  .badge-medium { background: rgba(255,165,2,0.15); color: var(--orange); }
-  .badge-done { background: rgba(232,255,71,0.15); color: var(--accent); }
-  .badge-hints { background: rgba(184,71,255,0.15); color: var(--accent4); }
-  .badge-push { background: rgba(71,171,255,0.15); color: #47abff; }
-  .badge-pull { background: rgba(46,213,115,0.15); color: var(--green); }
-  .badge-legs { background: rgba(255,107,53,0.15); color: var(--accent3); }
-  .badge-cond { background: rgba(255,165,2,0.15); color: var(--orange); }
-
-  /* MACRO BARS */
-  .macro-row { margin-bottom: 14px; }
-  .macro-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
-  .macro-label span:first-child { color: var(--text); }
-  .macro-label span:last-child { color: var(--muted); font-family: 'DM Mono', monospace; }
-  .macro-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .macro-fill { height: 100%; border-radius: 3px; }
-
-  /* TIMELINE */
-  .timeline-item {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  .timeline-dot {
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    margin-top: 2px;
-  }
-
-  .timeline-content { flex: 1; }
-  .timeline-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-  .timeline-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-  /* REWARD CARDS */
-  .reward-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.3s;
-    cursor: default;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .reward-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-  }
-
-  .reward-card:nth-child(1)::before { background: var(--accent); }
-  .reward-card:nth-child(2)::before { background: var(--accent2); }
-  .reward-card:nth-child(3)::before { background: var(--accent3); }
-  .reward-card:nth-child(4)::before { background: var(--accent4); }
-  .reward-card:nth-child(5)::before { background: var(--green); }
-  .reward-card:nth-child(6)::before { background: #47abff; }
-
-  .reward-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .reward-icon { font-size: 28px; margin-bottom: 8px; }
-  .reward-milestone { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 2px; margin-bottom: 6px; }
-  .reward-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-  .reward-desc { font-size: 12px; color: var(--muted); }
-  .reward-cost { margin-top: 8px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent2); }
-
-  /* FINANCE TABLE */
-  .fin-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    border-radius: 8px;
-    margin-bottom: 6px;
-    background: var(--surface2);
-    font-size: 13px;
-  }
-
-  .fin-row .label { color: var(--text); }
-  .fin-row .amount { font-family: 'DM Mono', monospace; color: var(--accent); }
-  .fin-row .amount.bad { color: var(--red); }
-  .fin-row .amount.neutral { color: var(--orange); }
-
-  /* INPUT FIELDS */
-  .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-  input[type="text"], input[type="number"], textarea, select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 10px 14px;
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-
-  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-
-  .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:hover { background: #d4eb00; }
-  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* HABIT GRID */
-  .habit-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .habit-dot {
-    width: 18px; height: 18px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-  }
-  .habit-dot:hover { opacity: 0.8; transform: scale(1.2); }
-  .habit-dot.empty { background: var(--border); }
-  .habit-dot.filled { background: var(--accent); }
-  .habit-dot .tooltip {
-    position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 3px 7px;
-    border-radius: 4px;
-    font-size: 10px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-family: 'DM Mono', monospace;
-  }
-  .habit-dot:hover .tooltip { opacity: 1; }
-
-  /* MINDSET PAGE SPECIFICS */
-  .book-item { 
-    display: flex; align-items: center; gap: 12px; 
-    padding: 12px 14px; border-radius: 8px; 
-    background: var(--surface2); margin-bottom: 8px;
-    border: 1px solid transparent;
-    transition: all 0.2s;
-  }
-  .book-item:hover { border-color: var(--border); }
-  .book-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--accent); width: 28px; text-align: center; flex-shrink: 0; }
-  .book-title { font-size: 13px; font-weight: 500; }
-  .book-why { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  /* WEEKLY OVERVIEW BANNER */
-  .week-banner {
-    background: linear-gradient(135deg, rgba(232,255,71,0.08), rgba(71,255,184,0.05));
-    border: 1px solid rgba(232,255,71,0.2);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 24px;
-    display: flex;
-    gap: 32px;
-    align-items: center;
-  }
-
-  .week-banner .big { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--accent); line-height: 1; }
-  .week-banner .small { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 2px; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* ANIMATIONS */
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .page.active { animation: fadeIn 0.3s ease; }
-
-  /* HIGHLIGHT ROW */
-  .highlight { background: rgba(232,255,71,0.06); border-left: 3px solid var(--accent); padding-left: 10px; }
-
-  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
-  /* PROGRESS BAR HORIZONTAL */
-  .prog-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 8px; }
-  .prog-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-
-  /* DAY PLAN COLUMN */
-  .day-block {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .day-block-header {
-    padding: 12px 16px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    letter-spacing: 2px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .day-block-body { padding: 12px 16px 16px; }
-  .day-item { font-size: 12px; padding: 4px 0; color: var(--muted); display: flex; gap: 6px; align-items: center; }
-  .day-item::before { content: '–'; color: var(--border); }
-
+:root{--bg:#0c0c0e;--s1:#131318;--s2:#1c1c24;--s3:#25252f;--border:#2e2e3a;--y:#f5e642;--g:#42f5a8;--o:#f57342;--b:#4287f5;--r:#f54242;--text:#e8e8f0;--muted:#6b6b7e;--font:'Syne',sans-serif;--mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(12,12,14,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:3px;height:52px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.logo{font-size:15px;font-weight:800;color:var(--y);letter-spacing:2px;margin-right:10px;white-space:nowrap;flex-shrink:0}
+.nb{background:none;border:none;color:var(--muted);font-family:var(--font);font-size:12px;font-weight:700;padding:5px 12px;border-radius:18px;cursor:pointer;white-space:nowrap;transition:.15s}
+.nb:hover{color:var(--text);background:var(--s2)}
+.nb.on{color:#000;background:var(--y)}
+.xpbar{position:fixed;top:52px;left:0;right:0;z-index:199;background:var(--s1);border-bottom:1px solid var(--border);padding:7px 16px;display:flex;align-items:center;gap:12px}
+.xp-val{font-family:var(--mono);font-size:12px;color:var(--y);font-weight:500;white-space:nowrap}
+.xp-track{flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--y),var(--g));border-radius:3px;transition:width .5s ease}
+.xp-lv{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.streak{display:flex;align-items:center;gap:4px;background:rgba(245,230,66,.1);border:1px solid rgba(245,230,66,.25);border-radius:16px;padding:2px 9px;font-size:11px;font-family:var(--mono);color:var(--y);white-space:nowrap}
+.page{display:none;padding:110px 16px 80px;max-width:660px;margin:0 auto;animation:fadeUp .25s ease}
+.page.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sh{margin-bottom:20px}.sh h1{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.sh p{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--mono)}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px}
+.ct{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-family:var(--mono)}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center}
+.sv{font-size:24px;font-weight:800;line-height:1}
+.sl{font-size:9px;color:var(--muted);margin-top:3px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase}
+.ci{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;cursor:pointer;transition:.12s;border:1px solid transparent;margin-bottom:5px;user-select:none;-webkit-tap-highlight-color:transparent}
+.ci:hover{background:var(--s2);border-color:var(--border)}
+.ci:active{transform:scale(.98)}
+.ci.done{opacity:.45}
+.ci.done .ci-label{text-decoration:line-through}
+.cb{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:.15s}
+.ci.done .cb{background:var(--y);border-color:var(--y);color:#000}
+.ci-label{font-size:13px;font-weight:700;flex:1}
+.ci-sub{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:1px}
+.ci-pts{font-family:var(--mono);font-size:11px;color:var(--y);flex-shrink:0}
+.wtable{width:100%;border-collapse:collapse;font-size:12px}
+.wtable th{text-align:left;padding:6px 8px;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);border-bottom:1px solid var(--border);font-weight:400}
+.wtable td{padding:9px 8px;border-bottom:1px solid rgba(46,46,58,.35)}
+.wtable tr:last-child td{border-bottom:none}
+.wtable tr:hover td{background:var(--s2)}
+.tag{display:inline-block;padding:1px 6px;border-radius:8px;font-size:9px;font-family:var(--mono)}
+.te{background:rgba(66,245,168,.12);color:var(--g)}
+.tm{background:rgba(245,115,66,.12);color:var(--o)}
+.td{background:rgba(245,230,66,.12);color:var(--y)}
+.th{background:rgba(245,66,66,.12);color:var(--r)}
+.lc-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:.12s;margin-bottom:4px}
+.lc-row:hover{background:var(--s2);border-color:var(--border)}
+.lc-row:active{transform:scale(.99)}
+.lc-row.done .lc-n{text-decoration:line-through;color:var(--muted)}
+.lc-cb{width:16px;height:16px;border:2px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;transition:.15s}
+.lc-row.done .lc-cb{background:var(--y);border-color:var(--y);color:#000}
+.lc-n{flex:1;font-size:12px;font-weight:600}
+.lc-p{font-family:var(--mono);font-size:9px;color:var(--y)}
+.mbar-r{margin-bottom:10px}
+.mbar-hd{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.mbar-hd span:last-child{font-family:var(--mono);color:var(--muted);font-size:10px}
+.mbar{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.mbar-f{height:100%;border-radius:2px}
+.fin-hero{background:linear-gradient(135deg,rgba(245,230,66,.08),rgba(66,245,168,.04));border:1px solid rgba(245,230,66,.2);border-radius:12px;padding:20px;margin-bottom:12px;text-align:center}
+.fin-big{font-size:44px;font-weight:800;color:var(--y);line-height:1}
+.fin-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:2px}
+.frow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:7px;background:var(--s2);margin-bottom:5px;font-size:12px}
+.frow .amt{font-family:var(--mono);font-size:12px;font-weight:600}
+.abr{color:var(--r)}.aok{color:var(--g)}.awn{color:var(--o)}.ayl{color:var(--y)}
+.exp-inp{display:flex;gap:7px;margin-bottom:7px}
+.exp-inp input,.exp-inp select{background:var(--s2);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 10px;font-size:12px;font-family:var(--font);outline:none;transition:.15s}
+.exp-inp input:focus,.exp-inp select:focus{border-color:var(--y)}
+.exp-inp input::placeholder{color:var(--muted)}
+.btn{padding:8px 16px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-family:var(--font);font-weight:700;transition:.15s}
+.btn-y{background:var(--y);color:#000}.btn-y:hover{background:#ffe800}
+.btn-gh{background:var(--s2);color:var(--text);border:1px solid var(--border)}.btn-gh:hover{border-color:var(--y);color:var(--y)}
+.eli{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--s2);border-radius:7px;margin-bottom:4px;font-size:12px}
+.db{background:rgba(245,66,66,.15);border:none;color:var(--r);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:10px}
+.hdots{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px}
+.hd{width:13px;height:13px;border-radius:2px;cursor:pointer;transition:.12s;flex-shrink:0}
+.hd:hover{transform:scale(1.3)}
+.hd.e{background:var(--s3)}.hd.f{background:var(--y)}
+.book-item{display:flex;gap:12px;padding:12px;background:var(--s2);border-radius:9px;margin-bottom:7px;align-items:flex-start;cursor:pointer;transition:.12s;border:1px solid transparent}
+.book-item:hover{border-color:var(--border)}
+.book-item.done-b{opacity:.4}
+.bn{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--y);width:26px;flex-shrink:0}
+.bt{font-size:13px;font-weight:700;margin-bottom:2px}
+.bw{font-size:11px;color:var(--muted);line-height:1.5}
+.rcard{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;position:relative;overflow:hidden}
+.rcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.rcard:nth-child(1)::before{background:var(--y)}.rcard:nth-child(2)::before{background:var(--g)}
+.rcard:nth-child(3)::before{background:var(--o)}.rcard:nth-child(4)::before{background:var(--b)}
+.rcard:nth-child(5)::before{background:var(--r)}.rcard:nth-child(6)::before{background:var(--y)}
+.rcard:nth-child(7)::before{background:var(--g)}
+.rcard.locked{opacity:.4}
+.ri{font-size:24px;flex-shrink:0;margin-top:1px}
+.rm{font-family:var(--mono);font-size:9px;color:var(--y);letter-spacing:1px;margin-bottom:2px}
+.rtl{font-size:13px;font-weight:700;margin-bottom:2px}
+.rd{font-size:11px;color:var(--muted);line-height:1.5}
+.rc{font-family:var(--mono);font-size:10px;color:var(--g);margin-top:4px}
+.ub{position:absolute;right:10px;top:10px;background:var(--y);color:#000;font-size:8px;font-family:var(--mono);padding:2px 6px;border-radius:8px;font-weight:700}
+.day-pill{display:inline-flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--border);border-radius:18px;padding:5px 12px;margin-bottom:16px}
+.day-pill span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.day-pill b{font-size:12px;color:var(--y)}
+.day-pill button{background:var(--s3);border:none;color:var(--text);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:.12s}
+.day-pill button:hover{background:var(--y);color:#000}
+.ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-n{font-size:16px;font-weight:800;color:var(--y);line-height:1}
+.ring-l{font-size:7px;color:var(--muted);font-family:var(--mono);letter-spacing:1px}
+.rule-banner{background:rgba(245,66,66,.05);border:1px solid rgba(245,66,66,.18);border-radius:8px;padding:11px 13px;margin-bottom:10px;font-size:12px;line-height:1.6;color:var(--muted)}
+.rule-banner strong{color:var(--text)}
+.wtabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+.wtab{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:11px;cursor:pointer;transition:.12s;font-weight:700}
+.wtab:hover{border-color:var(--y)}
+.wtab.on{background:var(--y);color:#000;border-color:var(--y)}
+.pb{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--y),var(--g));transition:width .5s ease}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--y);color:#000;padding:8px 20px;border-radius:18px;font-weight:700;font-size:12px;z-index:999;opacity:0;transition:.25s;pointer-events:none;font-family:var(--mono);white-space:nowrap}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<nav class="sidebar">
-  <div class="logo">PROJECT 90<span>TOTAL TRANSFORMATION</span></div>
-
-  <div class="nav-section">DAILY</div>
-  <button class="nav-btn active" onclick="showPage('dashboard')">
-    <span class="nav-icon">⚡</span> Dashboard
-  </button>
-  <button class="nav-btn" onclick="showPage('daily')">
-    <span class="nav-icon">☀️</span> Daily Checklist
-  </button>
-
-  <div class="nav-section">BODY</div>
-  <button class="nav-btn" onclick="showPage('workout')">
-    <span class="nav-icon">💪</span> Workout Plan
-  </button>
-  <button class="nav-btn" onclick="showPage('nutrition')">
-    <span class="nav-icon">🥗</span> Nutrition
-  </button>
-
-  <div class="nav-section">MIND</div>
-  <button class="nav-btn" onclick="showPage('leetcode')">
-    <span class="nav-icon">💻</span> LeetCode
-  </button>
-  <button class="nav-btn" onclick="showPage('reading')">
-    <span class="nav-icon">📚</span> Reading + Mindset
-  </button>
-  <button class="nav-btn" onclick="showPage('startup')">
-    <span class="nav-icon">🚀</span> Startup Clarity
-  </button>
-
-  <div class="nav-section">WEALTH</div>
-  <button class="nav-btn" onclick="showPage('finance')">
-    <span class="nav-icon">💰</span> Finance
-  </button>
-
-  <div class="nav-section">JOURNEY</div>
-  <button class="nav-btn" onclick="showPage('milestones')">
-    <span class="nav-icon">🏆</span> Milestones
-  </button>
-  <button class="nav-btn" onclick="showPage('rewards')">
-    <span class="nav-icon">🎁</span> Rewards
-  </button>
-  <button class="nav-btn" onclick="showPage('habits')">
-    <span class="nav-icon">📊</span> Habit Tracker
-  </button>
-
-  <div class="day-counter">
-    <div class="day-num" id="currentDay">1</div>
-    <div class="day-label">OF 90 DAYS</div>
-    <div class="progress-ring"><div class="progress-ring-fill" id="mainProgress" style="width:1%"></div></div>
-  </div>
+<nav class="nav">
+  <div class="logo">P90</div>
+  <button class="nb on" onclick="go('dash',this)">⚡ Home</button>
+  <button class="nb" onclick="go('daily',this)">✅ Daily</button>
+  <button class="nb" onclick="go('workout',this)">💪 Workout</button>
+  <button class="nb" onclick="go('nutrition',this)">🥗 Nutrition</button>
+  <button class="nb" onclick="go('lc',this)">💻 LeetCode</button>
+  <button class="nb" onclick="go('reading',this)">📚 Reading</button>
+  <button class="nb" onclick="go('finance',this)">💰 Finance</button>
+  <button class="nb" onclick="go('habits',this)">📊 Habits</button>
+  <button class="nb" onclick="go('rewards',this)">🏆 Rewards</button>
 </nav>
 
-<!-- MAIN -->
-<main class="main">
+<div class="xpbar">
+  <div class="xp-val">⚡ <span id="xpT">0</span> XP</div>
+  <div class="xp-track"><div class="xp-fill" id="xpF"></div></div>
+  <div class="xp-lv">Lv.<span id="lvl">1</span> · <span id="xpN">100</span>xp to next</div>
+  <div class="streak">🔥 <span id="strk">0</span>d</div>
+</div>
 
-  <!-- ======================== DASHBOARD ======================== -->
-  <div class="page active" id="page-dashboard">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent)">DASHBOARD</div>
-        <div class="page-sub">// YOUR COMMAND CENTER — DAY <span id="dashDay">1</span> OF 90</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)" id="todayDate"></div>
-        <div style="font-size:13px;color:var(--accent2);margin-top:4px" id="todayWeekDay"></div>
-      </div>
+<!-- HOME -->
+<div class="page on" id="p-dash">
+  <div class="sh"><h1>Let's <span style="color:var(--y)">crush</span> today.</h1><p>// PROJECT 90 · DAY <span id="dDay">1</span> OF 90</p></div>
+  <div class="day-pill">
+    <button onclick="chDay(-1)">◀</button>
+    <span>Day</span><b id="dPill">1</b><span>of 90</span>
+    <button onclick="chDay(1)">▶</button>
+  </div>
+  <div class="sg">
+    <div class="sc"><div class="sv ayl" id="d-xp">0</div><div class="sl">Today XP</div></div>
+    <div class="sc"><div class="sv aok" id="d-done">0</div><div class="sl">Done</div></div>
+    <div class="sc"><div class="sv awn" id="d-left">12</div><div class="sl">Left</div></div>
+  </div>
+  <div class="card" style="display:flex;align-items:center;gap:16px">
+    <div class="ring-wrap">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="28" fill="none" stroke="var(--s3)" stroke-width="6"/>
+        <circle cx="36" cy="36" r="28" fill="none" stroke="var(--y)" stroke-width="6"
+          stroke-dasharray="176" id="rCircle" stroke-dashoffset="175" stroke-linecap="round"/>
+      </svg>
+      <div class="ring-c"><div class="ring-n" id="rPct">1%</div><div class="ring-l">90 DAYS</div></div>
     </div>
-
-    <div class="week-banner">
-      <div>
-        <div class="big" id="dashWeek">1</div>
-        <div class="small">CURRENT WEEK</div>
-      </div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:500;margin-bottom:4px">Week Focus</div>
-        <div style="font-size:13px;color:var(--muted)" id="weekFocus">Arrays + Strings · Push/Pull · Establish Habits · No Cheat Zone</div>
-      </div>
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px">OVERALL PROGRESS</div>
-        <div class="prog-bar" style="width:180px"><div class="prog-fill" id="dashProgress" style="width:1%"></div></div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-top:6px" id="dashPercent">1%</div>
-      </div>
-    </div>
-
-    <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-cell">
-        <div class="stat-val" style="color:var(--accent2)" id="statsChecked">0</div>
-        <div class="stat-label">TODAY DONE</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-val" style="color:var(--accent3)" id="statsTotal">14</div>
-        <div class="stat-label">TOTAL TASKS</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-val" id="statsLeet">4</div>
-        <div class="stat-label">LC SOLVED</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-val" style="color:var(--accent4)" id="statsStreak">0</div>
-        <div class="stat-label">DAY STREAK</div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">📅 TODAY'S SCHEDULE</div>
-        <div id="todaySchedule"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">⚡ QUICK CHECKLIST</div>
-        <div id="quickChecks"></div>
-        <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">COMPLETION</div>
-          <div style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace" id="completionPct">0%</div>
-        </div>
-        <div class="prog-bar"><div class="prog-fill" id="checkProg" style="width:0%"></div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🔥 90-DAY TRANSFORMATION TIMELINE</div>
-      <div style="display:flex;gap:0;flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px">
-        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
-          <div class="timeline-dot" style="background:rgba(232,255,71,0.15);color:var(--accent)">1</div>
-          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
-          <div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace">WEEK 1-2</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">DOMS · Strength jumps · Habits forming</div>
-        </div>
-        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
-          <div class="timeline-dot" style="background:rgba(71,255,184,0.15);color:var(--accent2)">2</div>
-          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
-          <div style="font-size:11px;color:var(--accent2);font-family:'DM Mono',monospace">WEEK 3-4</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">Waist shrinks · Chest/arms firm · Energy up</div>
-        </div>
-        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
-          <div class="timeline-dot" style="background:rgba(255,107,53,0.15);color:var(--accent3)">3</div>
-          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
-          <div style="font-size:11px;color:var(--accent3);font-family:'DM Mono',monospace">MONTH 2</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">Muscle shape · Looser clothes · LC patterns click</div>
-        </div>
-        <div class="timeline-item" style="min-width:200px;flex-direction:column;align-items:center;text-align:center">
-          <div class="timeline-dot" style="background:rgba(184,71,255,0.15);color:var(--accent4)">4</div>
-          <div style="width:1px;height:20px;background:var(--border);margin:6px auto"></div>
-          <div style="font-size:11px;color:var(--accent4);font-family:'DM Mono',monospace">MONTH 3</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">People notice · Body fat lower · Startup clarity</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="background:linear-gradient(135deg,rgba(255,107,53,0.06),rgba(255,71,87,0.04));border-color:rgba(255,107,53,0.3)">
-      <div class="card-title" style="color:var(--accent3)">⚠️ HARD TRUTH — READ DAILY</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="font-size:13px;padding:10px 14px;background:rgba(255,71,87,0.07);border-radius:8px">Miss workouts → <strong style="color:var(--red)">results slow</strong></div>
-        <div style="font-size:13px;padding:10px 14px;background:rgba(255,71,87,0.07);border-radius:8px">Skip protein → <strong style="color:var(--red)">muscle won't show</strong></div>
-        <div style="font-size:13px;padding:10px 14px;background:rgba(255,71,87,0.07);border-radius:8px">Overtrain → <strong style="color:var(--red)">burnout</strong></div>
-        <div style="font-size:13px;padding:10px 14px;background:rgba(46,213,115,0.07);border-radius:8px">Consistency > <strong style="color:var(--green)">perfection</strong></div>
+    <div style="flex:1">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:5px">WEEK <span id="wkLbl">1</span> · TOTAL <span id="totXP" style="color:var(--y)">0</span> XP</div>
+      <div class="pb"><div class="pf" id="mProg"></div></div>
+      <div style="margin-top:8px;display:flex;justify-content:space-between">
+        <button class="btn btn-gh" style="font-size:11px;padding:5px 12px" onclick="go('daily',null)">Open Checklist →</button>
+        <button class="btn" style="font-size:11px;padding:5px 10px;background:var(--s3);color:var(--muted);border:1px solid var(--border)" onclick="resetToday()">Reset</button>
       </div>
     </div>
   </div>
-
-  <!-- ======================== DAILY CHECKLIST ======================== -->
-  <div class="page" id="page-daily">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent2)">DAILY CHECKLIST</div>
-        <div class="page-sub">// 14 NON-NEGOTIABLES · EVERY. SINGLE. DAY.</div>
-      </div>
-      <button class="btn btn-ghost" onclick="resetDay()">↺ Reset Day</button>
-    </div>
-
-    <div class="grid-2">
-      <div>
-        <div class="card">
-          <div class="card-title">🧠 MIND</div>
-          <div id="checks-mind"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">💪 BODY</div>
-          <div id="checks-body"></div>
-        </div>
-      </div>
-      <div>
-        <div class="card">
-          <div class="card-title">🥗 NUTRITION</div>
-          <div id="checks-nutrition"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">📚 GROWTH</div>
-          <div id="checks-growth"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="background:linear-gradient(135deg,rgba(71,255,184,0.05),rgba(232,255,71,0.03))">
-      <div class="card-title" style="color:var(--accent2)">📝 DAILY JOURNAL</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div>
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">WIN OF THE DAY</div>
-          <textarea style="height:80px;resize:none" placeholder="What did you do well today?"></textarea>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">TOMORROW I WILL</div>
-          <textarea style="height:80px;resize:none" placeholder="One specific intention for tomorrow..."></textarea>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">GRATEFUL FOR</div>
-          <textarea style="height:60px;resize:none" placeholder="3 things you're grateful for..."></textarea>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;letter-spacing:1px">ENERGY LEVEL (1-10)</div>
-          <input type="number" min="1" max="10" placeholder="7" style="width:80px">
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:10px;margin-bottom:6px;letter-spacing:1px">MOOD (1-10)</div>
-          <input type="number" min="1" max="10" placeholder="8" style="width:80px">
-        </div>
-      </div>
+  <div class="card">
+    <div class="ct">Quick checks</div>
+    <div id="qList"></div>
+  </div>
+  <div class="card" style="background:rgba(245,66,66,.04);border-color:rgba(245,66,66,.18)">
+    <div class="ct" style="color:var(--r)">⚠ Read daily</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+      <div style="padding:9px;background:rgba(245,66,66,.07);border-radius:7px;font-size:11px;color:var(--muted)">Miss workout → <strong style="color:var(--text)">results slow</strong></div>
+      <div style="padding:9px;background:rgba(245,66,66,.07);border-radius:7px;font-size:11px;color:var(--muted)">Skip protein → <strong style="color:var(--text)">muscle won't show</strong></div>
+      <div style="padding:9px;background:rgba(245,66,66,.07);border-radius:7px;font-size:11px;color:var(--muted)">Skip meditation → <strong style="color:var(--text)">stays reactive</strong></div>
+      <div style="padding:9px;background:rgba(66,245,168,.07);border-radius:7px;font-size:11px;color:var(--muted)">Consistency → <strong style="color:var(--g)">everything changes</strong></div>
     </div>
   </div>
+</div>
 
-  <!-- ======================== WORKOUT ======================== -->
-  <div class="page" id="page-workout">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent3)">WORKOUT PLAN</div>
-        <div class="page-sub">// PROJECT 30 · PUSH · PULL · LEGS · CONDITIONING</div>
-      </div>
-    </div>
+<!-- DAILY -->
+<div class="page" id="p-daily">
+  <div class="sh"><h1>Daily <span style="color:var(--y)">Checklist</span></h1><p>// Tap to earn XP · <span id="dailyXPshow">0</span> XP today</p></div>
+  <div class="card"><div class="ct">🧠 Mind</div><div id="ch-mind"></div></div>
+  <div class="card"><div class="ct">💪 Body</div><div id="ch-body"></div></div>
+  <div class="card"><div class="ct">🥗 Nutrition</div><div id="ch-nutrition"></div></div>
+  <div class="card"><div class="ct">📈 Growth</div><div id="ch-growth"></div></div>
+  <div class="card" style="text-align:center;padding:18px">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:5px">TODAY'S SCORE</div>
+    <div style="font-size:40px;font-weight:800;color:var(--y)" id="tScore">0</div>
+    <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">XP earned today</div>
+    <div class="pb" style="margin-top:10px"><div class="pf" id="tProg"></div></div>
+  </div>
+</div>
 
-    <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-cell"><div class="stat-val" style="color:#47abff">D1</div><div class="stat-label">PUSH</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--green)">D2</div><div class="stat-label">PULL</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--muted)">D3</div><div class="stat-label">REST/WALK</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent3)">D4</div><div class="stat-label">LEGS+CORE</div></div>
-    </div>
-
-    <div class="card" style="border-left:4px solid #47abff">
-      <div class="card-title" style="color:#47abff">🟦 DAY 1 — PUSH (Chest · Shoulders · Triceps)</div>
+<!-- WORKOUT -->
+<div class="page" id="p-workout">
+  <div class="sh"><h1>Workout <span style="color:var(--o)">Plan</span></h1><p>// Tap your day · Log it · Earn XP</p></div>
+  <div class="wtabs">
+    <div class="wtab on" onclick="showW('w1',this)">Push</div>
+    <div class="wtab" onclick="showW('w2',this)">Pull</div>
+    <div class="wtab" onclick="showW('w3',this)">Legs+Core</div>
+    <div class="wtab" onclick="showW('w4',this)">Conditioning</div>
+  </div>
+  <div id="w1">
+    <div class="card" style="border-left:3px solid var(--b)">
+      <div class="ct" style="color:var(--b)">Day 1 — Push · Chest · Shoulders · Triceps</div>
       <table class="wtable">
-        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Form Cue</th></tr>
-        <tr><td>Machine Chest Press</td><td>3</td><td>12</td><td>20–30 kg</td><td>Back flat, chest up</td></tr>
-        <tr><td>Incline DB Press</td><td>3</td><td>10</td><td>7.5–10 kg</td><td>Bench ~30°, slow</td></tr>
-        <tr><td>Shoulder Press (Machine/DB)</td><td>3</td><td>10</td><td>10–15 kg</td><td>Core tight</td></tr>
-        <tr><td>Lateral Raise</td><td>3</td><td>15</td><td>4–6 kg</td><td>Lift to shoulder</td></tr>
-        <tr><td>Tricep Pushdown</td><td>3</td><td>12</td><td>15–20 kg</td><td>Elbows fixed</td></tr>
-        <tr><td>Push-ups</td><td>2</td><td>8–12</td><td>Bodyweight</td><td>Straight body</td></tr>
+        <tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
+        <tr><td>Machine Chest Press</td><td>3×12</td><td>20–30kg</td><td>Back flat, chest up</td></tr>
+        <tr><td>Incline DB Press</td><td>3×10</td><td>7.5–10kg</td><td>~30°, slow negative</td></tr>
+        <tr><td>Shoulder Press</td><td>3×10</td><td>10–15kg</td><td>Core tight</td></tr>
+        <tr><td>Lateral Raise</td><td>3×15</td><td>4–6kg</td><td>Lift to shoulder</td></tr>
+        <tr><td>Tricep Pushdown</td><td>3×12</td><td>15–20kg</td><td>Elbows fixed</td></tr>
+        <tr><td>Push-ups</td><td>2×8–12</td><td>Bodyweight</td><td>Straight body</td></tr>
       </table>
+      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('push',40)">✓ Done → +40 XP</button>
     </div>
-
-    <div class="card" style="border-left:4px solid var(--green)">
-      <div class="card-title" style="color:var(--green)">🟩 DAY 2 — PULL (Back · Biceps)</div>
+  </div>
+  <div id="w2" style="display:none">
+    <div class="card" style="border-left:3px solid var(--g)">
+      <div class="ct" style="color:var(--g)">Day 2 — Pull · Back · Biceps</div>
       <table class="wtable">
-        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Form Cue</th></tr>
-        <tr><td>Lat Pulldown</td><td>3</td><td>12</td><td>25–35 kg</td><td>Pull to chest</td></tr>
-        <tr><td>Seated Cable Row</td><td>3</td><td>12</td><td>20–30 kg</td><td>Squeeze back</td></tr>
-        <tr><td>One-arm DB Row</td><td>3</td><td>10</td><td>10–12.5 kg</td><td>Flat back</td></tr>
-        <tr><td>Face Pull</td><td>3</td><td>15</td><td>10–15 kg</td><td>Elbows high</td></tr>
-        <tr><td>DB Curl</td><td>3</td><td>12</td><td>6–8 kg</td><td>Slow reps</td></tr>
-        <tr><td>Hammer Curl</td><td>2</td><td>12</td><td>6–8 kg</td><td>Neutral grip</td></tr>
+        <tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
+        <tr><td>Lat Pulldown</td><td>3×12</td><td>25–35kg</td><td>Pull to chest</td></tr>
+        <tr><td>Seated Cable Row</td><td>3×12</td><td>20–30kg</td><td>Squeeze back</td></tr>
+        <tr><td>One-arm DB Row</td><td>3×10</td><td>10–12.5kg</td><td>Flat back</td></tr>
+        <tr><td>Face Pull</td><td>3×15</td><td>10–15kg</td><td>Elbows high</td></tr>
+        <tr><td>DB Curl</td><td>3×12</td><td>6–8kg</td><td>Slow reps</td></tr>
+        <tr><td>Hammer Curl</td><td>2×12</td><td>6–8kg</td><td>Neutral grip</td></tr>
       </table>
+      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('pull',40)">✓ Done → +40 XP</button>
     </div>
-
-    <div class="card" style="border-left:4px solid var(--accent3)">
-      <div class="card-title" style="color:var(--accent3)">🟥 DAY 4 — LEGS + CORE</div>
-      <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">LEGS</div>
-      <table class="wtable" style="margin-bottom:18px">
-        <tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Form Cue</th></tr>
-        <tr><td>Goblet Squat</td><td>4</td><td>10</td><td>10–15 kg</td><td>Knees out</td></tr>
-        <tr><td>Leg Press</td><td>3</td><td>12</td><td>60–80 kg</td><td>Full depth</td></tr>
-        <tr><td>Hip Thrust</td><td>3</td><td>12</td><td>20–30 kg</td><td>Squeeze glutes</td></tr>
-        <tr><td>Seated/Lying Leg Curl</td><td>3</td><td>12</td><td>20–30 kg</td><td>Slow control</td></tr>
-        <tr><td>Walking Lunges</td><td>3</td><td>12/leg</td><td>Bodyweight</td><td>Upright torso</td></tr>
-        <tr><td>Standing Calf Raise</td><td>4</td><td>15</td><td>BW / +20 kg</td><td>Full stretch</td></tr>
-      </table>
-      <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">CORE</div>
+  </div>
+  <div id="w3" style="display:none">
+    <div class="card" style="border-left:3px solid var(--o)">
+      <div class="ct" style="color:var(--o)">Day 4 — Legs + Core</div>
       <table class="wtable">
-        <tr><th>Exercise</th><th>Sets</th><th>Reps/Time</th></tr>
-        <tr><td>Plank</td><td>3</td><td>40–60 sec</td></tr>
-        <tr><td>Lying Leg Raises</td><td>3</td><td>12</td></tr>
-        <tr><td>Cable / Machine Crunch</td><td>3</td><td>15</td></tr>
+        <tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
+        <tr><td>Goblet Squat</td><td>4×10</td><td>10–15kg</td><td>Knees out</td></tr>
+        <tr><td>Leg Press</td><td>3×12</td><td>60–80kg</td><td>Full depth</td></tr>
+        <tr><td>Hip Thrust</td><td>3×12</td><td>20–30kg</td><td>Squeeze glutes</td></tr>
+        <tr><td>Leg Curl</td><td>3×12</td><td>20–30kg</td><td>Slow control</td></tr>
+        <tr><td>Walking Lunges</td><td>3×12/leg</td><td>BW</td><td>Upright torso</td></tr>
+        <tr><td>Calf Raise</td><td>4×15</td><td>BW/+20kg</td><td>Full stretch</td></tr>
+        <tr><td>Plank</td><td>3×45–60s</td><td>—</td><td>Straight line</td></tr>
+        <tr><td>Lying Leg Raises</td><td>3×12</td><td>—</td><td>Back flat</td></tr>
+        <tr><td>Cable Crunch</td><td>3×15</td><td>—</td><td>Contract abs</td></tr>
       </table>
+      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('legs',50)">✓ Done → +50 XP</button>
     </div>
-
-    <div class="card" style="border-left:4px solid var(--orange)">
-      <div class="card-title" style="color:var(--orange)">🟨 DAY 5 — CONDITIONING + ABS</div>
+  </div>
+  <div id="w4" style="display:none">
+    <div class="card" style="border-left:3px solid var(--y)">
+      <div class="ct">Day 5 — Conditioning + Abs</div>
       <table class="wtable">
-        <tr><th>Exercise</th><th>Duration/Reps</th></tr>
-        <tr><td>Incline Walk / Cycling</td><td>20 min</td></tr>
-        <tr><td>Rowing / Battle Rope</td><td>8–10 min</td></tr>
-        <tr><td>Russian Twists</td><td>3×20</td></tr>
-        <tr><td>Leg Raises</td><td>3×12</td></tr>
+        <tr><th>Exercise</th><th>Duration</th><th>Notes</th></tr>
+        <tr><td>Incline Walk / Cycling</td><td>20 min</td><td>60–70% max HR</td></tr>
+        <tr><td>Rowing / Battle Rope</td><td>8–10 min</td><td>30s on, 15s rest</td></tr>
+        <tr><td>Russian Twists</td><td>3×20</td><td>Feet off ground</td></tr>
+        <tr><td>Leg Raises</td><td>3×12</td><td>Back flat</td></tr>
       </table>
-    </div>
-
-    <div class="card" style="background:rgba(232,255,71,0.05);border-color:rgba(232,255,71,0.3)">
-      <div class="card-title">📈 PROGRESSION RULE — DO NOT IGNORE</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-        <div style="background:var(--surface2);border-radius:8px;padding:14px;text-align:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)">+2.5kg</div>
-          <div style="font-size:12px;color:var(--muted)">OR add each week</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:8px;padding:14px;text-align:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent2)">+2 REPS</div>
-          <div style="font-size:12px;color:var(--muted)">Never BOTH together</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:8px;padding:14px;text-align:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange)">48HRS</div>
-          <div style="font-size:12px;color:var(--muted)">Sore? Keep same weight</div>
-        </div>
-      </div>
+      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('cond',35)">✓ Done → +35 XP</button>
     </div>
   </div>
-
-  <!-- ======================== NUTRITION ======================== -->
-  <div class="page" id="page-nutrition">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent2)">NUTRITION</div>
-        <div class="page-sub">// 1500 KCAL · 120-130G PROTEIN · 90-DAY CUT</div>
-      </div>
-    </div>
-
-    <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-cell"><div class="stat-val">1500</div><div class="stat-label">KCAL TARGET</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent2)">125g</div><div class="stat-label">PROTEIN TARGET</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--green)">32g</div><div class="stat-label">FIBER MIN</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent3)">3L</div><div class="stat-label">WATER TARGET</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 DAILY MACROS</div>
-      <div class="macro-row">
-        <div class="macro-label"><span>Protein (120–130g)</span><span>~55g from shakes + 70g food</span></div>
-        <div class="macro-bar"><div class="macro-fill" style="width:85%;background:linear-gradient(90deg,var(--accent2),var(--accent))"></div></div>
-      </div>
-      <div class="macro-row">
-        <div class="macro-label"><span>Calories (~1500 kcal)</span><span>Target</span></div>
-        <div class="macro-bar"><div class="macro-fill" style="width:100%;background:linear-gradient(90deg,var(--accent),var(--orange))"></div></div>
-      </div>
-      <div class="macro-row">
-        <div class="macro-label"><span>Fiber (28–35g)</span><span>From thorans + legumes</span></div>
-        <div class="macro-bar"><div class="macro-fill" style="width:75%;background:linear-gradient(90deg,var(--green),var(--accent2))"></div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🥤 PROTEIN SHAKES (DAILY — NON-NEGOTIABLE)</div>
-      <table class="wtable">
-        <tr><th>When</th><th>What</th><th>Qty</th><th>Calories</th><th>Protein</th></tr>
-        <tr class="highlight"><td>Morning</td><td>Whey + skim milk</td><td>1 scoop + 200ml</td><td>~190 kcal</td><td>30–32g</td></tr>
-        <tr class="highlight"><td>Post-workout</td><td>Whey + water</td><td>1 scoop</td><td>~120 kcal</td><td>24–25g</td></tr>
-        <tr style="font-weight:600"><td>TOTAL</td><td></td><td></td><td>~310 kcal</td><td>55–57g</td></tr>
-      </table>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">🍳 BREAKFAST</div>
-        <table class="wtable">
-          <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
-          <tr><td>Whole egg</td><td>1</td><td>~70</td><td>6g</td></tr>
-          <tr><td>Egg whites</td><td>2</td><td>~34</td><td>7g</td></tr>
-          <tr><td>Spinach thoran</td><td>70–80g</td><td>~35</td><td>2–3g</td></tr>
-        </table>
-        <div style="font-size:11px;color:var(--muted);margin-top:10px;font-family:'DM Mono',monospace">Oil ≤ ½ tsp · Coconut ≤ ½–1 tsp</div>
-      </div>
-      <div class="card">
-        <div class="card-title">🌙 DINNER</div>
-        <table class="wtable">
-          <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
-          <tr><td>Chicken (grilled/boiled)</td><td>150–180g</td><td>240–300</td><td>35–40g</td></tr>
-          <tr><td>Mixed vegetables</td><td>Free</td><td>~50</td><td>3–4g</td></tr>
-          <tr><td>Pumpkin seeds</td><td>10g</td><td>~55</td><td>3g</td></tr>
-        </table>
-        <div style="font-size:11px;color:var(--red);margin-top:10px;font-family:'DM Mono',monospace">❌ No rice · ❌ No roti</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🍚 LUNCH — PROTEIN ROTATION</div>
-      <table class="wtable">
-        <tr><th>Protein</th><th>Qty</th><th>Cal</th><th>Protein</th><th>Frequency</th></tr>
-        <tr><td>Chicken / Fish</td><td>150g</td><td>240–260</td><td>32–35g</td><td style="color:var(--green)">Most days</td></tr>
-        <tr><td>Paneer</td><td>100g</td><td>~260</td><td>18–20g</td><td style="color:var(--orange)">2–3× / week</td></tr>
-        <tr><td>Eggs (1 whole + 2 whites)</td><td></td><td>~105</td><td>~13g</td><td style="color:var(--muted)">Rare / backup</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🥗 THORAN / LEGUME COMBOS — PICK ONE PER DAY</div>
-      <table class="wtable">
-        <tr><th>Combo</th><th>Portions</th><th>Cal</th><th>Protein</th><th>Fiber</th><th>Best For</th></tr>
-        <tr><td>Beetroot + Horse gram</td><td>80g + 70g</td><td>130–150</td><td>8–10g</td><td>10–12g</td><td>Iron, fat loss</td></tr>
-        <tr><td>Spinach + Horse gram</td><td>80g + 70g</td><td>120–140</td><td>9–11g</td><td>11–13g</td><td>Micronutrients</td></tr>
-        <tr><td>Beetroot + Payar</td><td>80g + 80g</td><td>140–160</td><td>9–11g</td><td>9–11g</td><td>Easier digestion</td></tr>
-        <tr><td>Spinach + Payar</td><td>80g + 80g</td><td>130–150</td><td>9–10g</td><td>10–12g</td><td>Gut health</td></tr>
-      </table>
-      <div style="font-size:11px;color:var(--muted);margin-top:10px;font-family:'DM Mono',monospace">Oil + coconut ≤ 1 tsp combined · Soak legumes 8-10hrs · Add lemon for iron absorption</div>
-    </div>
-
-    <div class="card" style="background:rgba(232,255,71,0.04);border-color:rgba(232,255,71,0.2)">
-      <div class="card-title">⚠️ NON-NEGOTIABLE RULES</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">Measure oil, coconut, seeds <div style="font-size:11px;color:var(--muted);margin-top:3px">Biggest hidden calorie source</div></div>
-        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">Protein every meal <div style="font-size:11px;color:var(--muted);margin-top:3px">Muscle preservation on cut</div></div>
-        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">Chicken > paneer frequency <div style="font-size:11px;color:var(--muted);margin-top:3px">Lower fat, better cut</div></div>
-        <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px">No weekend cheats (first 30 days) <div style="font-size:11px;color:var(--muted);margin-top:3px">Hormones + discipline lock-in</div></div>
-      </div>
+  <div class="card" style="background:rgba(245,230,66,.04);border-color:rgba(245,230,66,.18)">
+    <div class="ct">📈 Progression Rule</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;text-align:center">
+      <div style="background:var(--s2);border-radius:7px;padding:10px"><div style="font-weight:800;font-size:18px;color:var(--y)">+2.5kg</div><div style="font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono)">OR per week</div></div>
+      <div style="background:var(--s2);border-radius:7px;padding:10px"><div style="font-weight:800;font-size:18px;color:var(--g)">+2 reps</div><div style="font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono)">never both</div></div>
+      <div style="background:var(--s2);border-radius:7px;padding:10px"><div style="font-weight:800;font-size:18px;color:var(--o)">48hrs</div><div style="font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono)">sore? hold weight</div></div>
     </div>
   </div>
+</div>
 
-  <!-- ======================== LEETCODE ======================== -->
-  <div class="page" id="page-leetcode">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--orange)">LEETCODE</div>
-        <div class="page-sub">// 45 PROBLEMS · 3 WEEKS · 10 PAGES/DAY READING</div>
-      </div>
+<!-- NUTRITION -->
+<div class="page" id="p-nutrition">
+  <div class="sh"><h1>Nutrition <span style="color:var(--g)">Plan</span></h1><p>// 1500 kcal · 120–130g protein · cut phase</p></div>
+  <div class="sg">
+    <div class="sc"><div class="sv">1500</div><div class="sl">Kcal</div></div>
+    <div class="sc"><div class="sv aok">125g</div><div class="sl">Protein</div></div>
+    <div class="sc"><div class="sv" style="color:var(--b)">3L</div><div class="sl">Water</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Daily macro targets</div>
+    <div class="mbar-r"><div class="mbar-hd"><span>Protein (120–130g)</span><span>55g shakes + 70g food</span></div><div class="mbar"><div class="mbar-f" style="width:85%;background:linear-gradient(90deg,var(--g),var(--y))"></div></div></div>
+    <div class="mbar-r"><div class="mbar-hd"><span>Calories (~1500)</span><span>Controlled deficit</span></div><div class="mbar"><div class="mbar-f" style="width:100%;background:linear-gradient(90deg,var(--y),var(--o))"></div></div></div>
+    <div class="mbar-r"><div class="mbar-hd"><span>Fiber (28–35g)</span><span>Thorans + legumes</span></div><div class="mbar"><div class="mbar-f" style="width:72%;background:linear-gradient(90deg,var(--g),var(--b))"></div></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">🥤 Protein Shakes — Both Non-Negotiable</div>
+    <div class="frow"><span>Morning — Whey + skim milk</span><span class="amt aok">~30g protein</span></div>
+    <div class="frow"><span>Post-workout — Whey + water</span><span class="amt aok">~25g protein</span></div>
+    <div class="frow" style="background:rgba(245,230,66,.08)"><span style="font-weight:700">Total from shakes</span><span class="amt ayl">~55g · ~310 kcal</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">🍳 Breakfast</div>
+    <table class="wtable">
+      <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
+      <tr><td>Whole egg</td><td>1</td><td>70</td><td>6g</td></tr>
+      <tr><td>Egg whites</td><td>2</td><td>34</td><td>7g</td></tr>
+      <tr><td>Spinach thoran</td><td>70–80g</td><td>35</td><td>2–3g</td></tr>
+    </table>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:7px">Oil ≤ ½ tsp · Coconut ≤ ½–1 tsp</div>
+  </div>
+  <div class="card">
+    <div class="ct">🍚 Lunch — Rotate</div>
+    <table class="wtable">
+      <tr><th>Protein</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
+      <tr><td>Chicken / Fish</td><td>150g</td><td>250</td><td>33g <span class="tag te">Most days</span></td></tr>
+      <tr><td>Paneer</td><td>100g</td><td>260</td><td>19g <span class="tag tm">2–3×/wk</span></td></tr>
+      <tr><td>Eggs (1+2 whites)</td><td>—</td><td>105</td><td>13g <span style="font-size:9px;color:var(--muted)">backup</span></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="ct">🥗 Thoran Combo — Pick One Daily</div>
+    <table class="wtable">
+      <tr><th>Combo</th><th>Cal</th><th>Protein</th><th>Fiber</th></tr>
+      <tr><td>Beetroot + Horse gram</td><td>140</td><td>9g</td><td>11g</td></tr>
+      <tr><td>Spinach + Horse gram</td><td>130</td><td>10g</td><td>12g</td></tr>
+      <tr><td>Beetroot + Payar</td><td>150</td><td>10g</td><td>10g</td></tr>
+      <tr><td>Spinach + Payar</td><td>140</td><td>9.5g</td><td>11g</td></tr>
+    </table>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:7px">Oil+coconut ≤ 1 tsp · Soak legumes 8–10hr · Lemon for iron absorption</div>
+  </div>
+  <div class="card">
+    <div class="ct">🌙 Dinner</div>
+    <table class="wtable">
+      <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
+      <tr><td>Chicken (grilled)</td><td>150–180g</td><td>270</td><td>37g</td></tr>
+      <tr><td>Mixed vegetables</td><td>Free</td><td>50</td><td>3g</td></tr>
+      <tr><td>Pumpkin seeds</td><td>10g</td><td>55</td><td>3g</td></tr>
+    </table>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--r);margin-top:7px">❌ No rice · ❌ No roti</div>
+  </div>
+</div>
+
+<!-- LEETCODE -->
+<div class="page" id="p-lc">
+  <div class="sh"><h1>LeetCode <span style="color:var(--o)">Track</span></h1><p>// 1 problem/day = +20 XP · tap to mark done</p></div>
+  <div class="sg">
+    <div class="sc"><div class="sv aok" id="lcD">4</div><div class="sl">Solved</div></div>
+    <div class="sc"><div class="sv awn" id="lcL">41</div><div class="sl">Left</div></div>
+    <div class="sc"><div class="sv ayl" id="lcX">80</div><div class="sl">XP earned</div></div>
+  </div>
+  <div class="rule-banner"><strong>Rule:</strong> Struggle 20+ min before hints. After solving — rewrite from scratch next day to lock in the pattern.</div>
+  <div class="wtabs">
+    <div class="wtab on" onclick="showLC('la',this)">Arrays</div>
+    <div class="wtab" onclick="showLC('ls',this)">Strings</div>
+    <div class="wtab" onclick="showLC('lh',this)">Hash Maps</div>
+  </div>
+  <div id="la"><div class="card"><div class="ct">Arrays — 15 problems</div><div id="ll-a"></div></div></div>
+  <div id="ls" style="display:none"><div class="card"><div class="ct">Strings — 15 problems</div><div id="ll-s"></div></div></div>
+  <div id="lh" style="display:none"><div class="card"><div class="ct">Hash Maps — 15 problems</div><div id="ll-h"></div></div></div>
+</div>
+
+<!-- READING -->
+<div class="page" id="p-reading">
+  <div class="sh"><h1>Reading + <span style="color:var(--b)">Mindset</span></h1><p>// 10 pages/day = +15 XP · finish book = +100 XP</p></div>
+  <div class="sg">
+    <div class="sc"><div class="sv" style="color:var(--b)">900</div><div class="sl">Pages total</div></div>
+    <div class="sc"><div class="sv ayl">10</div><div class="sl">Pages/day</div></div>
+    <div class="sc"><div class="sv aok" id="bkFin">0</div><div class="sl">Finished</div></div>
+  </div>
+  <div class="card"><div class="ct">📚 Book Stack — In Order</div><div id="bookList"></div></div>
+  <div class="card">
+    <div class="ct">🧘 Meditation — +10 XP/day</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px">10 minutes before your phone. Just a timer. Sit, breathe, notice thoughts without reacting. Highest-ROI habit in this plan.</div>
+    <div class="frow"><span>Week 1–2</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">5 min body scan</span></div>
+    <div class="frow"><span>Week 3–4</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">8 min breath focus</span></div>
+    <div class="frow"><span>Month 2+</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">10 min open awareness</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">🚿 Cold Shower — +10 XP/day</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px">Dopamine +250% (sustained). Builds the habit of doing hard things on purpose.</div>
+    <div class="frow"><span>Days 1–7</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">30 sec cold at end</span></div>
+    <div class="frow"><span>Days 8–21</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">1 min cold</span></div>
+    <div class="frow"><span>Day 22+</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">Full cold 3–5 min</span></div>
+    <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--y);font-family:var(--mono)">Get in before you can talk yourself out of it.</div>
+  </div>
+  <div class="card">
+    <div class="ct">📵 Screen Time</div>
+    <div class="frow"><span>❌ Phone first 30 min of day</span><span class="amt abr" style="font-size:10px">BANNED</span></div>
+    <div class="frow"><span>❌ Phone in bed</span><span class="amt abr" style="font-size:10px">BANNED</span></div>
+    <div class="frow"><span>❌ Reels > 15 min/day</span><span class="amt abr" style="font-size:10px">BANNED</span></div>
+    <div class="frow"><span>✅ LeetCode / coding / reading</span><span class="amt aok" style="font-size:10px">GO</span></div>
+    <div class="frow"><span>🎯 Total screen &lt; 3hrs</span><span class="amt ayl" style="font-size:10px">TARGET</span></div>
+  </div>
+</div>
+
+<!-- FINANCE -->
+<div class="page" id="p-finance">
+  <div class="sh"><h1>Finance <span style="color:var(--g)">Plan</span></h1><p>// March — survival mode · every rupee counts</p></div>
+  <div class="fin-hero">
+    <div class="fin-big" id="finL">₹4,133</div>
+    <div class="fin-lbl">REMAINING THIS MONTH</div>
+    <div style="height:5px;background:rgba(0,0,0,.3);border-radius:3px;margin:12px 0 0">
+      <div id="finBar" style="height:100%;background:linear-gradient(90deg,var(--g),var(--y));border-radius:3px;transition:width .5s ease;width:100%"></div>
     </div>
-
-    <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-cell"><div class="stat-val" style="color:var(--green)">4</div><div class="stat-label">SOLVED</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--orange)">41</div><div class="stat-label">REMAINING</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent)">45</div><div class="stat-label">TOTAL</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent4)">8.9%</div><div class="stat-label">COMPLETE</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📅 3-WEEK STUDY PLAN</div>
-      <div class="grid-3">
-        <div style="background:var(--surface2);border-radius:10px;padding:16px">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent);letter-spacing:2px;margin-bottom:10px">WEEK 1</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Days 1-3: Arrays #1–8</div>
-          <div style="font-size:12px;color:var(--muted)">Days 4-7: Strings #1–8</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent2);letter-spacing:2px;margin-bottom:10px">WEEK 2</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Days 1-2: Arrays #9–15</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Days 3-4: Strings #9–15</div>
-          <div style="font-size:12px;color:var(--muted)">Days 5-7: Hash Tables #1–10</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent3);letter-spacing:2px;margin-bottom:10px">WEEK 3</div>
-          <div style="font-size:12px;color:var(--muted)">Days 1-5: Hash Tables #11–15 + Review tough ones</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🔢 ARRAYS (15 Problems)</div>
-      <table class="wtable" id="lcArrayTable"></table>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📝 STRINGS (15 Problems)</div>
-      <table class="wtable" id="lcStringTable"></table>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🗂️ HASH TABLES / HASH MAPS (15 Problems)</div>
-      <table class="wtable" id="lcHashTable"></table>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35)">
+      <span>Spent: <span id="spentSF" style="color:var(--o)">₹0</span></span>
+      <span>Budget: ₹4,133</span>
     </div>
   </div>
-
-  <!-- ======================== READING + MINDSET ======================== -->
-  <div class="page" id="page-reading">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent4)">READING + MINDSET</div>
-        <div class="page-sub">// 10 PAGES/DAY · MEDITATION · COLD SHOWERS · MINDSET REWIRE</div>
-      </div>
-    </div>
-
-    <div class="grid-3" style="margin-bottom:20px">
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent4)">900</div><div class="stat-label">PAGES IN 90 DAYS</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent2)">10</div><div class="stat-label">PAGES/DAY MIN</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent)">5</div><div class="stat-label">BOOKS TARGET</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📚 READING LIST — 90 DAY STACK</div>
-      <div class="book-item">
-        <div class="book-num">1</div>
-        <div>
-          <div class="book-title">Atomic Habits — James Clear</div>
-          <div class="book-why">Your foundation. Systems > goals. Understand how habits are built and broken.</div>
-        </div>
-        <span class="badge badge-done" style="margin-left:auto">START HERE</span>
-      </div>
-      <div class="book-item">
-        <div class="book-num">2</div>
-        <div>
-          <div class="book-title">Deep Work — Cal Newport</div>
-          <div class="book-why">LeetCode, coding, and startup thinking all require deep focus. This rewires your attention.</div>
-        </div>
-      </div>
-      <div class="book-item">
-        <div class="book-num">3</div>
-        <div>
-          <div class="book-title">The Lean Startup — Eric Ries</div>
-          <div class="book-why">Build, measure, learn. Core startup thinking for your future projects.</div>
-        </div>
-      </div>
-      <div class="book-item">
-        <div class="book-num">4</div>
-        <div>
-          <div class="book-title">Can't Hurt Me — David Goggins</div>
-          <div class="book-why">Mental toughness during hard training days. Callus your mind when it wants to quit.</div>
-        </div>
-      </div>
-      <div class="book-item">
-        <div class="book-num">5</div>
-        <div>
-          <div class="book-title">Zero to One — Peter Thiel</div>
-          <div class="book-why">Startup clarity and original thinking. What does the world need that doesn't exist yet?</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">🧘 MEDITATION PRACTICE</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">10 minutes every morning before your phone. Non-negotiable. Use an app (Headspace, Waking Up, or just a timer). This is the single highest-ROI habit for mental clarity, personality, and startup thinking.</div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px">
-          <div style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:8px">WEEK 1-2</div>
-          <div style="font-size:13px;color:var(--muted)">5 min body scan → notice your thoughts without acting on them</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px;margin-top:8px">
-          <div style="font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace;margin-bottom:8px">WEEK 3+</div>
-          <div style="font-size:13px;color:var(--muted)">10 min breath focus → use for problem solving clarity on hard LC problems</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🚿 COLD SHOWERS</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">Builds mental toughness. Boosts dopamine +250% (sustained, not spike). Improves skin. Pairs perfectly with workout recovery.</div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px">
-          <div style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:8px">PROTOCOL</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8">Day 1-7: End warm shower with 30sec cold<br>Day 8-21: 1 full minute cold<br>Day 22+: Full cold shower (3–5 min)</div>
-        </div>
-        <div style="margin-top:10px;font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace">THE RULE: Get in before you can talk yourself out of it.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🧠 SCREEN TIME RULES</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div style="background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.2);border-radius:10px;padding:16px">
-          <div style="font-size:12px;color:var(--red);font-family:'DM Mono',monospace;margin-bottom:8px">❌ BANNED</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8">Phone first 30 min after waking<br>Phone in bed<br>Mindless scroll after 10pm<br>Reels/TikTok > 15 min/day<br>News doom scrolling</div>
-        </div>
-        <div style="background:rgba(46,213,115,0.06);border:1px solid rgba(46,213,115,0.2);border-radius:10px;padding:16px">
-          <div style="font-size:12px;color:var(--green);font-family:'DM Mono',monospace;margin-bottom:8px">✅ ALLOWED</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8">LeetCode, coding, learning<br>Podcast while walking/cooking<br>YouTube — educational only<br>Reading (physical or e-reader)<br>Finance tracking</div>
-        </div>
-      </div>
-      <div style="margin-top:14px;padding:12px 16px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--muted)">
-        <strong style="color:var(--accent)">Target:</strong> Screen time under 3hrs/day (excluding productive work). Track in phone settings weekly.
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">💬 PERSONALITY + SOCIAL DEVELOPMENT</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-        <div style="background:var(--surface2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:6px">CONVERSATION</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.7">Ask questions you genuinely want answered. Listen more than you speak. Pause before responding. Never interrupt.</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--accent2);font-family:'DM Mono',monospace;margin-bottom:6px">POSTURE + PRESENCE</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.7">Stand tall. Shoulders back. Eye contact. Slow deliberate movements. Your body changes how others see you — and how you see yourself.</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--accent3);font-family:'DM Mono',monospace;margin-bottom:6px">DISCIPLINE = ATTRACTIVENESS</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.7">Show up on time. Do what you said you'd do. Have opinions. Be consistent. People are drawn to those who master themselves.</div>
-        </div>
-      </div>
-    </div>
+  <div class="card">
+    <div class="ct">💰 March Salary Breakdown</div>
+    <div class="frow"><span>Monthly Salary</span><span class="amt aok">₹37,133</span></div>
+    <div class="frow"><span>Rent + Credit Card</span><span class="amt abr">−₹30,000</span></div>
+    <div class="frow"><span>Debt payment</span><span class="amt abr">−₹3,000</span></div>
+    <div style="height:1px;background:var(--border);margin:6px 0"></div>
+    <div class="frow" style="background:rgba(245,230,66,.08)"><span style="font-weight:700">Left to spend</span><span class="amt ayl" style="font-size:16px;font-weight:800">₹4,133</span></div>
   </div>
-
-  <!-- ======================== STARTUP CLARITY ======================== -->
-  <div class="page" id="page-startup">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent)">STARTUP CLARITY</div>
-        <div class="page-sub">// THINK LIKE A FOUNDER · BUILD SKILLS · FIND THE PROBLEM</div>
-      </div>
-    </div>
-
-    <div class="card" style="background:linear-gradient(135deg,rgba(232,255,71,0.06),rgba(71,255,184,0.04));border-color:rgba(232,255,71,0.25)">
-      <div class="card-title">🎯 THE BIG QUESTION</div>
-      <div style="font-size:16px;line-height:1.8;color:var(--muted);margin-bottom:16px">
-        You don't need to know <em style="color:var(--text)">what</em> to build yet. You need to build the person who can build anything.
-        That's what the next 90 days are for.
-      </div>
-      <div style="font-size:13px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:1px">YOUR 90-DAY BUILDER MISSION:</div>
-      <div style="margin-top:10px;font-size:14px;color:var(--text);line-height:1.8">
-        → Master DSA fundamentals (LeetCode plan)<br>
-        → Build backend skills (your existing tracker)<br>
-        → Read startup books (Lean Startup, Zero to One)<br>
-        → Observe problems in daily life — write them down<br>
-        → Talk to 3+ people per week about their frustrations
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">🔬 PROBLEM JOURNAL</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Every day, notice one frustrating thing in your life or people around you. These are startup ideas waiting to exist.</div>
-        <textarea style="height:120px;resize:none" placeholder="Day 1: Problem I noticed today...&#10;&#10;Who has this problem?&#10;How do they solve it now?&#10;How could it be 10x better?"></textarea>
-        <button class="btn btn-primary" style="margin-top:10px;width:100%">Save Problem</button>
-      </div>
-
-      <div class="card">
-        <div class="card-title">🛠️ FOUNDER SKILL STACK</div>
-        <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:10px">Track what you're building</div>
-        <div id="founderSkills"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🧭 90-DAY FOUNDER ROADMAP</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-        <div style="background:var(--surface2);border-radius:10px;padding:16px;border-top:3px solid var(--accent)">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:10px">MONTH 1 — FOUNDATION</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.8">✓ Lock in all habits<br>✓ Arrays + Strings in LC<br>✓ Read Atomic Habits<br>✓ Journal daily problems<br>✓ 10 pages/day reading</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px;border-top:3px solid var(--accent2)">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent2);margin-bottom:10px">MONTH 2 — BUILD</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.8">✓ Hash Tables + more LC<br>✓ Read Deep Work + Lean Startup<br>✓ Pick ONE problem to explore<br>✓ Talk to potential users<br>✓ Prototype in your head / paper</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px;border-top:3px solid var(--accent3)">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent3);margin-bottom:10px">MONTH 3 — CLARITY</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.8">✓ Read Zero to One<br>✓ Have a clear problem statement<br>✓ Know your target user<br>✓ Backend skill + LC strong<br>✓ Body transformed → confidence high</div>
-        </div>
-      </div>
-    </div>
+  <div class="card">
+    <div class="ct">🎯 Suggested Split</div>
+    <div class="frow"><span>🥦 Food / groceries</span><span class="amt aok">₹2,500</span></div>
+    <div class="frow"><span>🚌 Transport</span><span class="amt awn">₹800</span></div>
+    <div class="frow"><span>📦 Emergency / misc</span><span class="amt awn">₹500</span></div>
+    <div class="frow"><span>💊 Whey protein</span><span style="font-size:10px;font-family:var(--mono);color:var(--b)">Buy bulk, saves money</span></div>
+    <div class="frow" style="background:rgba(245,66,66,.07)"><span>🚫 Eating out / fun</span><span class="amt abr">₹0 this month</span></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.6;padding:9px;background:var(--s2);border-radius:7px">Survival month. Cook everything. Walk when possible. Next month after debt — more room. You can do this.</div>
   </div>
-
-  <!-- ======================== FINANCE ======================== -->
-  <div class="page" id="page-finance">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--green)">FINANCE</div>
-        <div class="page-sub">// TRACK · SAVE · INVEST · BUILD FINANCIAL DISCIPLINE</div>
-      </div>
+  <div class="card">
+    <div class="ct">➕ Log Expense</div>
+    <div class="exp-inp">
+      <input type="text" id="eN" placeholder="What did you spend on?" style="flex:1">
+      <input type="number" id="eA" placeholder="₹" style="width:80px;flex:none">
     </div>
-
-    <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-cell"><div class="stat-val" style="color:var(--green)" id="finIncome">—</div><div class="stat-label">INCOME</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--red)" id="finSpend">—</div><div class="stat-label">SPENT</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent)" id="finSaved">—</div><div class="stat-label">SAVED</div></div>
-      <div class="stat-cell"><div class="stat-val" style="color:var(--accent2)" id="finPct">—</div><div class="stat-label">SAVE %</div></div>
+    <div class="exp-inp">
+      <select id="eC">
+        <option value="food">🥦 Food</option>
+        <option value="transport">🚌 Transport</option>
+        <option value="misc">📦 Misc</option>
+        <option value="impulse">⚠ Impulse</option>
+      </select>
+      <button class="btn btn-y" style="flex:1" onclick="addExp()">Add</button>
     </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">💰 MONTHLY BUDGET SETUP</div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px">MONTHLY INCOME (₹)</div>
-          <input type="number" id="inputIncome" placeholder="e.g. 30000" oninput="calcFinance()">
-        </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px">MONTHLY SPEND (₹)</div>
-          <input type="number" id="inputSpend" placeholder="e.g. 18000" oninput="calcFinance()">
-        </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px">SAVINGS GOAL (%)</div>
-          <input type="number" id="inputGoalPct" placeholder="e.g. 30" oninput="calcFinance()">
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 SPEND CATEGORIES</div>
-        <div class="fin-row"><span class="label">Food / Nutrition</span><span class="amount">Necessary</span></div>
-        <div class="fin-row"><span class="label">Gym membership</span><span class="amount">Necessary</span></div>
-        <div class="fin-row"><span class="label">Transport</span><span class="amount neutral">Track</span></div>
-        <div class="fin-row"><span class="label">Entertainment / eating out</span><span class="amount bad">Cut 80%</span></div>
-        <div class="fin-row"><span class="label">Alcohol / smoking</span><span class="amount bad">ZERO</span></div>
-        <div class="fin-row"><span class="label">Impulse shopping</span><span class="amount bad">48hr rule</span></div>
-        <div class="fin-row"><span class="label">Books / courses</span><span class="amount">Invest</span></div>
-        <div class="fin-row"><span class="label">Emergency fund</span><span class="amount">3 months</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📏 THE 50/30/20 ADAPTED FOR YOUR PHASE</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-        <div style="background:rgba(46,213,115,0.08);border:1px solid rgba(46,213,115,0.2);border-radius:10px;padding:16px;text-align:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--green)">50%</div>
-          <div style="font-size:13px;font-weight:500;margin-bottom:6px">NEEDS</div>
-          <div style="font-size:12px;color:var(--muted)">Rent, food, gym, transport, phone</div>
-        </div>
-        <div style="background:rgba(232,255,71,0.06);border:1px solid rgba(232,255,71,0.2);border-radius:10px;padding:16px;text-align:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent)">30%</div>
-          <div style="font-size:13px;font-weight:500;margin-bottom:6px">SAVE + INVEST</div>
-          <div style="font-size:12px;color:var(--muted)">Emergency fund first, then SIP/index fund</div>
-        </div>
-        <div style="background:rgba(184,71,255,0.06);border:1px solid rgba(184,71,255,0.2);border-radius:10px;padding:16px;text-align:center">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent4)">20%</div>
-          <div style="font-size:13px;font-weight:500;margin-bottom:6px">GROWTH</div>
-          <div style="font-size:12px;color:var(--muted)">Books, courses, rewards, skills</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📋 THE 48-HOUR RULE</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">Before any non-essential purchase: <strong style="color:var(--text)">wait 48 hours.</strong> If you still want it and it fits your budget, buy it. 90% of impulse wants disappear. This one rule alone can save you thousands per year.</div>
-    </div>
+    <div id="eList"></div>
   </div>
-
-  <!-- ======================== MILESTONES ======================== -->
-  <div class="page" id="page-milestones">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent3)">MILESTONES</div>
-        <div class="page-sub">// YOUR ACHIEVEMENT MAP — 90 DAYS TO A NEW YOU</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🗺️ TRANSFORMATION MILESTONES</div>
-      <div id="milestoneList"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📸 BODY CHECK-IN SCHEDULE</div>
-      <table class="wtable">
-        <tr><th>Checkpoint</th><th>Day</th><th>What to Track</th><th>Status</th></tr>
-        <tr><td>Starting point</td><td>Day 1</td><td>Weight, measurements, 1 photo</td><td><span class="badge badge-done">NOW</span></td></tr>
-        <tr><td>Check-in 1</td><td>Day 14</td><td>Weight, energy, habit streak</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
-        <tr><td>Check-in 2</td><td>Day 30</td><td>Weight, measurements, photo</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
-        <tr><td>Mid-point</td><td>Day 45</td><td>Full assessment + reward</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
-        <tr><td>Check-in 3</td><td>Day 60</td><td>Weight, measurements, photo</td><td><span class="badge" style="background:rgba(107,107,128,0.2);color:var(--muted)">Upcoming</span></td></tr>
-        <tr><td>FINISH LINE</td><td>Day 90</td><td>Full transformation comparison</td><td><span class="badge" style="background:rgba(232,255,71,0.1);color:var(--accent)">Goal</span></td></tr>
-      </table>
-    </div>
+  <div class="card">
+    <div class="ct">⏱ 48-Hour Rule</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">Any non-essential purchase: <strong style="color:var(--text)">write it down and wait 48 hours.</strong> Still want it? It fits ₹4,133? Buy it. Most impulse wants vanish. This one rule saves you the most money this month.</div>
   </div>
+</div>
 
-  <!-- ======================== REWARDS ======================== -->
-  <div class="page" id="page-rewards">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent)">REWARDS</div>
-        <div class="page-sub">// BUDGET-FRIENDLY · MILESTONE-LOCKED · YOU EARNED IT</div>
-      </div>
-    </div>
+<!-- HABITS -->
+<div class="page" id="p-habits">
+  <div class="sh"><h1>Habit <span style="color:var(--y)">Tracker</span></h1><p>// 90 dots · tap each day done · don't break the chain</p></div>
+  <div id="hGrids"></div>
+</div>
 
-    <div style="background:rgba(232,255,71,0.05);border:1px solid rgba(232,255,71,0.15);border-radius:12px;padding:18px 24px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.7">
-      <strong style="color:var(--accent)">The Rule:</strong> Rewards are locked until the milestone is achieved. No shortcuts. Each reward is chosen to <em style="color:var(--text)">reinforce your identity</em> — you're not celebrating by going back to old habits. You're leveling up as a new person.
-    </div>
-
-    <div class="grid-3" id="rewardGrid"></div>
+<!-- REWARDS -->
+<div class="page" id="p-rewards">
+  <div class="sh"><h1>Rewards <span style="color:var(--y)">System</span></h1><p>// Earn the milestone · unlock the reward</p></div>
+  <div class="card" style="background:rgba(245,230,66,.04);border-color:rgba(245,230,66,.18)">
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">Your XP: <strong class="ayl" id="rXP">0</strong> · Rewards unlock when you hit <strong style="color:var(--text)">both</strong> the day milestone and the XP threshold. No early unlocks.</div>
   </div>
+  <div id="rList"></div>
+</div>
 
-  <!-- ======================== HABIT TRACKER ======================== -->
-  <div class="page" id="page-habits">
-    <div class="page-header">
-      <div>
-        <div class="page-title" style="color:var(--accent2)">HABIT TRACKER</div>
-        <div class="page-sub">// 90 DAYS · EVERY DOT IS A DECISION</div>
-      </div>
-    </div>
-
-    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">Click each day to mark it complete. The visual momentum of filling this grid is one of the most powerful psychological tools you have. Don't break the chain.</div>
-
-    <div id="habitTrackerGrid"></div>
-  </div>
-
-</main>
+<div class="toast" id="toast"></div>
 
 <script>
-// ===== STATE =====
-let dayNumber = 1;
-let checks = {};
-let lcStatus = {};
-
-// Day counter from localStorage-like memory
-function init() {
-  const today = new Date();
-  document.getElementById('todayDate').textContent = today.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-  document.getElementById('todayWeekDay').textContent = today.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
-
-  updateDayDisplay();
-  buildChecks();
-  buildLeetcode();
-  buildMilestones();
-  buildRewards();
-  buildHabitTracker();
-  buildStartupSkills();
-  buildDashboard();
-}
-
-function updateDayDisplay() {
-  document.getElementById('currentDay').textContent = dayNumber;
-  document.getElementById('dashDay').textContent = dayNumber;
-  const pct = Math.round((dayNumber/90)*100);
-  document.getElementById('mainProgress').style.width = pct + '%';
-  document.getElementById('dashProgress').style.width = pct + '%';
-  document.getElementById('dashPercent').textContent = pct + '%';
-  const week = Math.ceil(dayNumber/7);
-  document.getElementById('dashWeek').textContent = week;
-}
-
-// ===== NAV =====
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if(id === 'dashboard') buildDashboard();
-}
-
-// ===== CHECKS DATA =====
-const checkData = {
-  mind: [
-    {id:'meditation', label:'Morning Meditation', sub:'10 min before phone — no excuses'},
-    {id:'journal', label:'Daily Journal Entry', sub:'Wins, tomorrow, gratitude'},
-    {id:'noScroll', label:'No mindless scrolling', sub:'Reels/TikTok < 15 min'},
-    {id:'reading', label:'10 pages read', sub:'Atomic Habits → Deep Work → Lean Startup'},
-    {id:'coldShower', label:'Cold Shower', sub:'Build mental toughness daily'},
-  ],
-  body: [
-    {id:'workout', label:'Workout completed', sub:'Push / Pull / Legs / Conditioning'},
-    {id:'steps', label:'8,000–10,000 steps', sub:'Walk if no workout day'},
-    {id:'sleep', label:'7–8 hrs sleep', sub:'Phone out of room, 10pm wind down'},
-    {id:'noSmoke', label:'No smoking', sub:'Zero. Non-negotiable.'},
-    {id:'noAlcohol', label:'Alcohol minimal / none', sub:'First 30 days: ZERO'},
-  ],
-  nutrition: [
-    {id:'protein', label:'120–130g protein hit', sub:'Shake + food sources'},
-    {id:'water', label:'2.5–3L water', sub:'Track with bottle marks'},
-    {id:'veggies', label:'Vegetables eaten', sub:'Thoran + dinner veggies'},
-    {id:'noCheat', label:'No off-plan eating', sub:'Meal prepped and controlled'},
-  ],
-  growth: [
-    {id:'leetcode', label:'LeetCode problem done', sub:'1 per day minimum'},
-    {id:'finance', label:'Finance tracked', sub:'Log any spending today'},
-    {id:'problem', label:'Noticed 1 real-world problem', sub:'Startup thinking habit'},
-    {id:'posture', label:'Posture check', sub:'Shoulders back, stand tall all day'},
-    {id:'screens', label:'Screen time < 3hrs', sub:'Check phone settings tonight'},
-  ]
+// ── STATE ──
+const S = {
+  day:1, checks:{}, lcStatus:{a1:true,a2:true,a3:true,a4:true},
+  workouts:{}, habits:{}, expenses:[], books:[]
 };
 
-function buildChecks() {
-  ['mind','body','nutrition','growth'].forEach(cat => {
-    const el = document.getElementById('checks-' + cat);
-    if(!el) return;
-    el.innerHTML = '';
-    checkData[cat].forEach(item => {
-      el.innerHTML += `
-        <div class="check-item ${checks[item.id] ? 'done' : ''}" onclick="toggleCheck('${item.id}', this)">
-          <div class="check-box">${checks[item.id] ? '✓' : ''}</div>
-          <div>
-            <div class="check-label">${item.label}</div>
-            <div class="check-sub">${item.sub}</div>
-          </div>
-        </div>`;
-    });
-  });
-  updateCheckStats();
+// ── CHECK DATA ──
+const CHK = {
+  mind:[
+    {id:'med', label:'Meditation',    sub:'10 min before phone', pts:10},
+    {id:'cold',label:'Cold Shower',   sub:'Full cold — no skipping', pts:10},
+    {id:'ns',  label:'No Mindless Scroll', sub:'Reels < 15 min/day', pts:10},
+  ],
+  body:[
+    {id:'wkt', label:'Workout / 8-10k Steps', sub:'Gym or walk — no zero days', pts:40},
+    {id:'slp', label:'7–8 hrs Sleep', sub:'Phone out of room', pts:15},
+    {id:'nsmk',label:'No Smoking',    sub:'Track the streak', pts:10},
+  ],
+  nutrition:[
+    {id:'prot',label:'120g Protein Hit',   sub:'Shakes + all meals', pts:20},
+    {id:'wtr', label:'2.5–3L Water',        sub:'Mark your bottle', pts:10},
+    {id:'veg', label:'Vegetables Eaten',    sub:'Thoran + dinner', pts:10},
+    {id:'mp',  label:'On Meal Plan',        sub:'No off-plan food', pts:15},
+  ],
+  growth:[
+    {id:'lc',  label:'LeetCode Done',  sub:'1+ problem today', pts:20},
+    {id:'rdg', label:'10 Pages Read',   sub:'From your book stack', pts:15},
+  ]
+};
+const ALL = Object.values(CHK).flat();
+const MAX_DAY_XP = ALL.reduce((a,c)=>a+c.pts,0);
+
+// ── BOOKS ──
+const BOOKS = [
+  {id:'b1',title:'How to Win Friends & Influence People',auth:'Dale Carnegie',
+   why:'The foundation of charisma and likability. Learn how to make people feel valued, how to handle disagreements without making enemies, and how to lead people genuinely. Every interaction you have will improve.',pts:100},
+  {id:'b2',title:'Atomic Habits',auth:'James Clear',
+   why:'You are building 17 habits at once. Understand the cue-routine-reward loop. Identity-based habits: "I am someone who trains daily" — not "I want to." The difference is everything.',pts:100},
+  {id:'b3',title:'Deep Work',auth:'Cal Newport',
+   why:'LeetCode, coding, and serious learning all require uninterrupted focus. Protect your deep work blocks. Produce at your cognitive peak. This book rewires how you use your time.',pts:100},
+  {id:'b4',title:"Can't Hurt Me",auth:'David Goggins',
+   why:'For days you want to skip the gym. For the cold shower you want to avoid. Mental toughness is built deliberately. Read this on hard days.',pts:100},
+  {id:'b5',title:'The Lean Startup',auth:'Eric Ries',
+   why:'Build, measure, learn. Great mental model for solving any real problem efficiently. Even if you never start a company, thinking like a builder makes you sharper.',pts:100},
+];
+
+// ── LC DATA ──
+const LCA = [
+  {id:'a1',num:'#1',name:'Two Sum',diff:'easy'},
+  {id:'a2',num:'#121',name:'Best Time to Buy and Sell Stock',diff:'easy'},
+  {id:'a3',num:'#217',name:'Contains Duplicate',diff:'easy'},
+  {id:'a4',num:'#238',name:'Product of Array Except Self',diff:'medium'},
+  {id:'a5',num:'#53',name:'Maximum Subarray',diff:'medium'},
+  {id:'a6',num:'#88',name:'Merge Sorted Array',diff:'easy'},
+  {id:'a7',num:'#26',name:'Remove Duplicates from Sorted Array',diff:'easy'},
+  {id:'a8',num:'#66',name:'Plus One',diff:'easy'},
+  {id:'a9',num:'#283',name:'Move Zeroes',diff:'easy'},
+  {id:'a10',num:'#724',name:'Find Pivot Index',diff:'easy'},
+  {id:'a11',num:'#169',name:'Majority Element',diff:'easy'},
+  {id:'a12',num:'#189',name:'Rotate Array',diff:'medium'},
+  {id:'a13',num:'#136',name:'Single Number',diff:'easy'},
+  {id:'a14',num:'#350',name:'Intersection of Two Arrays II',diff:'easy'},
+  {id:'a15',num:'#118',name:"Pascal's Triangle",diff:'easy'},
+];
+const LCS = [
+  {id:'s1',num:'#242',name:'Valid Anagram',diff:'easy'},
+  {id:'s2',num:'#125',name:'Valid Palindrome',diff:'easy'},
+  {id:'s3',num:'#344',name:'Reverse String',diff:'easy'},
+  {id:'s4',num:'#387',name:'First Unique Character',diff:'easy'},
+  {id:'s5',num:'#14',name:'Longest Common Prefix',diff:'easy'},
+  {id:'s6',num:'#20',name:'Valid Parentheses',diff:'easy'},
+  {id:'s7',num:'#28',name:'Implement strStr()',diff:'easy'},
+  {id:'s8',num:'#58',name:'Length of Last Word',diff:'easy'},
+  {id:'s9',num:'#3',name:'Longest Substring Without Repeating',diff:'medium'},
+  {id:'s10',num:'#8',name:'String to Integer (atoi)',diff:'medium'},
+  {id:'s11',num:'#151',name:'Reverse Words in a String',diff:'medium'},
+  {id:'s12',num:'#49',name:'Group Anagrams',diff:'medium'},
+  {id:'s13',num:'#5',name:'Longest Palindromic Substring',diff:'medium'},
+  {id:'s14',num:'#205',name:'Isomorphic Strings',diff:'easy'},
+  {id:'s15',num:'#13',name:'Roman to Integer',diff:'easy'},
+];
+const LCH = [
+  {id:'h1',num:'#1',name:'Two Sum (HashMap approach)',diff:'easy'},
+  {id:'h2',num:'#49',name:'Group Anagrams (HashMap)',diff:'medium'},
+  {id:'h3',num:'#217',name:'Contains Duplicate',diff:'easy'},
+  {id:'h4',num:'#242',name:'Valid Anagram',diff:'easy'},
+  {id:'h5',num:'#771',name:'Jewels and Stones',diff:'easy'},
+  {id:'h6',num:'#383',name:'Ransom Note',diff:'easy'},
+  {id:'h7',num:'#205',name:'Isomorphic Strings',diff:'easy'},
+  {id:'h8',num:'#290',name:'Word Pattern',diff:'easy'},
+  {id:'h9',num:'#202',name:'Happy Number',diff:'easy'},
+  {id:'h10',num:'#219',name:'Contains Duplicate II',diff:'easy'},
+  {id:'h11',num:'#349',name:'Intersection of Two Arrays',diff:'easy'},
+  {id:'h12',num:'#36',name:'Valid Sudoku',diff:'medium'},
+  {id:'h13',num:'#347',name:'Top K Frequent Elements',diff:'medium'},
+  {id:'h14',num:'#560',name:'Subarray Sum Equals K',diff:'medium'},
+  {id:'h15',num:'#128',name:'Longest Consecutive Sequence',diff:'medium'},
+];
+
+// ── REWARDS ──
+const RWDS = [
+  {day:7,xp:400,icon:'🎧',title:'New Playlist or Spotify Premium',desc:"Build your workout + focus playlist. After 7 days of showing up, you've earned music that fuels you.",cost:'Free trial or ₹119'},
+  {day:21,xp:1400,icon:'📖',title:'Buy Your Next Book',desc:"210+ pages done. You're a reader now. Buy the next book in the stack — knowledge compounds.",cost:'₹300–600'},
+  {day:30,xp:2000,icon:'👕',title:'New Gym T-Shirt or Shorts',desc:"One well-fitted piece. No splurge — one item that matches the identity you've been building.",cost:'₹500–900'},
+  {day:45,xp:3200,icon:'🍱',title:'One Planned Cheat Meal',desc:"Not a cheat day — one single meal at a place you love. Enjoy it fully. Then straight back to the plan.",cost:'₹200–500'},
+  {day:60,xp:4500,icon:'💈',title:'Premium Haircut + Grooming',desc:"Your body has changed. Now let the outside match. A sharp cut and a fresh grooming session. You look the part.",cost:'₹400–900'},
+  {day:75,xp:5800,icon:'🏃',title:'New Running Shoes',desc:"Your feet have logged thousands of steps. Reward them with a quality pair that makes you want to move even more.",cost:'₹1500–3000'},
+  {day:90,xp:7000,icon:'🍽️',title:'Dinner Anywhere You Want',desc:"Day 90. You did it. Go to the restaurant you've been saving. Eat what you want. You earned this completely.",cost:'₹500–1500'},
+];
+
+// ── HABITS ──
+const HABS = [
+  {id:'hw',name:'Workout',col:'var(--o)'},
+  {id:'hm',name:'Meditation',col:'var(--b)'},
+  {id:'hc',name:'Cold Shower',col:'#47d6f5'},
+  {id:'hp',name:'Protein Goal',col:'var(--g)'},
+  {id:'hr',name:'10 Pages',col:'var(--y)'},
+  {id:'hl',name:'LeetCode',col:'var(--o)'},
+  {id:'hn',name:'No Scroll',col:'var(--r)'},
+  {id:'hs',name:'8hr Sleep',col:'#a47af5'},
+];
+
+const BUDGET = 4133;
+
+// ── HELPERS ──
+function $(id){return document.getElementById(id)}
+let toastTmr;
+function toast(msg){
+  const t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTmr);toastTmr=setTimeout(()=>t.classList.remove('show'),1800);
 }
 
-function toggleCheck(id, el) {
-  checks[id] = !checks[id];
-  el.classList.toggle('done');
-  el.querySelector('.check-box').textContent = checks[id] ? '✓' : '';
-  el.querySelector('.check-label').style.textDecoration = checks[id] ? 'line-through' : '';
-  updateCheckStats();
-  buildQuickChecks();
+function computeXP(){
+  let x=80; // 4 pre-done LC
+  ALL.forEach(c=>{if(S.checks[c.id])x+=c.pts});
+  Object.values(S.workouts).forEach(p=>x+=p);
+  const pre=['a1','a2','a3','a4'];
+  Object.keys(S.lcStatus).forEach(id=>{if(S.lcStatus[id]&&!pre.includes(id))x+=20});
+  x+=S.books.length*100;
+  return x;
+}
+function refreshXP(){
+  const xp=computeXP();
+  const lv=Math.floor(xp/100)+1;
+  const inLv=xp%100;
+  $('xpT').textContent=xp;
+  $('xpF').style.width=inLv+'%';
+  $('lvl').textContent=lv;
+  $('xpN').textContent=100-inLv;
+  $('totXP').textContent=xp;
+  if($('rXP'))$('rXP').textContent=xp+' XP';
 }
 
-function updateCheckStats() {
-  const total = Object.keys(checkData).reduce((a, c) => a + checkData[c].length, 0);
-  const done = Object.values(checks).filter(Boolean).length;
-  const pct = Math.round((done/total)*100);
-  document.getElementById('statsChecked').textContent = done;
-  document.getElementById('statsTotal').textContent = total;
-  const p = document.getElementById('completionPct');
-  const b = document.getElementById('checkProg');
-  if(p) p.textContent = pct + '%';
-  if(b) b.style.width = pct + '%';
+// ── NAV ──
+function go(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  $('p-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  else document.querySelectorAll('.nb').forEach(b=>{if(b.textContent.toLowerCase().includes(id.slice(0,4)))b.classList.add('on')});
+  if(id==='dash')updateDash();
+  if(id==='rewards'){refreshXP();buildRewards();}
+  if(id==='finance')buildExpenses();
 }
 
-function buildQuickChecks() {
-  const el = document.getElementById('quickChecks');
-  if(!el) return;
-  const allItems = Object.values(checkData).flat().slice(0,6);
-  el.innerHTML = allItems.map(item => `
-    <div class="check-item ${checks[item.id] ? 'done' : ''}" onclick="toggleCheck('${item.id}', this)" style="padding:8px 12px">
-      <div class="check-box">${checks[item.id] ? '✓' : ''}</div>
-      <div class="check-label" style="font-size:13px;${checks[item.id] ? 'text-decoration:line-through;' : ''}">${item.label}</div>
+// ── DAY ──
+function chDay(d){S.day=Math.max(1,Math.min(90,S.day+d));updateDash();}
+
+// ── DASH ──
+function updateDash(){
+  const day=S.day;
+  $('dDay').textContent=day;
+  $('dPill').textContent=day;
+  $('wkLbl').textContent=Math.ceil(day/7);
+  const pct=Math.round(day/90*100);
+  $('mProg').style.width=pct+'%';
+  $('rPct').textContent=pct+'%';
+  const c=176,off=c-(c*pct/100);
+  $('rCircle').style.strokeDashoffset=off;
+  const todXP=ALL.filter(c=>S.checks[c.id]).reduce((a,c)=>a+c.pts,0);
+  const dn=ALL.filter(c=>S.checks[c.id]).length;
+  $('d-xp').textContent=todXP;
+  $('d-done').textContent=dn;
+  $('d-left').textContent=ALL.length-dn;
+  buildQuick();
+  refreshXP();
+}
+
+function buildQuick(){
+  const el=$('qList');if(!el)return;
+  el.innerHTML=ALL.slice(0,5).map(c=>`
+    <div class="ci ${S.checks[c.id]?'done':''}" onclick="togCheck('${c.id}',this)">
+      <div class="cb">${S.checks[c.id]?'✓':''}</div>
+      <div class="ci-label">${c.label}</div>
+      <div class="ci-pts">+${c.pts}</div>
     </div>`).join('');
 }
 
-function resetDay() {
-  checks = {};
-  buildChecks();
-}
-
-// ===== DASHBOARD =====
-function buildDashboard() {
-  const schedules = {
-    0: [{t:'Legs + Core', c:'#ff6b35'},{t:'Conditioning + Abs', c:'#ffa502'},{t:'Rest / Optional Walk', c:'#6b6b80'}],
-    1: [{t:'Push Day', c:'#47abff'},{t:'Workout', c:'#47abff'}],
-    2: [{t:'Pull Day', c:'#2ed573'},{t:'Workout', c:'#2ed573'}],
-    3: [{t:'Rest / Walk', c:'#6b6b80'}],
-    4: [{t:'Legs + Core', c:'#ff6b35'}],
-    5: [{t:'Conditioning + Abs', c:'#ffa502'}],
-    6: [{t:'Optional Walk / Mobility', c:'#6b6b80'}],
-  };
-  const dow = new Date().getDay();
-  const el = document.getElementById('todaySchedule');
-  if(el) {
-    const items = [
-      {time:'6:00 AM', task:'Wake up → Meditation → Cold shower', color: 'var(--accent)'},
-      {time:'6:30 AM', task:'Morning whey + breakfast', color: 'var(--accent2)'},
-      {time:'7:00 AM', task:'Workout / Walk', color: 'var(--accent3)'},
-      {time:'9:00 AM', task:'LeetCode problem (1 minimum)', color: 'var(--orange)'},
-      {time:'12:00 PM', task:'Lunch — protein + thoran combo', color: 'var(--green)'},
-      {time:'4:00 PM', task:'10 pages reading', color: 'var(--accent4)'},
-      {time:'5:00 PM', task:'Evening fruit + walk', color: 'var(--green)'},
-      {time:'7:00 PM', task:'Post-workout whey + dinner prep', color: 'var(--accent2)'},
-      {time:'9:00 PM', task:'Journal + finance log + plan tomorrow', color: 'var(--accent)'},
-      {time:'10:00 PM', task:'Phone off / reading only / sleep', color: 'var(--muted)'},
-    ];
-    el.innerHTML = items.map(i => `
-      <div style="display:flex;gap:12px;padding:7px 0;border-bottom:1px solid rgba(42,42,58,0.5)">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:${i.color};width:60px;flex-shrink:0;padding-top:2px">${i.time}</div>
-        <div style="font-size:12px;color:var(--muted)">${i.task}</div>
-      </div>`).join('');
-  }
-  buildQuickChecks();
-}
-
-// ===== LEETCODE =====
-const lcArrays = [
-  {num:'#1', name:'Two Sum', diff:'easy', status:'done'},
-  {num:'#121', name:'Best Time to Buy and Sell Stock', diff:'easy', status:'done'},
-  {num:'#217', name:'Contains Duplicate', diff:'easy', status:'done'},
-  {num:'#238', name:'Product of Array Except Self', diff:'medium', status:'hints'},
-  {num:'#53', name:'Maximum Subarray', diff:'medium', status:''},
-  {num:'#88', name:'Merge Sorted Array', diff:'easy', status:''},
-  {num:'#26', name:'Remove Duplicates from Sorted Array', diff:'easy', status:''},
-  {num:'#66', name:'Plus One', diff:'easy', status:''},
-  {num:'#283', name:'Move Zeroes', diff:'easy', status:''},
-  {num:'#724', name:'Find Pivot Index', diff:'easy', status:''},
-  {num:'#169', name:'Majority Element', diff:'easy', status:''},
-  {num:'#189', name:'Rotate Array', diff:'medium', status:''},
-  {num:'#136', name:'Single Number', diff:'easy', status:''},
-  {num:'#350', name:'Intersection of Two Arrays II', diff:'easy', status:''},
-  {num:'#118', name:"Pascal's Triangle", diff:'easy', status:''},
-];
-
-const lcStrings = [
-  {num:'#242', name:'Valid Anagram', diff:'easy', status:''},
-  {num:'#125', name:'Valid Palindrome', diff:'easy', status:''},
-  {num:'#344', name:'Reverse String', diff:'easy', status:''},
-  {num:'#387', name:'First Unique Character in a String', diff:'easy', status:''},
-  {num:'#14', name:'Longest Common Prefix', diff:'easy', status:''},
-  {num:'#20', name:'Valid Parentheses', diff:'easy', status:''},
-  {num:'#28', name:'Implement strStr()', diff:'easy', status:''},
-  {num:'#58', name:'Length of Last Word', diff:'easy', status:''},
-  {num:'#3', name:'Longest Substring Without Repeating Characters', diff:'medium', status:''},
-  {num:'#8', name:'String to Integer (atoi)', diff:'medium', status:''},
-  {num:'#151', name:'Reverse Words in a String', diff:'medium', status:''},
-  {num:'#49', name:'Group Anagrams', diff:'medium', status:''},
-  {num:'#5', name:'Longest Palindromic Substring', diff:'medium', status:''},
-  {num:'#205', name:'Isomorphic Strings', diff:'easy', status:''},
-  {num:'#13', name:'Roman to Integer', diff:'easy', status:''},
-];
-
-const lcHash = [
-  {num:'#1', name:'Two Sum (hash map approach)', diff:'easy', status:''},
-  {num:'#49', name:'Group Anagrams (hash map approach)', diff:'medium', status:''},
-  {num:'#217', name:'Contains Duplicate', diff:'easy', status:''},
-  {num:'#242', name:'Valid Anagram', diff:'easy', status:''},
-  {num:'#771', name:'Jewels and Stones', diff:'easy', status:''},
-  {num:'#383', name:'Ransom Note', diff:'easy', status:''},
-  {num:'#205', name:'Isomorphic Strings', diff:'easy', status:''},
-  {num:'#290', name:'Word Pattern', diff:'easy', status:''},
-  {num:'#202', name:'Happy Number', diff:'easy', status:''},
-  {num:'#219', name:'Contains Duplicate II', diff:'easy', status:''},
-  {num:'#349', name:'Intersection of Two Arrays', diff:'easy', status:''},
-  {num:'#36', name:'Valid Sudoku', diff:'medium', status:''},
-  {num:'#347', name:'Top K Frequent Elements', diff:'medium', status:''},
-  {num:'#560', name:'Subarray Sum Equals K', diff:'medium', status:''},
-  {num:'#128', name:'Longest Consecutive Sequence', diff:'medium', status:''},
-];
-
-function buildLCTable(tableId, data) {
-  const el = document.getElementById(tableId);
-  if(!el) return;
-  el.innerHTML = `<tr><th>#</th><th>Problem</th><th>Difficulty</th><th>Status</th><th>Action</th></tr>`;
-  data.forEach((p, i) => {
-    const key = tableId + i;
-    const done = lcStatus[key] || p.status === 'done';
-    const hints = p.status === 'hints';
-    el.innerHTML += `
-      <tr>
-        <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${p.num}</td>
-        <td style="${done ? 'text-decoration:line-through;color:var(--muted)' : ''}">${p.name}</td>
-        <td><span class="badge badge-${p.diff}">${p.diff}</span></td>
-        <td>${done ? '<span class="badge badge-done">DONE</span>' : hints ? '<span class="badge badge-hints">DONE (hints)</span>' : '<span style="color:var(--muted);font-size:11px;font-family:\'DM Mono\',monospace">pending</span>'}</td>
-        <td><button class="btn btn-ghost" style="padding:4px 12px;font-size:11px" onclick="toggleLC('${key}', this, ${i})">
-          ${done ? '↺ Undo' : '✓ Done'}
-        </button></td>
-      </tr>`;
-  });
-}
-
-function toggleLC(key, btn, i) {
-  lcStatus[key] = !lcStatus[key];
-  const total = Object.values(lcStatus).filter(Boolean).length + 4; // 4 already done
-  document.getElementById('statsLeet').textContent = total;
-  buildLeetcode();
-}
-
-function buildLeetcode() {
-  buildLCTable('lcArrayTable', lcArrays);
-  buildLCTable('lcStringTable', lcStrings);
-  buildLCTable('lcHashTable', lcHash);
-}
-
-// ===== MILESTONES =====
-const milestones = [
-  {day:7, icon:'🌱', title:'First Week Survived', body:'7 straight days of workouts, checklist, and cold showers. DOMS is real — so is your toughness.', color:'var(--accent)'},
-  {day:14, icon:'💥', title:'2 Weeks — Strength Visible', body:'Weight on your exercises is climbing. Morning routine feels automatic. Sleep quality improved.', color:'var(--accent2)'},
-  {day:21, icon:'🧠', title:'21-Day Habit Lock', body:'Science says 21 days to start a habit. You\'ve done it. LeetCode patterns starting to click. Waist reducing.', color:'var(--accent3)'},
-  {day:30, icon:'🏋️', title:'Month 1 Complete', body:'Chest, arms feeling firmer. Protein-first eating is now instinct. No weekend cheats unlocks Month 2 freedom.', color:'var(--accent4)'},
-  {day:45, icon:'⚡', title:'Halfway — Unstoppable', body:'Mid-point check. 8kg+ fat loss possible. Clothes visibly looser. LeetCode arrays + strings done. Founder thinking active.', color:'var(--orange)'},
-  {day:60, icon:'🔥', title:'Month 2 Done — People Notice', body:'Friends asking what you\'re doing. Body fat clearly lower. Backend + LC stack solid. Problem journal has ideas.', color:'var(--green)'},
-  {day:75, icon:'🚀', title:'75 Days — Almost There', body:'Visible muscle shape. Confidence changed how you walk into rooms. Startup problem identified and validated.', color:'#47abff'},
-  {day:90, icon:'👑', title:'DAY 90 — TRANSFORMED', body:'Lean, athletic, disciplined, brilliant. You did what 95% of people only talk about. This is who you are now.', color:'var(--accent)'},
-];
-
-function buildMilestones() {
-  const el = document.getElementById('milestoneList');
-  if(!el) return;
-  el.innerHTML = milestones.map(m => `
-    <div class="timeline-item" style="padding:16px 0;border-bottom:1px solid var(--border);${dayNumber >= m.day ? 'opacity:1' : 'opacity:0.5'}">
-      <div class="timeline-dot" style="background:${dayNumber >= m.day ? m.color.replace('var(','rgba(').replace(')',',0.2)') : 'var(--surface2)'};color:${m.color};font-size:18px;width:44px;height:44px">${m.icon}</div>
-      <div class="timeline-content">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-          <div class="timeline-title">${m.title}</div>
-          <span class="badge" style="background:rgba(107,107,128,0.15);color:var(--muted)">Day ${m.day}</span>
-          ${dayNumber >= m.day ? '<span class="badge badge-done">✓ ACHIEVED</span>' : ''}
+// ── CHECKS ──
+function buildChecks(){
+  Object.entries(CHK).forEach(([cat,items])=>{
+    const el=$('ch-'+cat);if(!el)return;
+    el.innerHTML=items.map(c=>`
+      <div class="ci ${S.checks[c.id]?'done':''}" id="ci-${c.id}" onclick="togCheck('${c.id}',this)">
+        <div class="cb">${S.checks[c.id]?'✓':''}</div>
+        <div class="ci-text">
+          <div class="ci-label">${c.label}</div>
+          <div class="ci-sub">${c.sub}</div>
         </div>
-        <div class="timeline-text">${m.body}</div>
+        <div class="ci-pts">+${c.pts} XP</div>
+      </div>`).join('');
+  });
+  updDayScore();
+}
+
+function togCheck(id,el){
+  S.checks[id]=!S.checks[id];
+  const on=S.checks[id];
+  el.classList.toggle('done',on);
+  el.querySelector('.cb').textContent=on?'✓':'';
+  if(on)toast('+'+ALL.find(c=>c.id===id).pts+' XP!');
+  refreshXP();updateDash();updDayScore();buildQuick();
+}
+
+function updDayScore(){
+  const x=ALL.filter(c=>S.checks[c.id]).reduce((a,c)=>a+c.pts,0);
+  if($('tScore'))$('tScore').textContent=x;
+  if($('dailyXPshow'))$('dailyXPshow').textContent=x;
+  if($('tProg'))$('tProg').style.width=Math.min(100,x/MAX_DAY_XP*100)+'%';
+}
+
+function resetToday(){S.checks={};buildChecks();buildQuick();refreshXP();updateDash();toast('Day reset');}
+
+// ── WORKOUT ──
+function showW(id,btn){
+  ['w1','w2','w3','w4'].forEach(w=>{const e=$(w);if(e)e.style.display=w===id?'block':'none';});
+  document.querySelectorAll('#p-workout .wtab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function logW(type,pts){
+  if(S.workouts[type]){toast('Already logged!');return;}
+  S.workouts[type]=pts;
+  S.checks['wkt']=true;
+  const ci=$('ci-wkt');
+  if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
+  refreshXP();updateDash();updDayScore();buildQuick();
+  toast('+'+pts+' XP! Workout done 💪');
+}
+
+// ── LEETCODE ──
+function buildLC(){
+  buildLCList('ll-a',LCA);buildLCList('ll-s',LCS);buildLCList('ll-h',LCH);updLCStats();
+}
+function buildLCList(elId,data){
+  const el=$(elId);if(!el)return;
+  const pre=['a1','a2','a3','a4'];
+  el.innerHTML=data.map(p=>{
+    const dn=S.lcStatus[p.id]||false;
+    const isHints=p.id==='a4';
+    return`<div class="lc-row ${dn?'done':''}" onclick="togLC('${p.id}',this)">
+      <div class="lc-cb">${dn?'✓':''}</div>
+      <div class="lc-n">${p.num} ${p.name}</div>
+      <span class="tag ${p.diff==='easy'?'te':'tm'}">${p.diff}</span>
+      ${isHints?'<span class="tag th">hints</span>':''}
+      <div class="lc-p">+20</div>
+    </div>`;
+  }).join('');
+}
+function togLC(id,el){
+  const pre=['a1','a2','a3','a4'];
+  if(pre.includes(id)){toast('Already counted!');return;}
+  S.lcStatus[id]=!S.lcStatus[id];
+  el.classList.toggle('done',S.lcStatus[id]);
+  el.querySelector('.lc-cb').textContent=S.lcStatus[id]?'✓':'';
+  if(S.lcStatus[id]){
+    S.checks['lc']=true;
+    const ci=$('ci-lc');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
+    toast('+20 XP! LC done 🔥');
+  }
+  refreshXP();updLCStats();updateDash();updDayScore();
+}
+function updLCStats(){
+  const pre=['a1','a2','a3','a4'];
+  const ex=Object.keys(S.lcStatus).filter(id=>S.lcStatus[id]&&!pre.includes(id)).length;
+  const tot=4+ex;
+  if($('lcD'))$('lcD').textContent=tot;
+  if($('lcL'))$('lcL').textContent=45-tot;
+  if($('lcX'))$('lcX').textContent=tot*20;
+}
+function showLC(id,btn){
+  ['la','ls','lh'].forEach(s=>{const e=$(s);if(e)e.style.display=s===id?'block':'none';});
+  document.querySelectorAll('#p-lc .wtab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── BOOKS ──
+function buildBooks(){
+  const el=$('bookList');if(!el)return;
+  el.innerHTML=BOOKS.map((b,i)=>`
+    <div class="book-item ${S.books.includes(b.id)?'done-b':''}" onclick="togBook('${b.id}',this)">
+      <div class="bn">${i+1}</div>
+      <div>
+        <div class="bt">${S.books.includes(b.id)?'✓ ':''} ${b.title}</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-bottom:3px">${b.auth}</div>
+        <div class="bw">${b.why}</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--y);margin-top:4px">Finish → +100 XP</div>
       </div>
     </div>`).join('');
+  if($('bkFin'))$('bkFin').textContent=S.books.length;
+}
+function togBook(id){
+  if(S.books.includes(id)){S.books=S.books.filter(b=>b!==id);}
+  else{S.books.push(id);toast('+100 XP! Book finished 📚');}
+  buildBooks();refreshXP();updateDash();
 }
 
-// ===== REWARDS =====
-const rewards = [
-  {milestone:'Day 7', icon:'🎧', title:'New Playlist / Spotify Premium', desc:'Build your ultimate workout and focus playlist. Music is fuel.', cost:'₹119/month or free trial'},
-  {milestone:'Day 21', icon:'📖', title:'Buy Your Next Book', desc:'Reward consistent reading with the next book from your stack. Knowledge compounds.', cost:'₹300–600'},
-  {milestone:'Day 30', icon:'👕', title:'One New Gym Outfit', desc:'You\'ve earned one quality piece. Feel the part you\'re becoming. No splurge — one item.', cost:'₹800–1500'},
-  {milestone:'Day 45', icon:'🍱', title:'One Cheat Meal (Not Day)', desc:'One planned, enjoyed meal at a place you love. Then back to the plan. Guilt-free.', cost:'₹200–500'},
-  {milestone:'Day 60', icon:'📸', title:'Professional Photo Shoot', desc:'Document your transformation. Before/after. Confidence captured. Motivation to continue.', cost:'₹500–1500 or phone + good light'},
-  {milestone:'Day 75', icon:'🎮', title:'One Entertainment Day', desc:'Movie, game, hang out with friends guilt-free. You\'ve built the discipline to bounce back.', cost:'₹200–800'},
-  {milestone:'Day 90', icon:'👟', title:'New Shoes or Gear', desc:'You ran the race. New shoes for the next one. Quality item that lasts and reminds you of this achievement.', cost:'₹2000–4000'},
-  {milestone:'Day 90+', icon:'🚀', title:'Invest in a Course/Skill', desc:'DSA course, backend bootcamp, or startup resource. Your most valuable asset is your skills.', cost:'₹1000–5000'},
-];
-
-function buildRewards() {
-  const el = document.getElementById('rewardGrid');
-  if(!el) return;
-  el.innerHTML = rewards.map(r => `
-    <div class="reward-card">
-      <div class="reward-milestone">${r.milestone}</div>
-      <div class="reward-icon">${r.icon}</div>
-      <div class="reward-title">${r.title}</div>
-      <div class="reward-desc">${r.desc}</div>
-      <div class="reward-cost">${r.cost}</div>
+// ── FINANCE ──
+function addExp(){
+  const n=$('eN').value.trim();
+  const a=parseFloat($('eA').value);
+  const c=$('eC').value;
+  if(!n||!a||a<=0){toast('Enter name + amount');return;}
+  S.expenses.push({n,a,c,id:Date.now()});
+  $('eN').value='';$('eA').value='';
+  buildExpenses();
+}
+function delExp(id){S.expenses=S.expenses.filter(e=>e.id!==id);buildExpenses();}
+function buildExpenses(){
+  const spent=S.expenses.reduce((a,e)=>a+e.a,0);
+  const left=BUDGET-spent;
+  const pct=Math.max(0,left/BUDGET*100);
+  if($('finL'))$('finL').textContent='₹'+Math.max(0,left).toLocaleString('en-IN');
+  if($('spentSF'))$('spentSF').textContent='₹'+spent.toLocaleString('en-IN');
+  const bar=$('finBar');
+  if(bar){
+    bar.style.width=pct+'%';
+    bar.style.background=pct>50?'linear-gradient(90deg,var(--g),var(--y))':pct>20?'linear-gradient(90deg,var(--y),var(--o))':'var(--r)';
+  }
+  const el=$('eList');if(!el)return;
+  if(!S.expenses.length){el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:11px;padding:14px;font-family:var(--mono)">No expenses logged yet</div>';return;}
+  const icons={food:'🥦',transport:'🚌',misc:'📦',impulse:'⚠'};
+  el.innerHTML=S.expenses.slice().reverse().map(e=>`
+    <div class="eli">
+      <span>${icons[e.c]||'•'} ${e.n}</span>
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-family:var(--mono);color:var(--o);font-size:12px">₹${e.a.toLocaleString('en-IN')}</span>
+        <button class="db" onclick="delExp(${e.id})">✕</button>
+      </div>
     </div>`).join('');
+  const imp=S.expenses.filter(e=>e.c==='impulse');
+  if(imp.length)el.innerHTML+=`<div style="padding:9px;background:rgba(245,66,66,.1);border-radius:7px;margin-top:7px;font-size:11px;color:var(--r);font-family:var(--mono)">⚠ ${imp.length} impulse spend(s). Did you use the 48-hr rule?</div>`;
 }
 
-// ===== HABIT TRACKER =====
-let habitDots = {};
-
-function buildHabitTracker() {
-  const el = document.getElementById('habitTrackerGrid');
-  if(!el) return;
-  const habits = [
-    {id:'h_workout', name:'Workout', color:'var(--accent3)'},
-    {id:'h_meditation', name:'Meditation', color:'var(--accent4)'},
-    {id:'h_coldshower', name:'Cold Shower', color:'#47abff'},
-    {id:'h_protein', name:'Protein Goal', color:'var(--accent2)'},
-    {id:'h_reading', name:'10 Pages', color:'var(--accent)'},
-    {id:'h_leetcode', name:'LeetCode', color:'var(--orange)'},
-    {id:'h_steps', name:'10k Steps', color:'var(--green)'},
-    {id:'h_journal', name:'Journaling', color:'var(--accent4)'},
-    {id:'h_noscroll', name:'No Scroll', color:'var(--red)'},
-    {id:'h_sleep', name:'8hr Sleep', color:'var(--accent2)'},
-  ];
-
-  el.innerHTML = habits.map(h => {
-    const dots = Array.from({length:90}, (_,i) => {
-      const key = h.id + '_' + i;
-      const filled = habitDots[key];
-      return `<div class="habit-dot ${filled ? 'filled' : 'empty'}" onclick="toggleHabit('${key}', this)" title="Day ${i+1}">
-        <div class="tooltip">Day ${i+1}</div>
-      </div>`;
+// ── HABITS ──
+function buildHabits(){
+  const el=$('hGrids');if(!el)return;
+  el.innerHTML=HABS.map(h=>{
+    const cnt=Array.from({length:90},(_,i)=>S.habits[h.id+'_'+i]).filter(Boolean).length;
+    const dots=Array.from({length:90},(_,i)=>{
+      const k=h.id+'_'+i,on=S.habits[k];
+      return`<div class="hd ${on?'f':'e'}" style="${on?'background:'+h.col:''}" onclick="togHabit('${k}','${h.col}',this)" title="Day ${i+1}"></div>`;
     }).join('');
-    const count = Array.from({length:90},(_,i)=>habitDots[h.id+'_'+i]).filter(Boolean).length;
-    return `
-      <div class="card" style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div style="font-weight:500;font-size:14px">${h.name}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:${h.color}">${count}/90</div>
-        </div>
-        <div class="habit-grid">${dots}</div>
-      </div>`;
+    return`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-weight:700;font-size:13px">${h.name}</div>
+        <div style="font-family:var(--mono);font-size:10px;color:${h.col}">${cnt}/90</div>
+      </div>
+      <div class="hdots">${dots}</div>
+    </div>`;
+  }).join('');
+}
+function togHabit(key,col,el){
+  S.habits[key]=!S.habits[key];
+  el.classList.toggle('f',S.habits[key]);
+  el.classList.toggle('e',!S.habits[key]);
+  el.style.background=S.habits[key]?col:'';
+  buildHabits();
+}
+
+// ── REWARDS ──
+function buildRewards(){
+  const el=$('rList');if(!el)return;
+  const xp=computeXP(),day=S.day;
+  el.innerHTML=RWDS.map(r=>{
+    const ok=day>=r.day&&xp>=r.xp;
+    return`<div class="rcard ${ok?'':'locked'}">
+      ${ok?'<div class="ub">UNLOCKED ✓</div>':''}
+      <div class="ri">${r.icon}</div>
+      <div style="flex:1">
+        <div class="rm">Day ${r.day} · ${r.xp} XP needed</div>
+        <div class="rtl">${r.title}</div>
+        <div class="rd">${r.desc}</div>
+        <div class="rc">Budget: ${r.cost}</div>
+      </div>
+    </div>`;
   }).join('');
 }
 
-function toggleHabit(key, el) {
-  habitDots[key] = !habitDots[key];
-  el.classList.toggle('filled');
-  el.classList.toggle('empty');
-  // update count
-  buildHabitTracker();
-}
-
-// ===== FINANCE =====
-function calcFinance() {
-  const income = parseFloat(document.getElementById('inputIncome').value) || 0;
-  const spend = parseFloat(document.getElementById('inputSpend').value) || 0;
-  const saved = income - spend;
-  const pct = income > 0 ? Math.round((saved/income)*100) : 0;
-  document.getElementById('finIncome').textContent = income > 0 ? '₹' + income.toLocaleString('en-IN') : '—';
-  document.getElementById('finSpend').textContent = spend > 0 ? '₹' + spend.toLocaleString('en-IN') : '—';
-  document.getElementById('finSaved').textContent = saved > 0 ? '₹' + saved.toLocaleString('en-IN') : '—';
-  document.getElementById('finPct').textContent = pct > 0 ? pct + '%' : '—';
-}
-
-// ===== STARTUP SKILLS =====
-function buildStartupSkills() {
-  const el = document.getElementById('founderSkills');
-  if(!el) return;
-  const skills = [
-    {name:'DSA / LeetCode', pct:9, color:'var(--orange)'},
-    {name:'Backend Development', pct:30, color:'var(--accent2)'},
-    {name:'System Design', pct:5, color:'var(--accent)'},
-    {name:'Product Thinking', pct:10, color:'var(--accent3)'},
-    {name:'Communication', pct:40, color:'var(--accent4)'},
-    {name:'Financial Literacy', pct:15, color:'var(--green)'},
-  ];
-  el.innerHTML = skills.map(s => `
-    <div class="macro-row">
-      <div class="macro-label"><span>${s.name}</span><span>${s.pct}%</span></div>
-      <div class="macro-bar"><div class="macro-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
-    </div>`).join('');
-}
-
-// ===== DAY CONTROLS =====
-document.addEventListener('DOMContentLoaded', () => {
-  // Add day controls to sidebar
-  const dc = document.querySelector('.day-counter');
-  const ctrl = document.createElement('div');
-  ctrl.style = 'display:flex;gap:6px;margin-top:10px';
-  ctrl.innerHTML = `
-    <button class="btn btn-ghost" style="flex:1;padding:6px;font-size:11px" onclick="dayNumber=Math.max(1,dayNumber-1);updateDayDisplay();buildMilestones()">◀</button>
-    <button class="btn btn-primary" style="flex:1;padding:6px;font-size:11px" onclick="dayNumber=Math.min(90,dayNumber+1);updateDayDisplay();buildMilestones()">▶</button>`;
-  dc.appendChild(ctrl);
-});
-
-init();
+// ── INIT ──
+buildChecks();buildLC();buildBooks();buildHabits();buildExpenses();buildRewards();updateDash();
 </script>
 </body>
 </html>
