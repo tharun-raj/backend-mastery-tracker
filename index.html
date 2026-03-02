@@ -6,123 +6,192 @@
 <title>PROJECT 90</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0c0c0e;--s1:#131318;--s2:#1c1c24;--s3:#25252f;--border:#2e2e3a;--y:#f5e642;--g:#42f5a8;--o:#f57342;--b:#4287f5;--r:#f54242;--text:#e8e8f0;--muted:#6b6b7e;--font:'Syne',sans-serif;--mono:'JetBrains Mono',monospace}
+:root{--bg:#0c0c0e;--s1:#131318;--s2:#1c1c24;--s3:#25252f;--bd:#2e2e3a;--y:#f5e642;--g:#42f5a8;--o:#f57342;--b:#4287f5;--r:#f54242;--p:#b47af5;--tx:#e8e8f0;--mu:#6b6b7e;--fn:'Syne',sans-serif;--mo:'JetBrains Mono',monospace}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(12,12,14,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:3px;height:52px;overflow-x:auto;scrollbar-width:none}
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);min-height:100vh;overflow-x:hidden}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(12,12,14,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 14px;gap:2px;height:50px;overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.logo{font-size:15px;font-weight:800;color:var(--y);letter-spacing:2px;margin-right:10px;white-space:nowrap;flex-shrink:0}
-.nb{background:none;border:none;color:var(--muted);font-family:var(--font);font-size:12px;font-weight:700;padding:5px 12px;border-radius:18px;cursor:pointer;white-space:nowrap;transition:.15s}
-.nb:hover{color:var(--text);background:var(--s2)}
+.logo{font-size:14px;font-weight:800;color:var(--y);letter-spacing:2px;margin-right:8px;white-space:nowrap;flex-shrink:0}
+.nb{background:none;border:none;color:var(--mu);font-family:var(--fn);font-size:11px;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;white-space:nowrap;transition:.12s}
+.nb:hover{color:var(--tx);background:var(--s2)}
 .nb.on{color:#000;background:var(--y)}
-.xpbar{position:fixed;top:52px;left:0;right:0;z-index:199;background:var(--s1);border-bottom:1px solid var(--border);padding:7px 16px;display:flex;align-items:center;gap:12px}
-.xp-val{font-family:var(--mono);font-size:12px;color:var(--y);font-weight:500;white-space:nowrap}
-.xp-track{flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
-.xp-fill{height:100%;background:linear-gradient(90deg,var(--y),var(--g));border-radius:3px;transition:width .5s ease}
-.xp-lv{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
-.streak{display:flex;align-items:center;gap:4px;background:rgba(245,230,66,.1);border:1px solid rgba(245,230,66,.25);border-radius:16px;padding:2px 9px;font-size:11px;font-family:var(--mono);color:var(--y);white-space:nowrap}
-.page{display:none;padding:110px 16px 80px;max-width:660px;margin:0 auto;animation:fadeUp .25s ease}
+
+/* XP BAR */
+.xpbar{position:fixed;top:50px;left:0;right:0;z-index:199;background:var(--s1);border-bottom:1px solid var(--bd);padding:6px 14px;display:flex;align-items:center;gap:10px}
+.xv{font-family:var(--mo);font-size:11px;color:var(--y);font-weight:500;white-space:nowrap}
+.xt{flex:1;height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.xf{height:100%;background:linear-gradient(90deg,var(--y),var(--g));border-radius:2px;transition:width .5s ease}
+.xl{font-family:var(--mo);font-size:9px;color:var(--mu);white-space:nowrap}
+.sk{display:flex;align-items:center;gap:3px;background:rgba(245,230,66,.1);border:1px solid rgba(245,230,66,.22);border-radius:14px;padding:2px 8px;font-size:10px;font-family:var(--mo);color:var(--y);white-space:nowrap}
+
+/* PAGES */
+.page{display:none;padding:100px 14px 90px;max-width:640px;margin:0 auto;animation:fu .22s ease}
 .page.on{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.sh{margin-bottom:20px}.sh h1{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
-.sh p{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--mono)}
-.card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px}
-.ct{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-family:var(--mono)}
-.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.sc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center}
-.sv{font-size:24px;font-weight:800;line-height:1}
-.sl{font-size:9px;color:var(--muted);margin-top:3px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase}
-.ci{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;cursor:pointer;transition:.12s;border:1px solid transparent;margin-bottom:5px;user-select:none;-webkit-tap-highlight-color:transparent}
-.ci:hover{background:var(--s2);border-color:var(--border)}
-.ci:active{transform:scale(.98)}
-.ci.done{opacity:.45}
-.ci.done .ci-label{text-decoration:line-through}
-.cb{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:.15s}
+@keyframes fu{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* TYPOGRAPHY */
+.sh{margin-bottom:18px}.sh h1{font-size:24px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.sh p{font-size:11px;color:var(--mu);margin-top:4px;font-family:var(--mo)}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:16px;margin-bottom:10px}
+.ct{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;font-family:var(--mo)}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.sc{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:12px 8px;text-align:center}
+.sv{font-size:22px;font-weight:800;line-height:1}
+.sl{font-size:8px;color:var(--mu);margin-top:3px;font-family:var(--mo);letter-spacing:1px;text-transform:uppercase}
+
+/* CHECKLIST */
+.ci{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:8px;cursor:pointer;transition:.1s;border:1px solid transparent;margin-bottom:4px;user-select:none;-webkit-tap-highlight-color:transparent}
+.ci:hover{background:var(--s2);border-color:var(--bd)}
+.ci:active{transform:scale(.985)}
+.ci.done{opacity:.4}
+.ci.done .cl{text-decoration:line-through}
+.cb{width:19px;height:19px;border:2px solid var(--bd);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:.13s}
 .ci.done .cb{background:var(--y);border-color:var(--y);color:#000}
-.ci-label{font-size:13px;font-weight:700;flex:1}
-.ci-sub{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:1px}
-.ci-pts{font-family:var(--mono);font-size:11px;color:var(--y);flex-shrink:0}
-.wtable{width:100%;border-collapse:collapse;font-size:12px}
-.wtable th{text-align:left;padding:6px 8px;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);border-bottom:1px solid var(--border);font-weight:400}
-.wtable td{padding:9px 8px;border-bottom:1px solid rgba(46,46,58,.35)}
-.wtable tr:last-child td{border-bottom:none}
-.wtable tr:hover td{background:var(--s2)}
-.tag{display:inline-block;padding:1px 6px;border-radius:8px;font-size:9px;font-family:var(--mono)}
+.cl{font-size:13px;font-weight:700;flex:1}
+.csb{font-size:10px;color:var(--mu);font-family:var(--mo);margin-top:1px}
+.cp{font-family:var(--mo);font-size:10px;color:var(--y);flex-shrink:0}
+
+/* TABLE */
+.wt{width:100%;border-collapse:collapse;font-size:11px}
+.wt th{text-align:left;padding:5px 7px;font-family:var(--mo);font-size:8px;letter-spacing:2px;color:var(--mu);border-bottom:1px solid var(--bd);font-weight:400}
+.wt td{padding:8px 7px;border-bottom:1px solid rgba(46,46,58,.3)}
+.wt tr:last-child td{border-bottom:none}
+.wt tr:hover td{background:var(--s2)}
+.tag{display:inline-block;padding:1px 5px;border-radius:7px;font-size:8px;font-family:var(--mo)}
 .te{background:rgba(66,245,168,.12);color:var(--g)}
 .tm{background:rgba(245,115,66,.12);color:var(--o)}
 .td{background:rgba(245,230,66,.12);color:var(--y)}
 .th{background:rgba(245,66,66,.12);color:var(--r)}
-.lc-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:.12s;margin-bottom:4px}
-.lc-row:hover{background:var(--s2);border-color:var(--border)}
-.lc-row:active{transform:scale(.99)}
-.lc-row.done .lc-n{text-decoration:line-through;color:var(--muted)}
-.lc-cb{width:16px;height:16px;border:2px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;transition:.15s}
-.lc-row.done .lc-cb{background:var(--y);border-color:var(--y);color:#000}
-.lc-n{flex:1;font-size:12px;font-weight:600}
-.lc-p{font-family:var(--mono);font-size:9px;color:var(--y)}
-.mbar-r{margin-bottom:10px}
-.mbar-hd{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
-.mbar-hd span:last-child{font-family:var(--mono);color:var(--muted);font-size:10px}
-.mbar{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
-.mbar-f{height:100%;border-radius:2px}
-.fin-hero{background:linear-gradient(135deg,rgba(245,230,66,.08),rgba(66,245,168,.04));border:1px solid rgba(245,230,66,.2);border-radius:12px;padding:20px;margin-bottom:12px;text-align:center}
-.fin-big{font-size:44px;font-weight:800;color:var(--y);line-height:1}
-.fin-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:2px}
-.frow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:7px;background:var(--s2);margin-bottom:5px;font-size:12px}
-.frow .amt{font-family:var(--mono);font-size:12px;font-weight:600}
-.abr{color:var(--r)}.aok{color:var(--g)}.awn{color:var(--o)}.ayl{color:var(--y)}
-.exp-inp{display:flex;gap:7px;margin-bottom:7px}
-.exp-inp input,.exp-inp select{background:var(--s2);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 10px;font-size:12px;font-family:var(--font);outline:none;transition:.15s}
-.exp-inp input:focus,.exp-inp select:focus{border-color:var(--y)}
-.exp-inp input::placeholder{color:var(--muted)}
-.btn{padding:8px 16px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-family:var(--font);font-weight:700;transition:.15s}
-.btn-y{background:var(--y);color:#000}.btn-y:hover{background:#ffe800}
-.btn-gh{background:var(--s2);color:var(--text);border:1px solid var(--border)}.btn-gh:hover{border-color:var(--y);color:var(--y)}
-.eli{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--s2);border-radius:7px;margin-bottom:4px;font-size:12px}
-.db{background:rgba(245,66,66,.15);border:none;color:var(--r);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:10px}
-.hdots{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px}
-.hd{width:13px;height:13px;border-radius:2px;cursor:pointer;transition:.12s;flex-shrink:0}
-.hd:hover{transform:scale(1.3)}
-.hd.e{background:var(--s3)}.hd.f{background:var(--y)}
-.book-item{display:flex;gap:12px;padding:12px;background:var(--s2);border-radius:9px;margin-bottom:7px;align-items:flex-start;cursor:pointer;transition:.12s;border:1px solid transparent}
-.book-item:hover{border-color:var(--border)}
-.book-item.done-b{opacity:.4}
-.bn{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--y);width:26px;flex-shrink:0}
-.bt{font-size:13px;font-weight:700;margin-bottom:2px}
-.bw{font-size:11px;color:var(--muted);line-height:1.5}
-.rcard{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;position:relative;overflow:hidden}
-.rcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
-.rcard:nth-child(1)::before{background:var(--y)}.rcard:nth-child(2)::before{background:var(--g)}
-.rcard:nth-child(3)::before{background:var(--o)}.rcard:nth-child(4)::before{background:var(--b)}
-.rcard:nth-child(5)::before{background:var(--r)}.rcard:nth-child(6)::before{background:var(--y)}
-.rcard:nth-child(7)::before{background:var(--g)}
-.rcard.locked{opacity:.4}
-.ri{font-size:24px;flex-shrink:0;margin-top:1px}
-.rm{font-family:var(--mono);font-size:9px;color:var(--y);letter-spacing:1px;margin-bottom:2px}
+
+/* LC ROWS */
+.lr{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:.1s;margin-bottom:3px}
+.lr:hover{background:var(--s2);border-color:var(--bd)}
+.lr.done .ln{text-decoration:line-through;color:var(--mu)}
+.lcb{width:15px;height:15px;border:2px solid var(--bd);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;transition:.13s}
+.lr.done .lcb{background:var(--y);border-color:var(--y);color:#000}
+tr.lc-done td{background:rgba(66,245,168,.04)!important}
+tr.lc-hints td{background:rgba(245,115,66,.06)!important}
+.ln{flex:1;font-size:12px;font-weight:600}
+.lp{font-family:var(--mo);font-size:9px;color:var(--y)}
+
+/* FINANCE */
+.fh{background:linear-gradient(135deg,rgba(245,230,66,.08),rgba(66,245,168,.04));border:1px solid rgba(245,230,66,.2);border-radius:11px;padding:18px;margin-bottom:10px;text-align:center}
+.fb{font-size:40px;font-weight:800;color:var(--y);line-height:1}
+.fl{font-family:var(--mo);font-size:9px;color:var(--mu);margin-top:3px;letter-spacing:2px}
+.fr{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;border-radius:7px;background:var(--s2);margin-bottom:4px;font-size:12px}
+.fr .am{font-family:var(--mo);font-size:11px;font-weight:600}
+.abr{color:var(--r)}.aok{color:var(--g)}.awn{color:var(--o)}.ayl{color:var(--y)}.abl{color:var(--b)}
+
+/* INPUTS */
+.ei{display:flex;gap:6px;margin-bottom:6px}
+.ei input,.ei select{background:var(--s2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:7px 9px;font-size:12px;font-family:var(--fn);outline:none;transition:.13s}
+.ei input:focus,.ei select:focus{border-color:var(--y)}
+.ei input::placeholder{color:var(--mu)}
+.btn{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-family:var(--fn);font-weight:700;transition:.13s}
+.by{background:var(--y);color:#000}.by:hover{background:#ffe800}
+.bg{background:var(--s2);color:var(--tx);border:1px solid var(--bd)}.bg:hover{border-color:var(--y);color:var(--y)}
+.br{background:rgba(245,66,66,.15);color:var(--r);border:1px solid rgba(245,66,66,.3)}.br:hover{background:rgba(245,66,66,.25)}
+.eli{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;background:var(--s2);border-radius:6px;margin-bottom:3px;font-size:11px}
+.db{background:rgba(245,66,66,.15);border:none;color:var(--r);border-radius:4px;padding:2px 6px;cursor:pointer;font-size:9px}
+
+/* HABIT DOTS */
+.hdots{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px}
+.hd{width:12px;height:12px;border-radius:2px;cursor:pointer;transition:.1s;flex-shrink:0}
+.hd:hover{transform:scale(1.35)}
+.e{background:var(--s3)}.f{background:var(--y)}
+
+/* BOOK */
+.bi{display:flex;gap:11px;padding:11px;background:var(--s2);border-radius:8px;margin-bottom:6px;align-items:flex-start;cursor:pointer;transition:.1s;border:1px solid transparent}
+.bi:hover{border-color:var(--bd)}
+.bi.db2{opacity:.38}
+.bnum{font-family:var(--mo);font-size:18px;font-weight:700;color:var(--y);width:24px;flex-shrink:0}
+.btl{font-size:13px;font-weight:700;margin-bottom:1px}
+.bwy{font-size:11px;color:var(--mu);line-height:1.5}
+
+/* REWARDS */
+.rc{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:13px;margin-bottom:7px;display:flex;gap:11px;align-items:flex-start;position:relative;overflow:hidden}
+.rc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.rc:nth-child(odd)::before{background:var(--y)}.rc:nth-child(even)::before{background:var(--g)}
+.rc.locked{opacity:.38}
+.ri{font-size:22px;flex-shrink:0}
+.rm{font-family:var(--mo);font-size:9px;color:var(--y);letter-spacing:1px;margin-bottom:2px}
 .rtl{font-size:13px;font-weight:700;margin-bottom:2px}
-.rd{font-size:11px;color:var(--muted);line-height:1.5}
-.rc{font-family:var(--mono);font-size:10px;color:var(--g);margin-top:4px}
-.ub{position:absolute;right:10px;top:10px;background:var(--y);color:#000;font-size:8px;font-family:var(--mono);padding:2px 6px;border-radius:8px;font-weight:700}
-.day-pill{display:inline-flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--border);border-radius:18px;padding:5px 12px;margin-bottom:16px}
-.day-pill span{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.day-pill b{font-size:12px;color:var(--y)}
-.day-pill button{background:var(--s3);border:none;color:var(--text);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:.12s}
-.day-pill button:hover{background:var(--y);color:#000}
-.ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
-.ring-wrap svg{transform:rotate(-90deg)}
-.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-n{font-size:16px;font-weight:800;color:var(--y);line-height:1}
-.ring-l{font-size:7px;color:var(--muted);font-family:var(--mono);letter-spacing:1px}
-.rule-banner{background:rgba(245,66,66,.05);border:1px solid rgba(245,66,66,.18);border-radius:8px;padding:11px 13px;margin-bottom:10px;font-size:12px;line-height:1.6;color:var(--muted)}
-.rule-banner strong{color:var(--text)}
-.wtabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
-.wtab{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:11px;cursor:pointer;transition:.12s;font-weight:700}
-.wtab:hover{border-color:var(--y)}
-.wtab.on{background:var(--y);color:#000;border-color:var(--y)}
-.pb{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
-.pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--y),var(--g));transition:width .5s ease}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--y);color:#000;padding:8px 20px;border-radius:18px;font-weight:700;font-size:12px;z-index:999;opacity:0;transition:.25s;pointer-events:none;font-family:var(--mono);white-space:nowrap}
+.rd{font-size:11px;color:var(--mu);line-height:1.5}
+.rco{font-family:var(--mo);font-size:9px;color:var(--g);margin-top:3px}
+.ub{position:absolute;right:9px;top:9px;background:var(--y);color:#000;font-size:7px;font-family:var(--mo);padding:2px 5px;border-radius:7px;font-weight:700}
+
+/* SKILL BARS */
+.skbar{margin-bottom:10px}
+.skhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:12px}
+.skhd .pct{font-family:var(--mo);font-size:10px;color:var(--mu)}
+.pb{height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .6s ease}
+
+/* PILL */
+.dpill{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--bd);border-radius:16px;padding:4px 10px;margin-bottom:14px}
+.dpill span{font-family:var(--mo);font-size:10px;color:var(--mu)}
+.dpill b{font-size:11px;color:var(--y)}
+.dpill button{background:var(--s3);border:none;color:var(--tx);width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:.1s}
+.dpill button:hover{background:var(--y);color:#000}
+
+/* RING */
+.rw{position:relative;width:68px;height:68px;flex-shrink:0}
+.rw svg{transform:rotate(-90deg)}
+.rc2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rn{font-size:15px;font-weight:800;color:var(--y);line-height:1}
+.rl{font-size:6px;color:var(--mu);font-family:var(--mo);letter-spacing:1px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.tab{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer;transition:.1s;font-weight:700}
+.tab:hover{border-color:var(--y)}
+.tab.on{background:var(--y);color:#000;border-color:var(--y)}
+
+/* MONTH TOGGLE */
+.mtoggle{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.mtab{flex:1;padding:7px;text-align:center;cursor:pointer;font-size:11px;font-weight:700;transition:.13s;font-family:var(--fn)}
+.mtab.on{background:var(--y);color:#000}
+.mtab:not(.on){color:var(--mu)}
+
+/* RANGE SLIDER */
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--s3);outline:none;margin:8px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--y);cursor:pointer}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px;max-width:340px;width:100%;text-align:center}
+.modal h2{font-size:18px;font-weight:800;margin-bottom:8px}
+.modal p{font-size:12px;color:var(--mu);margin-bottom:18px;line-height:1.6}
+.modal-btns{display:flex;gap:8px;justify-content:center}
+
+/* LEARNING CARD */
+.lcard{background:var(--s2);border-radius:9px;padding:12px;margin-bottom:6px;border:1px solid transparent;transition:.12s}
+.lcard:hover{border-color:var(--bd)}
+.lphase{font-family:var(--mo);font-size:8px;letter-spacing:2px;margin-bottom:4px;font-weight:700}
+.ltl{font-size:13px;font-weight:700;margin-bottom:2px}
+.lsub{font-size:10px;color:var(--mu);line-height:1.5}
+.lck{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:6px;cursor:pointer;transition:.1s;border:1px solid transparent;margin-bottom:3px}
+.lck:hover{background:var(--s3);border-color:var(--bd)}
+.lck.done .lcklabel{text-decoration:line-through;color:var(--mu)}
+.lchk{width:15px;height:15px;border:2px solid var(--bd);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;transition:.12s}
+.lck.done .lchk{background:var(--g);border-color:var(--g);color:#000}
+.lcklabel{font-size:12px;flex:1}
+.lckpts{font-family:var(--mo);font-size:9px;color:var(--g)}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--y);color:#000;padding:7px 18px;border-radius:16px;font-weight:700;font-size:11px;z-index:999;opacity:0;transition:.22s;pointer-events:none;font-family:var(--mo);white-space:nowrap}
 .toast.show{opacity:1}
+
+/* SKILL CATEGORY */
+.skcat{background:var(--s2);border-radius:9px;padding:14px;margin-bottom:8px}
+.skcat-title{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.skill-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(46,46,58,.4);font-size:12px}
+.skill-item:last-child{border-bottom:none}
+.skill-lvl{font-family:var(--mo);font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700}
 </style>
 </head>
 <body>
@@ -132,246 +201,306 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   <button class="nb on" onclick="go('dash',this)">⚡ Home</button>
   <button class="nb" onclick="go('daily',this)">✅ Daily</button>
   <button class="nb" onclick="go('workout',this)">💪 Workout</button>
-  <button class="nb" onclick="go('nutrition',this)">🥗 Nutrition</button>
+  <button class="nb" onclick="go('nutrition',this)">🥗 Food</button>
   <button class="nb" onclick="go('lc',this)">💻 LeetCode</button>
   <button class="nb" onclick="go('reading',this)">📚 Reading</button>
+  <button class="nb" onclick="go('learning',this)">🎓 Learning</button>
   <button class="nb" onclick="go('finance',this)">💰 Finance</button>
   <button class="nb" onclick="go('habits',this)">📊 Habits</button>
+  <button class="nb" onclick="go('skills',this)">🌟 Skills</button>
   <button class="nb" onclick="go('rewards',this)">🏆 Rewards</button>
 </nav>
 
 <div class="xpbar">
-  <div class="xp-val">⚡ <span id="xpT">0</span> XP</div>
-  <div class="xp-track"><div class="xp-fill" id="xpF"></div></div>
-  <div class="xp-lv">Lv.<span id="lvl">1</span> · <span id="xpN">100</span>xp to next</div>
-  <div class="streak">🔥 <span id="strk">0</span>d</div>
+  <div class="xv">⚡ <span id="xpT">80</span> XP</div>
+  <div class="xt"><div class="xf" id="xF" style="width:80%"></div></div>
+  <div class="xl">Lv.<span id="lv">1</span> · <span id="xN">20</span>xp next</div>
+  <div class="sk">🔥 <span id="strk">0</span>d</div>
 </div>
 
-<!-- HOME -->
+<!-- ══ HOME ══ -->
 <div class="page on" id="p-dash">
-  <div class="sh"><h1>Let's <span style="color:var(--y)">crush</span> today.</h1><p>// PROJECT 90 · DAY <span id="dDay">1</span> OF 90</p></div>
-  <div class="day-pill">
+  <div class="sh"><h1>Let's <span style="color:var(--y)">crush</span> today.</h1><p>// PROJECT 90 · DAY <span id="dD">1</span></p></div>
+  <div class="dpill">
     <button onclick="chDay(-1)">◀</button>
-    <span>Day</span><b id="dPill">1</b><span>of 90</span>
+    <span>Day</span><b id="dP">1</b><span>of 90</span>
     <button onclick="chDay(1)">▶</button>
   </div>
   <div class="sg">
     <div class="sc"><div class="sv ayl" id="d-xp">0</div><div class="sl">Today XP</div></div>
-    <div class="sc"><div class="sv aok" id="d-done">0</div><div class="sl">Done</div></div>
-    <div class="sc"><div class="sv awn" id="d-left">12</div><div class="sl">Left</div></div>
+    <div class="sc"><div class="sv aok" id="d-dn">0</div><div class="sl">Done</div></div>
+    <div class="sc"><div class="sv awn" id="d-lf">12</div><div class="sl">Left</div></div>
   </div>
-  <div class="card" style="display:flex;align-items:center;gap:16px">
-    <div class="ring-wrap">
-      <svg width="72" height="72" viewBox="0 0 72 72">
-        <circle cx="36" cy="36" r="28" fill="none" stroke="var(--s3)" stroke-width="6"/>
-        <circle cx="36" cy="36" r="28" fill="none" stroke="var(--y)" stroke-width="6"
-          stroke-dasharray="176" id="rCircle" stroke-dashoffset="175" stroke-linecap="round"/>
+  <div class="card" style="display:flex;align-items:center;gap:14px">
+    <div class="rw">
+      <svg width="68" height="68" viewBox="0 0 68 68">
+        <circle cx="34" cy="34" r="26" fill="none" stroke="var(--s3)" stroke-width="6"/>
+        <circle cx="34" cy="34" r="26" fill="none" stroke="var(--y)" stroke-width="6"
+          stroke-dasharray="163" id="ring" stroke-dashoffset="162" stroke-linecap="round"/>
       </svg>
-      <div class="ring-c"><div class="ring-n" id="rPct">1%</div><div class="ring-l">90 DAYS</div></div>
+      <div class="rc2"><div class="rn" id="rPct">1%</div><div class="rl">90 DAYS</div></div>
     </div>
     <div style="flex:1">
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:5px">WEEK <span id="wkLbl">1</span> · TOTAL <span id="totXP" style="color:var(--y)">0</span> XP</div>
-      <div class="pb"><div class="pf" id="mProg"></div></div>
-      <div style="margin-top:8px;display:flex;justify-content:space-between">
-        <button class="btn btn-gh" style="font-size:11px;padding:5px 12px" onclick="go('daily',null)">Open Checklist →</button>
-        <button class="btn" style="font-size:11px;padding:5px 10px;background:var(--s3);color:var(--muted);border:1px solid var(--border)" onclick="resetToday()">Reset</button>
+      <div style="font-family:var(--mo);font-size:9px;color:var(--mu);margin-bottom:4px">WEEK <span id="wkL">1</span> · TOTAL <span id="totXP" style="color:var(--y)">80</span> XP</div>
+      <div class="pb"><div class="pf" id="mPg" style="background:linear-gradient(90deg,var(--y),var(--g))"></div></div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn by" style="font-size:10px;padding:4px 10px" onclick="go('daily',null)">Open Checklist →</button>
+        <button class="btn bg" style="font-size:10px;padding:4px 9px" onclick="showModal('reset-day')">Reset Day</button>
+        <button class="btn br" style="font-size:10px;padding:4px 9px" onclick="showModal('reset-all')">Reset All</button>
       </div>
     </div>
   </div>
-  <div class="card">
-    <div class="ct">Quick checks</div>
-    <div id="qList"></div>
-  </div>
-  <div class="card" style="background:rgba(245,66,66,.04);border-color:rgba(245,66,66,.18)">
+  <div class="card"><div class="ct">Quick checks</div><div id="qL"></div></div>
+  <div class="card" style="background:rgba(245,66,66,.04);border-color:rgba(245,66,66,.15)">
     <div class="ct" style="color:var(--r)">⚠ Read daily</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-      <div style="padding:9px;background:rgba(245,66,66,.07);border-radius:7px;font-size:11px;color:var(--muted)">Miss workout → <strong style="color:var(--text)">results slow</strong></div>
-      <div style="padding:9px;background:rgba(245,66,66,.07);border-radius:7px;font-size:11px;color:var(--muted)">Skip protein → <strong style="color:var(--text)">muscle won't show</strong></div>
-      <div style="padding:9px;background:rgba(245,66,66,.07);border-radius:7px;font-size:11px;color:var(--muted)">Skip meditation → <strong style="color:var(--text)">stays reactive</strong></div>
-      <div style="padding:9px;background:rgba(66,245,168,.07);border-radius:7px;font-size:11px;color:var(--muted)">Consistency → <strong style="color:var(--g)">everything changes</strong></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="padding:8px;background:rgba(245,66,66,.07);border-radius:6px;font-size:11px;color:var(--mu)">Miss workout → <strong style="color:var(--tx)">results slow</strong></div>
+      <div style="padding:8px;background:rgba(245,66,66,.07);border-radius:6px;font-size:11px;color:var(--mu)">Skip protein → <strong style="color:var(--tx)">muscle won't show</strong></div>
+      <div style="padding:8px;background:rgba(245,66,66,.07);border-radius:6px;font-size:11px;color:var(--mu)">Skip meditation → <strong style="color:var(--tx)">mind stays reactive</strong></div>
+      <div style="padding:8px;background:rgba(66,245,168,.07);border-radius:6px;font-size:11px;color:var(--mu)">Consistency → <strong style="color:var(--g)">everything changes</strong></div>
     </div>
   </div>
 </div>
 
-<!-- DAILY -->
+<!-- ══ DAILY ══ -->
 <div class="page" id="p-daily">
-  <div class="sh"><h1>Daily <span style="color:var(--y)">Checklist</span></h1><p>// Tap to earn XP · <span id="dailyXPshow">0</span> XP today</p></div>
+  <div class="sh"><h1>Daily <span style="color:var(--y)">Checklist</span></h1><p>// Tap to earn XP · <span id="dXPs">0</span> XP today</p></div>
   <div class="card"><div class="ct">🧠 Mind</div><div id="ch-mind"></div></div>
   <div class="card"><div class="ct">💪 Body</div><div id="ch-body"></div></div>
   <div class="card"><div class="ct">🥗 Nutrition</div><div id="ch-nutrition"></div></div>
   <div class="card"><div class="ct">📈 Growth</div><div id="ch-growth"></div></div>
-  <div class="card" style="text-align:center;padding:18px">
-    <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:5px">TODAY'S SCORE</div>
-    <div style="font-size:40px;font-weight:800;color:var(--y)" id="tScore">0</div>
-    <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">XP earned today</div>
-    <div class="pb" style="margin-top:10px"><div class="pf" id="tProg"></div></div>
+  <div class="card" style="text-align:center;padding:16px">
+    <div style="font-family:var(--mo);font-size:9px;color:var(--mu);margin-bottom:4px">TODAY'S SCORE</div>
+    <div style="font-size:38px;font-weight:800;color:var(--y)" id="tSc">0</div>
+    <div style="font-size:10px;color:var(--mu);font-family:var(--mo)">XP earned today</div>
+    <div class="pb" style="margin-top:9px"><div class="pf" id="tPg" style="background:linear-gradient(90deg,var(--y),var(--g))"></div></div>
   </div>
 </div>
 
-<!-- WORKOUT -->
+<!-- ══ WORKOUT ══ -->
 <div class="page" id="p-workout">
-  <div class="sh"><h1>Workout <span style="color:var(--o)">Plan</span></h1><p>// Tap your day · Log it · Earn XP</p></div>
-  <div class="wtabs">
-    <div class="wtab on" onclick="showW('w1',this)">Push</div>
-    <div class="wtab" onclick="showW('w2',this)">Pull</div>
-    <div class="wtab" onclick="showW('w3',this)">Legs+Core</div>
-    <div class="wtab" onclick="showW('w4',this)">Conditioning</div>
+  <div class="sh"><h1>Workout <span style="color:var(--o)">Plan</span></h1><p>// Tap your day · log it · earn XP</p></div>
+  <div class="tabs">
+    <div class="tab on" onclick="sW('w1',this)">Push</div>
+    <div class="tab" onclick="sW('w2',this)">Pull</div>
+    <div class="tab" onclick="sW('w3',this)">Legs+Core</div>
+    <div class="tab" onclick="sW('w4',this)">Conditioning</div>
   </div>
-  <div id="w1">
-    <div class="card" style="border-left:3px solid var(--b)">
-      <div class="ct" style="color:var(--b)">Day 1 — Push · Chest · Shoulders · Triceps</div>
-      <table class="wtable">
-        <tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
-        <tr><td>Machine Chest Press</td><td>3×12</td><td>20–30kg</td><td>Back flat, chest up</td></tr>
-        <tr><td>Incline DB Press</td><td>3×10</td><td>7.5–10kg</td><td>~30°, slow negative</td></tr>
-        <tr><td>Shoulder Press</td><td>3×10</td><td>10–15kg</td><td>Core tight</td></tr>
-        <tr><td>Lateral Raise</td><td>3×15</td><td>4–6kg</td><td>Lift to shoulder</td></tr>
-        <tr><td>Tricep Pushdown</td><td>3×12</td><td>15–20kg</td><td>Elbows fixed</td></tr>
-        <tr><td>Push-ups</td><td>2×8–12</td><td>Bodyweight</td><td>Straight body</td></tr>
-      </table>
-      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('push',40)">✓ Done → +40 XP</button>
-    </div>
-  </div>
-  <div id="w2" style="display:none">
-    <div class="card" style="border-left:3px solid var(--g)">
-      <div class="ct" style="color:var(--g)">Day 2 — Pull · Back · Biceps</div>
-      <table class="wtable">
-        <tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
-        <tr><td>Lat Pulldown</td><td>3×12</td><td>25–35kg</td><td>Pull to chest</td></tr>
-        <tr><td>Seated Cable Row</td><td>3×12</td><td>20–30kg</td><td>Squeeze back</td></tr>
-        <tr><td>One-arm DB Row</td><td>3×10</td><td>10–12.5kg</td><td>Flat back</td></tr>
-        <tr><td>Face Pull</td><td>3×15</td><td>10–15kg</td><td>Elbows high</td></tr>
-        <tr><td>DB Curl</td><td>3×12</td><td>6–8kg</td><td>Slow reps</td></tr>
-        <tr><td>Hammer Curl</td><td>2×12</td><td>6–8kg</td><td>Neutral grip</td></tr>
-      </table>
-      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('pull',40)">✓ Done → +40 XP</button>
-    </div>
-  </div>
-  <div id="w3" style="display:none">
-    <div class="card" style="border-left:3px solid var(--o)">
-      <div class="ct" style="color:var(--o)">Day 4 — Legs + Core</div>
-      <table class="wtable">
-        <tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
-        <tr><td>Goblet Squat</td><td>4×10</td><td>10–15kg</td><td>Knees out</td></tr>
-        <tr><td>Leg Press</td><td>3×12</td><td>60–80kg</td><td>Full depth</td></tr>
-        <tr><td>Hip Thrust</td><td>3×12</td><td>20–30kg</td><td>Squeeze glutes</td></tr>
-        <tr><td>Leg Curl</td><td>3×12</td><td>20–30kg</td><td>Slow control</td></tr>
-        <tr><td>Walking Lunges</td><td>3×12/leg</td><td>BW</td><td>Upright torso</td></tr>
-        <tr><td>Calf Raise</td><td>4×15</td><td>BW/+20kg</td><td>Full stretch</td></tr>
-        <tr><td>Plank</td><td>3×45–60s</td><td>—</td><td>Straight line</td></tr>
-        <tr><td>Lying Leg Raises</td><td>3×12</td><td>—</td><td>Back flat</td></tr>
-        <tr><td>Cable Crunch</td><td>3×15</td><td>—</td><td>Contract abs</td></tr>
-      </table>
-      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('legs',50)">✓ Done → +50 XP</button>
-    </div>
-  </div>
-  <div id="w4" style="display:none">
-    <div class="card" style="border-left:3px solid var(--y)">
-      <div class="ct">Day 5 — Conditioning + Abs</div>
-      <table class="wtable">
-        <tr><th>Exercise</th><th>Duration</th><th>Notes</th></tr>
-        <tr><td>Incline Walk / Cycling</td><td>20 min</td><td>60–70% max HR</td></tr>
-        <tr><td>Rowing / Battle Rope</td><td>8–10 min</td><td>30s on, 15s rest</td></tr>
-        <tr><td>Russian Twists</td><td>3×20</td><td>Feet off ground</td></tr>
-        <tr><td>Leg Raises</td><td>3×12</td><td>Back flat</td></tr>
-      </table>
-      <button class="btn btn-y" style="margin-top:12px;width:100%" onclick="logW('cond',35)">✓ Done → +35 XP</button>
-    </div>
-  </div>
-  <div class="card" style="background:rgba(245,230,66,.04);border-color:rgba(245,230,66,.18)">
+  <div id="w1"><div class="card" style="border-left:3px solid var(--b)">
+    <div class="ct" style="color:var(--b)">Day 1 — Push · Chest · Shoulders · Triceps</div>
+    <table class="wt"><tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
+    <tr><td>Machine Chest Press</td><td>3×12</td><td>20–30kg</td><td>Back flat</td></tr>
+    <tr><td>Incline DB Press</td><td>3×10</td><td>7.5–10kg</td><td>~30°, slow</td></tr>
+    <tr><td>Shoulder Press</td><td>3×10</td><td>10–15kg</td><td>Core tight</td></tr>
+    <tr><td>Lateral Raise</td><td>3×15</td><td>4–6kg</td><td>To shoulder</td></tr>
+    <tr><td>Tricep Pushdown</td><td>3×12</td><td>15–20kg</td><td>Elbows fixed</td></tr>
+    <tr><td>Push-ups</td><td>2×8–12</td><td>BW</td><td>Straight body</td></tr></table>
+    <button class="btn by" style="margin-top:10px;width:100%" onclick="logW('push',40)">✓ Done → +40 XP</button>
+  </div></div>
+  <div id="w2" style="display:none"><div class="card" style="border-left:3px solid var(--g)">
+    <div class="ct" style="color:var(--g)">Day 2 — Pull · Back · Biceps</div>
+    <table class="wt"><tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
+    <tr><td>Lat Pulldown</td><td>3×12</td><td>25–35kg</td><td>Pull to chest</td></tr>
+    <tr><td>Seated Cable Row</td><td>3×12</td><td>20–30kg</td><td>Squeeze back</td></tr>
+    <tr><td>One-arm DB Row</td><td>3×10</td><td>10–12.5kg</td><td>Flat back</td></tr>
+    <tr><td>Face Pull</td><td>3×15</td><td>10–15kg</td><td>Elbows high</td></tr>
+    <tr><td>DB Curl</td><td>3×12</td><td>6–8kg</td><td>Slow reps</td></tr>
+    <tr><td>Hammer Curl</td><td>2×12</td><td>6–8kg</td><td>Neutral grip</td></tr></table>
+    <button class="btn by" style="margin-top:10px;width:100%" onclick="logW('pull',40)">✓ Done → +40 XP</button>
+  </div></div>
+  <div id="w3" style="display:none"><div class="card" style="border-left:3px solid var(--o)">
+    <div class="ct" style="color:var(--o)">Day 4 — Legs + Core</div>
+    <table class="wt"><tr><th>Exercise</th><th>Sets×Reps</th><th>Weight</th><th>Cue</th></tr>
+    <tr><td>Goblet Squat</td><td>4×10</td><td>10–15kg</td><td>Knees out</td></tr>
+    <tr><td>Leg Press</td><td>3×12</td><td>60–80kg</td><td>Full depth</td></tr>
+    <tr><td>Hip Thrust</td><td>3×12</td><td>20–30kg</td><td>Squeeze glutes</td></tr>
+    <tr><td>Leg Curl</td><td>3×12</td><td>20–30kg</td><td>Slow control</td></tr>
+    <tr><td>Walking Lunges</td><td>3×12/leg</td><td>BW</td><td>Upright torso</td></tr>
+    <tr><td>Calf Raise</td><td>4×15</td><td>BW/+20kg</td><td>Full stretch</td></tr>
+    <tr><td>Plank</td><td>3×45–60s</td><td>—</td><td>Straight line</td></tr>
+    <tr><td>Leg Raises</td><td>3×12</td><td>—</td><td>Back flat</td></tr>
+    <tr><td>Cable Crunch</td><td>3×15</td><td>—</td><td>Contract abs</td></tr></table>
+    <button class="btn by" style="margin-top:10px;width:100%" onclick="logW('legs',50)">✓ Done → +50 XP</button>
+  </div></div>
+  <div id="w4" style="display:none"><div class="card" style="border-left:3px solid var(--y)">
+    <div class="ct">Day 5 — Conditioning + Abs</div>
+    <table class="wt"><tr><th>Exercise</th><th>Duration</th><th>Notes</th></tr>
+    <tr><td>Incline Walk/Cycling</td><td>20 min</td><td>60–70% HR</td></tr>
+    <tr><td>Rowing/Battle Rope</td><td>8–10 min</td><td>30s on, 15s rest</td></tr>
+    <tr><td>Russian Twists</td><td>3×20</td><td>Feet off ground</td></tr>
+    <tr><td>Leg Raises</td><td>3×12</td><td>Back flat</td></tr></table>
+    <button class="btn by" style="margin-top:10px;width:100%" onclick="logW('cond',35)">✓ Done → +35 XP</button>
+  </div></div>
+  <div class="card" style="background:rgba(245,230,66,.04);border-color:rgba(245,230,66,.15)">
     <div class="ct">📈 Progression Rule</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;text-align:center">
-      <div style="background:var(--s2);border-radius:7px;padding:10px"><div style="font-weight:800;font-size:18px;color:var(--y)">+2.5kg</div><div style="font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono)">OR per week</div></div>
-      <div style="background:var(--s2);border-radius:7px;padding:10px"><div style="font-weight:800;font-size:18px;color:var(--g)">+2 reps</div><div style="font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono)">never both</div></div>
-      <div style="background:var(--s2);border-radius:7px;padding:10px"><div style="font-weight:800;font-size:18px;color:var(--o)">48hrs</div><div style="font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono)">sore? hold weight</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center">
+      <div style="background:var(--s2);border-radius:7px;padding:9px"><div style="font-weight:800;font-size:17px;color:var(--y)">+2.5kg</div><div style="font-size:8px;color:var(--mu);margin-top:2px;font-family:var(--mo)">OR per week</div></div>
+      <div style="background:var(--s2);border-radius:7px;padding:9px"><div style="font-weight:800;font-size:17px;color:var(--g)">+2 reps</div><div style="font-size:8px;color:var(--mu);margin-top:2px;font-family:var(--mo)">never both</div></div>
+      <div style="background:var(--s2);border-radius:7px;padding:9px"><div style="font-weight:800;font-size:17px;color:var(--o)">48hrs</div><div style="font-size:8px;color:var(--mu);margin-top:2px;font-family:var(--mo)">sore? hold weight</div></div>
     </div>
   </div>
 </div>
 
-<!-- NUTRITION -->
+<!-- ══ NUTRITION ══ -->
 <div class="page" id="p-nutrition">
-  <div class="sh"><h1>Nutrition <span style="color:var(--g)">Plan</span></h1><p>// 1500 kcal · 120–130g protein · cut phase</p></div>
-  <div class="sg">
-    <div class="sc"><div class="sv">1500</div><div class="sl">Kcal</div></div>
-    <div class="sc"><div class="sv aok">125g</div><div class="sl">Protein</div></div>
-    <div class="sc"><div class="sv" style="color:var(--b)">3L</div><div class="sl">Water</div></div>
+  <div class="sh"><h1>Nutrition <span style="color:var(--g)">Tracker</span></h1><p>// Log every meal · hit your targets</p></div>
+
+  <!-- Live macro dashboard -->
+  <div style="background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:10px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:800;color:var(--y)" id="nt-kcal">0</div>
+        <div style="font-size:8px;color:var(--mu);font-family:var(--mo);margin-top:2px">KCAL</div>
+        <div style="font-size:8px;font-family:var(--mo);color:var(--mu)">/ 1500</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:800;color:var(--g)" id="nt-prot">0</div>
+        <div style="font-size:8px;color:var(--mu);font-family:var(--mo);margin-top:2px">PROTEIN g</div>
+        <div style="font-size:8px;font-family:var(--mo);color:var(--mu)">/ 125g</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:800;color:var(--o)" id="nt-carb">0</div>
+        <div style="font-size:8px;color:var(--mu);font-family:var(--mo);margin-top:2px">CARBS g</div>
+        <div style="font-size:8px;font-family:var(--mo);color:var(--mu)">/ 80g</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:800;color:var(--b)" id="nt-fat">0</div>
+        <div style="font-size:8px;color:var(--mu);font-family:var(--mo);margin-top:2px">FAT g</div>
+        <div style="font-size:8px;font-family:var(--mo);color:var(--mu)">/ 50g</div>
+      </div>
+    </div>
+    <!-- Macro bars -->
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px">
+        <span style="color:var(--y)">Calories</span><span id="nt-kcal-pct" style="font-family:var(--mo);font-size:9px;color:var(--mu)">0%</span>
+      </div>
+      <div class="pb"><div class="pf" id="nt-bar-kcal" style="background:linear-gradient(90deg,var(--y),var(--o));width:0%"></div></div>
+    </div>
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px">
+        <span style="color:var(--g)">Protein</span><span id="nt-prot-pct" style="font-family:var(--mo);font-size:9px;color:var(--mu)">0%</span>
+      </div>
+      <div class="pb"><div class="pf" id="nt-bar-prot" style="background:linear-gradient(90deg,var(--g),var(--b));width:0%"></div></div>
+    </div>
+    <div style="margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px">
+        <span style="color:var(--mu)">Remaining calories</span><span id="nt-remain" style="font-family:var(--mo);font-size:9px;color:var(--g)">1500 left</span>
+      </div>
+    </div>
   </div>
+
+  <!-- Quick-add from your plan -->
   <div class="card">
-    <div class="ct">Daily macro targets</div>
-    <div class="mbar-r"><div class="mbar-hd"><span>Protein (120–130g)</span><span>55g shakes + 70g food</span></div><div class="mbar"><div class="mbar-f" style="width:85%;background:linear-gradient(90deg,var(--g),var(--y))"></div></div></div>
-    <div class="mbar-r"><div class="mbar-hd"><span>Calories (~1500)</span><span>Controlled deficit</span></div><div class="mbar"><div class="mbar-f" style="width:100%;background:linear-gradient(90deg,var(--y),var(--o))"></div></div></div>
-    <div class="mbar-r"><div class="mbar-hd"><span>Fiber (28–35g)</span><span>Thorans + legumes</span></div><div class="mbar"><div class="mbar-f" style="width:72%;background:linear-gradient(90deg,var(--g),var(--b))"></div></div></div>
+    <div class="ct">⚡ Quick-Add from Your Plan</div>
+    <div style="font-size:10px;color:var(--mu);margin-bottom:10px;font-family:var(--mo)">Tap to add — values pre-filled from your meal plan</div>
+    <div id="nt-quickadd"></div>
   </div>
+
+  <!-- Custom meal logger -->
   <div class="card">
-    <div class="ct">🥤 Protein Shakes — Both Non-Negotiable</div>
-    <div class="frow"><span>Morning — Whey + skim milk</span><span class="amt aok">~30g protein</span></div>
-    <div class="frow"><span>Post-workout — Whey + water</span><span class="amt aok">~25g protein</span></div>
-    <div class="frow" style="background:rgba(245,230,66,.08)"><span style="font-weight:700">Total from shakes</span><span class="amt ayl">~55g · ~310 kcal</span></div>
+    <div class="ct">✏️ Log Custom Meal</div>
+    <div class="ei" style="flex-wrap:wrap;gap:6px">
+      <input type="text" id="nt-name" placeholder="Food / meal name" style="flex:1;min-width:140px">
+      <select id="nt-meal" style="background:var(--s2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:7px 9px;font-size:11px;font-family:var(--fn);outline:none">
+        <option value="morning-shake">🥤 Morning Shake</option>
+        <option value="breakfast">🍳 Breakfast</option>
+        <option value="lunch">🍚 Lunch</option>
+        <option value="post-shake">🥤 Post-workout Shake</option>
+        <option value="dinner">🌙 Dinner</option>
+        <option value="snack">🍎 Snack/Other</option>
+      </select>
+    </div>
+    <div class="ei" style="flex-wrap:wrap;gap:6px;margin-top:0">
+      <input type="number" id="nt-kcal-in" placeholder="Kcal" style="flex:1;min-width:60px">
+      <input type="number" id="nt-prot-in" placeholder="Protein g" style="flex:1;min-width:70px">
+      <input type="number" id="nt-carb-in" placeholder="Carbs g" style="flex:1;min-width:65px">
+      <input type="number" id="nt-fat-in" placeholder="Fat g" style="flex:1;min-width:55px">
+    </div>
+    <button class="btn by" style="width:100%;margin-top:6px" onclick="addMeal()">+ Log Meal</button>
   </div>
+
+  <!-- Today's meals logged -->
   <div class="card">
-    <div class="ct">🍳 Breakfast</div>
-    <table class="wtable">
-      <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
-      <tr><td>Whole egg</td><td>1</td><td>70</td><td>6g</td></tr>
-      <tr><td>Egg whites</td><td>2</td><td>34</td><td>7g</td></tr>
-      <tr><td>Spinach thoran</td><td>70–80g</td><td>35</td><td>2–3g</td></tr>
-    </table>
-    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:7px">Oil ≤ ½ tsp · Coconut ≤ ½–1 tsp</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="ct" style="margin-bottom:0">📋 Today's Log</div>
+      <button class="btn bg" style="font-size:10px;padding:3px 9px" onclick="clearMeals()">Clear Day</button>
+    </div>
+    <div id="nt-log">
+      <div style="text-align:center;color:var(--mu);font-size:11px;padding:14px;font-family:var(--mo)">No meals logged yet</div>
+    </div>
   </div>
+
+  <!-- Meal plan reference -->
   <div class="card">
-    <div class="ct">🍚 Lunch — Rotate</div>
-    <table class="wtable">
-      <tr><th>Protein</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
-      <tr><td>Chicken / Fish</td><td>150g</td><td>250</td><td>33g <span class="tag te">Most days</span></td></tr>
-      <tr><td>Paneer</td><td>100g</td><td>260</td><td>19g <span class="tag tm">2–3×/wk</span></td></tr>
-      <tr><td>Eggs (1+2 whites)</td><td>—</td><td>105</td><td>13g <span style="font-size:9px;color:var(--muted)">backup</span></td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <div class="ct">🥗 Thoran Combo — Pick One Daily</div>
-    <table class="wtable">
-      <tr><th>Combo</th><th>Cal</th><th>Protein</th><th>Fiber</th></tr>
-      <tr><td>Beetroot + Horse gram</td><td>140</td><td>9g</td><td>11g</td></tr>
-      <tr><td>Spinach + Horse gram</td><td>130</td><td>10g</td><td>12g</td></tr>
-      <tr><td>Beetroot + Payar</td><td>150</td><td>10g</td><td>10g</td></tr>
-      <tr><td>Spinach + Payar</td><td>140</td><td>9.5g</td><td>11g</td></tr>
-    </table>
-    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:7px">Oil+coconut ≤ 1 tsp · Soak legumes 8–10hr · Lemon for iron absorption</div>
-  </div>
-  <div class="card">
-    <div class="ct">🌙 Dinner</div>
-    <table class="wtable">
-      <tr><th>Food</th><th>Qty</th><th>Cal</th><th>Protein</th></tr>
-      <tr><td>Chicken (grilled)</td><td>150–180g</td><td>270</td><td>37g</td></tr>
-      <tr><td>Mixed vegetables</td><td>Free</td><td>50</td><td>3g</td></tr>
-      <tr><td>Pumpkin seeds</td><td>10g</td><td>55</td><td>3g</td></tr>
-    </table>
-    <div style="font-family:var(--mono);font-size:9px;color:var(--r);margin-top:7px">❌ No rice · ❌ No roti</div>
+    <div class="ct">📖 Your Meal Plan Reference</div>
+    <div class="tabs" style="margin-bottom:10px">
+      <div class="tab on" onclick="sNt('nt-ref-shakes',this)">Shakes</div>
+      <div class="tab" onclick="sNt('nt-ref-meals',this)">Meals</div>
+      <div class="tab" onclick="sNt('nt-ref-thoran',this)">Thoran</div>
+    </div>
+    <div id="nt-ref-shakes">
+      <table class="wt"><tr><th>Shake</th><th>Kcal</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr>
+      <tr><td>Whey + skim milk (morning)</td><td>190</td><td>30g</td><td>14g</td><td>2g</td></tr>
+      <tr><td>Whey + water (post-workout)</td><td>120</td><td>25g</td><td>3g</td><td>1g</td></tr></table>
+    </div>
+    <div id="nt-ref-meals" style="display:none">
+      <table class="wt"><tr><th>Food</th><th>Qty</th><th>Kcal</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr>
+      <tr><td>Whole egg</td><td>1</td><td>70</td><td>6g</td><td>0g</td><td>5g</td></tr>
+      <tr><td>Egg whites</td><td>2</td><td>34</td><td>7g</td><td>0g</td><td>0g</td></tr>
+      <tr><td>Spinach thoran</td><td>70g</td><td>35</td><td>3g</td><td>4g</td><td>1g</td></tr>
+      <tr><td>Chicken breast (grilled)</td><td>150g</td><td>247</td><td>33g</td><td>0g</td><td>6g</td></tr>
+      <tr><td>Fish (tilapia/rohu)</td><td>150g</td><td>195</td><td>33g</td><td>0g</td><td>4g</td></tr>
+      <tr><td>Paneer</td><td>100g</td><td>260</td><td>19g</td><td>4g</td><td>20g</td></tr>
+      <tr><td>Mixed vegetables</td><td>100g</td><td>50</td><td>2g</td><td>10g</td><td>0g</td></tr>
+      <tr><td>Pumpkin seeds</td><td>10g</td><td>55</td><td>3g</td><td>2g</td><td>4g</td></tr></table>
+    </div>
+    <div id="nt-ref-thoran" style="display:none">
+      <table class="wt"><tr><th>Combo</th><th>Kcal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Fiber</th></tr>
+      <tr><td>Beetroot + Horse gram</td><td>140</td><td>9g</td><td>22g</td><td>2g</td><td>11g</td></tr>
+      <tr><td>Spinach + Horse gram</td><td>130</td><td>10g</td><td>18g</td><td>2g</td><td>12g</td></tr>
+      <tr><td>Beetroot + Payar</td><td>150</td><td>10g</td><td>24g</td><td>2g</td><td>10g</td></tr>
+      <tr><td>Spinach + Payar</td><td>140</td><td>9g</td><td>20g</td><td>2g</td><td>11g</td></tr></table>
+      <div style="font-family:var(--mo);font-size:8px;color:var(--mu);margin-top:6px">Oil+coconut ≤ 1 tsp total · Soak legumes 8–10hr · Add lemon for iron absorption</div>
+    </div>
   </div>
 </div>
 
-<!-- LEETCODE -->
+<!-- ══ LEETCODE ══ -->
 <div class="page" id="p-lc">
-  <div class="sh"><h1>LeetCode <span style="color:var(--o)">Track</span></h1><p>// 1 problem/day = +20 XP · tap to mark done</p></div>
+  <div class="sh"><h1>LeetCode <span style="color:var(--o)">Track</span></h1><p>// 70 days · 140 problems · 5 phases · 2–3/day</p></div>
   <div class="sg">
-    <div class="sc"><div class="sv aok" id="lcD">4</div><div class="sl">Solved</div></div>
-    <div class="sc"><div class="sv awn" id="lcL">41</div><div class="sl">Left</div></div>
-    <div class="sc"><div class="sv ayl" id="lcX">80</div><div class="sl">XP earned</div></div>
+    <div class="sc"><div class="sv aok" id="lcD">0</div><div class="sl">Solved</div></div>
+    <div class="sc"><div class="sv awn" id="lcL">140</div><div class="sl">Left</div></div>
+    <div class="sc"><div class="sv ayl" id="lcX">0</div><div class="sl">XP earned</div></div>
   </div>
-  <div class="rule-banner"><strong>Rule:</strong> Struggle 20+ min before hints. After solving — rewrite from scratch next day to lock in the pattern.</div>
-  <div class="wtabs">
-    <div class="wtab on" onclick="showLC('la',this)">Arrays</div>
-    <div class="wtab" onclick="showLC('ls',this)">Strings</div>
-    <div class="wtab" onclick="showLC('lh',this)">Hash Maps</div>
+  <div style="background:rgba(245,66,66,.05);border:1px solid rgba(245,66,66,.15);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px;color:var(--mu);line-height:1.6">
+    <strong style="color:var(--tx)">Rules:</strong> Struggle 20–30 min before hints. After solving — rewrite from scratch next day. <strong style="color:var(--y)">Mark ✅ Done</strong> if solo. <strong style="color:var(--o)">Mark ⚡ Hints</strong> if you needed help — revisit in 3 days. Aim 80%+ ✅ before next phase.
   </div>
-  <div id="la"><div class="card"><div class="ct">Arrays — 15 problems</div><div id="ll-a"></div></div></div>
-  <div id="ls" style="display:none"><div class="card"><div class="ct">Strings — 15 problems</div><div id="ll-s"></div></div></div>
-  <div id="lh" style="display:none"><div class="card"><div class="ct">Hash Maps — 15 problems</div><div id="ll-h"></div></div></div>
+
+  <!-- Phase progress bar -->
+  <div class="card" style="padding:12px">
+    <div class="ct">Phase Progress</div>
+    <div id="lcPhaseBar"></div>
+  </div>
+
+  <div class="tabs" style="flex-wrap:wrap">
+    <div class="tab on"  onclick="sLC('lp1',this)">Phase 1</div>
+    <div class="tab"     onclick="sLC('lp2',this)">Phase 2</div>
+    <div class="tab"     onclick="sLC('lp3',this)">Phase 3</div>
+    <div class="tab"     onclick="sLC('lp4',this)">Phase 4</div>
+    <div class="tab"     onclick="sLC('lp5',this)">Phase 5</div>
+  </div>
+
+  <div id="lp1"><div id="ll-p1"></div></div>
+  <div id="lp2" style="display:none"><div id="ll-p2"></div></div>
+  <div id="lp3" style="display:none"><div id="ll-p3"></div></div>
+  <div id="lp4" style="display:none"><div id="ll-p4"></div></div>
+  <div id="lp5" style="display:none"><div id="ll-p5"></div></div>
 </div>
 
-<!-- READING -->
+<!-- ══ READING ══ -->
 <div class="page" id="p-reading">
-  <div class="sh"><h1>Reading + <span style="color:var(--b)">Mindset</span></h1><p>// 10 pages/day = +15 XP · finish book = +100 XP</p></div>
+  <div class="sh"><h1>Reading + <span style="color:var(--b)">Mindset</span></h1><p>// 10 pages/day = +15 XP · finish = +100 XP</p></div>
   <div class="sg">
     <div class="sc"><div class="sv" style="color:var(--b)">900</div><div class="sl">Pages total</div></div>
     <div class="sc"><div class="sv ayl">10</div><div class="sl">Pages/day</div></div>
@@ -380,501 +509,1562 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   <div class="card"><div class="ct">📚 Book Stack — In Order</div><div id="bookList"></div></div>
   <div class="card">
     <div class="ct">🧘 Meditation — +10 XP/day</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px">10 minutes before your phone. Just a timer. Sit, breathe, notice thoughts without reacting. Highest-ROI habit in this plan.</div>
-    <div class="frow"><span>Week 1–2</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">5 min body scan</span></div>
-    <div class="frow"><span>Week 3–4</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">8 min breath focus</span></div>
-    <div class="frow"><span>Month 2+</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">10 min open awareness</span></div>
+    <div style="font-size:11px;color:var(--mu);line-height:1.7;margin-bottom:9px">10 min before phone. Sit, breathe, notice thoughts without reacting. Highest-ROI habit here.</div>
+    <div class="fr"><span>Week 1–2</span><span style="font-family:var(--mo);font-size:9px;color:var(--mu)">5 min body scan</span></div>
+    <div class="fr"><span>Week 3–4</span><span style="font-family:var(--mo);font-size:9px;color:var(--mu)">8 min breath focus</span></div>
+    <div class="fr"><span>Month 2+</span><span style="font-family:var(--mo);font-size:9px;color:var(--mu)">10 min open awareness</span></div>
   </div>
   <div class="card">
     <div class="ct">🚿 Cold Shower — +10 XP/day</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:10px">Dopamine +250% (sustained). Builds the habit of doing hard things on purpose.</div>
-    <div class="frow"><span>Days 1–7</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">30 sec cold at end</span></div>
-    <div class="frow"><span>Days 8–21</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">1 min cold</span></div>
-    <div class="frow"><span>Day 22+</span><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">Full cold 3–5 min</span></div>
-    <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--y);font-family:var(--mono)">Get in before you can talk yourself out of it.</div>
-  </div>
-  <div class="card">
-    <div class="ct">📵 Screen Time</div>
-    <div class="frow"><span>❌ Phone first 30 min of day</span><span class="amt abr" style="font-size:10px">BANNED</span></div>
-    <div class="frow"><span>❌ Phone in bed</span><span class="amt abr" style="font-size:10px">BANNED</span></div>
-    <div class="frow"><span>❌ Reels > 15 min/day</span><span class="amt abr" style="font-size:10px">BANNED</span></div>
-    <div class="frow"><span>✅ LeetCode / coding / reading</span><span class="amt aok" style="font-size:10px">GO</span></div>
-    <div class="frow"><span>🎯 Total screen &lt; 3hrs</span><span class="amt ayl" style="font-size:10px">TARGET</span></div>
+    <div class="fr"><span>Days 1–7</span><span style="font-family:var(--mo);font-size:9px;color:var(--mu)">30 sec cold at end</span></div>
+    <div class="fr"><span>Days 8–21</span><span style="font-family:var(--mo);font-size:9px;color:var(--mu)">1 min full cold</span></div>
+    <div class="fr"><span>Day 22+</span><span style="font-family:var(--mo);font-size:9px;color:var(--mu)">3–5 min full cold</span></div>
+    <div style="margin-top:7px;font-size:10px;font-weight:700;color:var(--y);font-family:var(--mo)">Get in before you can talk yourself out of it.</div>
   </div>
 </div>
 
-<!-- FINANCE -->
+<!-- ══ LEARNING (Backend + AWS) ══ -->
+<div class="page" id="p-learning">
+  <div class="sh"><h1>Backend <span style="color:var(--p)">Learning</span></h1><p>// 6 months · 10 projects · AWS certified</p></div>
+  <div class="sg">
+    <div class="sc"><div class="sv" style="color:var(--p)" id="lrnD">0</div><div class="sl">Weeks done</div></div>
+    <div class="sc"><div class="sv ayl" id="lrnX">0</div><div class="sl">XP earned</div></div>
+    <div class="sc"><div class="sv aok" id="lrnPh">1</div><div class="sl">Current phase</div></div>
+  </div>
+
+  <!-- Time commitment banner -->
+  <div style="background:rgba(180,122,245,.06);border:1px solid rgba(180,122,245,.2);border-radius:8px;padding:12px 14px;margin-bottom:10px">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--p);font-family:var(--mo);margin-bottom:8px">YOUR DAILY SCHEDULE</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="background:var(--s2);border-radius:7px;padding:10px;border-left:3px solid var(--b)">
+        <div style="font-size:11px;font-weight:700;color:var(--b);margin-bottom:4px">📅 Weekdays (Mon–Fri)</div>
+        <div style="font-size:10px;color:var(--mu);line-height:1.6;font-family:var(--mo)">Total: <strong style="color:var(--tx)">2 hrs</strong><br>• 30min review/replay<br>• 45min focused learning<br>• 30min hands-on build<br>• 15min write 3 learnings</div>
+      </div>
+      <div style="background:var(--s2);border-radius:7px;padding:10px;border-left:3px solid var(--g)">
+        <div style="font-size:11px;font-weight:700;color:var(--g);margin-bottom:4px">🗓 Weekends (Sat–Sun)</div>
+        <div style="font-size:10px;color:var(--mu);line-height:1.6;font-family:var(--mo)">Total: <strong style="color:var(--tx)">5–6 hrs/day</strong><br>• 1hr review week's concepts<br>• 2–2.5hr project build<br>• 1.5–2hr new learning<br>• 30min document & commit</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:10px;color:var(--mu);font-family:var(--mo);line-height:1.5">Weekly total: ~20–22hrs · Rule: <strong style="color:var(--y)">Build everything. Read nothing passively.</strong></div>
+  </div>
+
+  <div class="tabs" style="flex-wrap:wrap">
+    <div class="tab on" onclick="sLn('ph1',this)">Phase 1</div>
+    <div class="tab" onclick="sLn('ph2',this)">Phase 2</div>
+    <div class="tab" onclick="sLn('ph3',this)">Phase 3</div>
+    <div class="tab" onclick="sLn('ph4',this)">Phase 4</div>
+    <div class="tab" onclick="sLn('proj',this)">Projects</div>
+    <div class="tab" onclick="sLn('sec',this)">Security</div>
+    <div class="tab" onclick="sLn('ai',this)">AI Usage</div>
+    <div class="tab" onclick="sLn('res',this)">Resources</div>
+  </div>
+  <div id="ph1"><div id="lrn-ph1"></div></div>
+  <div id="ph2" style="display:none"><div id="lrn-ph2"></div></div>
+  <div id="ph3" style="display:none"><div id="lrn-ph3"></div></div>
+  <div id="ph4" style="display:none"><div id="lrn-ph4"></div></div>
+  <div id="proj" style="display:none"><div id="lrn-proj"></div></div>
+  <div id="sec" style="display:none"><div id="lrn-sec"></div></div>
+  <div id="ai" style="display:none"><div id="lrn-ai"></div></div>
+  <div id="res" style="display:none"><div id="lrn-res"></div></div>
+</div>
+
+<!-- ══ FINANCE ══ -->
 <div class="page" id="p-finance">
-  <div class="sh"><h1>Finance <span style="color:var(--g)">Plan</span></h1><p>// March — survival mode · every rupee counts</p></div>
-  <div class="fin-hero">
-    <div class="fin-big" id="finL">₹4,133</div>
-    <div class="fin-lbl">REMAINING THIS MONTH</div>
-    <div style="height:5px;background:rgba(0,0,0,.3);border-radius:3px;margin:12px 0 0">
-      <div id="finBar" style="height:100%;background:linear-gradient(90deg,var(--g),var(--y));border-radius:3px;transition:width .5s ease;width:100%"></div>
+  <div class="sh"><h1>Finance <span style="color:var(--g)">Tracker</span></h1><p>// Track every rupee · build wealth discipline</p></div>
+
+  <!-- Month Toggle — auto-labelled by current month -->
+  <div class="mtoggle" id="monthToggle">
+    <div class="mtab" id="m1tab" onclick="setMonth(1)">March (Survival)</div>
+    <div class="mtab" id="m2tab" onclick="setMonth(2)">April (Full Salary)</div>
+  </div>
+
+  <!-- Dynamic hero -->
+  <div class="fh">
+    <div class="fb" id="finL">₹4,133</div>
+    <div class="fl" id="finLbl">REMAINING THIS MONTH</div>
+    <div style="height:4px;background:rgba(0,0,0,.3);border-radius:2px;margin:11px 0 0">
+      <div id="finBar" style="height:100%;background:linear-gradient(90deg,var(--g),var(--y));border-radius:2px;transition:width .5s ease;width:100%"></div>
     </div>
-    <div style="display:flex;justify-content:space-between;margin-top:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35)">
-      <span>Spent: <span id="spentSF" style="color:var(--o)">₹0</span></span>
-      <span>Budget: ₹4,133</span>
+    <div style="display:flex;justify-content:space-between;margin-top:5px;font-family:var(--mo);font-size:9px;color:rgba(255,255,255,.3)">
+      <span>Spent: <span id="spF" style="color:var(--o)">₹0</span></span>
+      <span id="budgetLbl">Budget: ₹4,133</span>
     </div>
   </div>
-  <div class="card">
-    <div class="ct">💰 March Salary Breakdown</div>
-    <div class="frow"><span>Monthly Salary</span><span class="amt aok">₹37,133</span></div>
-    <div class="frow"><span>Rent + Credit Card</span><span class="amt abr">−₹30,000</span></div>
-    <div class="frow"><span>Debt payment</span><span class="amt abr">−₹3,000</span></div>
-    <div style="height:1px;background:var(--border);margin:6px 0"></div>
-    <div class="frow" style="background:rgba(245,230,66,.08)"><span style="font-weight:700">Left to spend</span><span class="amt ayl" style="font-size:16px;font-weight:800">₹4,133</span></div>
+
+  <!-- March breakdown -->
+  <div id="marchView">
+    <div class="card">
+      <div class="ct">💰 March Salary Breakdown</div>
+      <div class="fr"><span>Monthly Salary</span><span class="am aok">₹37,133</span></div>
+      <div class="fr"><span>Rent + Credit Card</span><span class="am abr">−₹30,000</span></div>
+      <div class="fr"><span>Debt Payment</span><span class="am abr">−₹3,000</span></div>
+      <div style="height:1px;background:var(--bd);margin:6px 0"></div>
+      <div class="fr" style="background:rgba(245,230,66,.08)"><span style="font-weight:700">Left to spend</span><span class="am ayl" style="font-size:15px;font-weight:800">₹4,133</span></div>
+    </div>
+    <div class="card">
+      <div class="ct">🎯 Suggested Split (March)</div>
+      <div class="fr"><span>🥦 Food / groceries</span><span class="am aok">₹2,500</span></div>
+      <div class="fr"><span>🚌 Transport</span><span class="am awn">₹800</span></div>
+      <div class="fr"><span>📦 Emergency/misc</span><span class="am awn">₹500</span></div>
+      <div class="fr" style="background:rgba(245,66,66,.07)"><span>🚫 Eating out / fun</span><span class="am abr">₹0</span></div>
+      <div style="margin-top:8px;font-size:10px;color:var(--mu);font-family:var(--mo);line-height:1.6;padding:8px;background:var(--s2);border-radius:6px">Survival month. Cook everything. Walk where you can. Next month = full salary to allocate freely.</div>
+    </div>
   </div>
-  <div class="card">
-    <div class="ct">🎯 Suggested Split</div>
-    <div class="frow"><span>🥦 Food / groceries</span><span class="amt aok">₹2,500</span></div>
-    <div class="frow"><span>🚌 Transport</span><span class="amt awn">₹800</span></div>
-    <div class="frow"><span>📦 Emergency / misc</span><span class="amt awn">₹500</span></div>
-    <div class="frow"><span>💊 Whey protein</span><span style="font-size:10px;font-family:var(--mono);color:var(--b)">Buy bulk, saves money</span></div>
-    <div class="frow" style="background:rgba(245,66,66,.07)"><span>🚫 Eating out / fun</span><span class="amt abr">₹0 this month</span></div>
-    <div style="margin-top:8px;font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.6;padding:9px;background:var(--s2);border-radius:7px">Survival month. Cook everything. Walk when possible. Next month after debt — more room. You can do this.</div>
+
+  <!-- April breakdown -->
+  <div id="aprilView" style="display:none">
+    <div class="card">
+      <div class="ct">💰 April — Your Salary</div>
+      <div class="fr" style="background:rgba(245,230,66,.08)"><span style="font-weight:700">Monthly Salary</span><span class="am ayl" style="font-size:15px;font-weight:800">₹37,133</span></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--mu);line-height:1.6;padding:8px;background:var(--s2);border-radius:6px">Log your expenses below. Track every rupee. Build the habit.</div>
+    </div>
+    <div class="card">
+      <div class="ct">🎯 Suggested Allocation</div>
+      <div class="fr"><span>🏠 Fixed (Rent + CC + Debt)</span><span class="am abr">₹33,000</span></div>
+      <div class="fr"><span>🥦 Food / groceries</span><span class="am aok">₹2,500</span></div>
+      <div class="fr"><span>🚌 Transport</span><span class="am awn">₹500</span></div>
+      <div class="fr"><span>💰 Savings</span><span class="am" style="color:var(--b)">₹633</span></div>
+      <div class="fr"><span>🎯 Wants</span><span class="am" style="color:var(--p)">₹500</span></div>
+      <div style="margin-top:8px;font-size:10px;color:var(--mu);font-family:var(--mo);line-height:1.6;padding:8px;background:var(--s2);border-radius:6px">Adjust as needed. Rename categories when you log expenses to track properly.</div>
+    </div>
   </div>
+
+  <!-- Expense logger (shared) -->
   <div class="card">
-    <div class="ct">➕ Log Expense</div>
-    <div class="exp-inp">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="ct" style="margin-bottom:0">➕ Log Expense</div>
+      <button class="btn br" style="font-size:10px;padding:3px 10px" onclick="showModal('reset-month')">Reset Month</button>
+    </div>
+    <div class="ei">
       <input type="text" id="eN" placeholder="What did you spend on?" style="flex:1">
-      <input type="number" id="eA" placeholder="₹" style="width:80px;flex:none">
+      <input type="number" id="eA" placeholder="₹" style="width:75px;flex:none">
     </div>
-    <div class="exp-inp">
-      <select id="eC">
+    <div class="ei">
+      <select id="eC" style="flex:1">
         <option value="food">🥦 Food</option>
         <option value="transport">🚌 Transport</option>
-        <option value="misc">📦 Misc</option>
+        <option value="savings">💰 Savings</option>
+        <option value="invest">📈 Investment</option>
+        <option value="essential">🏠 Essential</option>
+        <option value="want">🎯 Want</option>
         <option value="impulse">⚠ Impulse</option>
       </select>
-      <button class="btn btn-y" style="flex:1" onclick="addExp()">Add</button>
+      <button class="btn by" style="flex:1" onclick="addExp()">Add</button>
     </div>
     <div id="eList"></div>
   </div>
   <div class="card">
     <div class="ct">⏱ 48-Hour Rule</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.7">Any non-essential purchase: <strong style="color:var(--text)">write it down and wait 48 hours.</strong> Still want it? It fits ₹4,133? Buy it. Most impulse wants vanish. This one rule saves you the most money this month.</div>
+    <div style="font-size:11px;color:var(--mu);line-height:1.7">Any non-essential: <strong style="color:var(--tx)">write it down, wait 48 hours.</strong> Still want it? Still fits budget? Buy it. 90% of impulse wants vanish. This is your biggest financial weapon this month.</div>
   </div>
 </div>
 
-<!-- HABITS -->
+<!-- ══ HABITS ══ -->
 <div class="page" id="p-habits">
-  <div class="sh"><h1>Habit <span style="color:var(--y)">Tracker</span></h1><p>// 90 dots · tap each day done · don't break the chain</p></div>
-  <div id="hGrids"></div>
+  <div class="sh"><h1>Habit <span style="color:var(--y)">Tracker</span></h1><p>// Tap each day done · don't break the chain</p></div>
+  <div id="hG"></div>
 </div>
 
-<!-- REWARDS -->
-<div class="page" id="p-rewards">
-  <div class="sh"><h1>Rewards <span style="color:var(--y)">System</span></h1><p>// Earn the milestone · unlock the reward</p></div>
-  <div class="card" style="background:rgba(245,230,66,.04);border-color:rgba(245,230,66,.18)">
-    <div style="font-size:12px;color:var(--muted);line-height:1.7">Your XP: <strong class="ayl" id="rXP">0</strong> · Rewards unlock when you hit <strong style="color:var(--text)">both</strong> the day milestone and the XP threshold. No early unlocks.</div>
+<!-- ══ SKILLS ══ -->
+<div class="page" id="p-skills">
+  <div class="sh"><h1>Your <span style="color:var(--y)">Skills</span></h1><p>// After 90 days of PROJECT 90 — here's who you become</p></div>
+  <div style="font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.7;padding:10px 12px;background:var(--s2);border-radius:8px">
+    These are the skills you will have built by Day 90 — across every domain. This is not motivational fluff. Each skill maps directly to specific habits, training, reading, and practice in this plan.
   </div>
-  <div id="rList"></div>
+
+  <div class="tabs" style="margin-bottom:10px">
+    <div class="tab on" onclick="sSk('sk-tech',this)">Technical</div>
+    <div class="tab" onclick="sSk('sk-body',this)">Body</div>
+    <div class="tab" onclick="sSk('sk-mind',this)">Mind</div>
+    <div class="tab" onclick="sSk('sk-soc',this)">Social</div>
+    <div class="tab" onclick="sSk('sk-fin',this)">Finance</div>
+    <div class="tab" onclick="sSk('sk-lead',this)">Leadership</div>
+  </div>
+
+  <div id="sk-tech"><div id="skTech"></div></div>
+  <div id="sk-body" style="display:none"><div id="skBody"></div></div>
+  <div id="sk-mind" style="display:none"><div id="skMind"></div></div>
+  <div id="sk-soc" style="display:none"><div id="skSoc"></div></div>
+  <div id="sk-fin" style="display:none"><div id="skFin"></div></div>
+  <div id="sk-lead" style="display:none"><div id="skLead"></div></div>
+</div>
+
+<!-- ══ REWARDS ══ -->
+<div class="page" id="p-rewards">
+  <div class="sh"><h1>Rewards <span style="color:var(--y)">System</span></h1><p>// Earn the milestone · unlock it</p></div>
+  <div class="card" style="background:rgba(245,230,66,.04);border-color:rgba(245,230,66,.15)">
+    <div style="font-size:11px;color:var(--mu);line-height:1.7">Your XP: <strong class="ayl" id="rXP">0</strong> · Rewards unlock at the day milestone AND XP threshold. No early unlocks. No exceptions.</div>
+  </div>
+  <div id="rL"></div>
+</div>
+
+<!-- ══ MODALS ══ -->
+<div class="modal-bg" id="modal-reset-day">
+  <div class="modal">
+    <div style="font-size:28px;margin-bottom:8px">🔄</div>
+    <h2>Reset Today?</h2>
+    <p>This clears all today's check-ins. Your overall XP, LeetCode, habits and other data stay safe.</p>
+    <div class="modal-btns">
+      <button class="btn bg" onclick="closeModal('reset-day')">Cancel</button>
+      <button class="btn by" onclick="doResetDay()">Yes, Reset Day</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-reset-all">
+  <div class="modal">
+    <div style="font-size:28px;margin-bottom:8px">⚠️</div>
+    <h2>Reset Everything?</h2>
+    <p>This clears ALL progress — checks, XP, habits, LeetCode, expenses, books. This cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn bg" onclick="closeModal('reset-all')">Cancel</button>
+      <button class="btn br" onclick="doResetAll()">Yes, Reset All</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-reset-month">
+  <div class="modal">
+    <div style="font-size:28px;margin-bottom:8px">🗑️</div>
+    <h2>Reset This Month?</h2>
+    <p>Clears all expenses for the current month only. Your other progress stays safe.</p>
+    <div class="modal-btns">
+      <button class="btn bg" onclick="closeModal('reset-month')">Cancel</button>
+      <button class="btn br" onclick="doResetMonth()">Yes, Clear Expenses</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── STATE ──
-const S = {
-  day:1, checks:{}, lcStatus:{a1:true,a2:true,a3:true,a4:true},
-  workouts:{}, habits:{}, expenses:[], books:[]
+// ══════ STATE ══════
+// Auto-detect current month (1=March, 2=April, 3=May onwards)
+function autoMonth(){
+  const m=new Date().getMonth()+1; // 1-12
+  if(m===3)return 1; // March = survival
+  if(m===4)return 2; // April = full salary
+  return 2; // May+ = full salary
+}
+
+const S={
+  day:1,checks:{},lc:{},
+  wkt:{},habits:{},expenses:[],books:[],lrn:{},
+  month:autoMonth(),
+  meals:[] // {id, name, meal, kcal, prot, carb, fat}
 };
 
-// ── CHECK DATA ──
-const CHK = {
+const BUDGET_MARCH=4133, BUDGET_APRIL=37133;
+
+// ══════ CHECK DATA ══════
+const CHK={
   mind:[
-    {id:'med', label:'Meditation',    sub:'10 min before phone', pts:10},
-    {id:'cold',label:'Cold Shower',   sub:'Full cold — no skipping', pts:10},
-    {id:'ns',  label:'No Mindless Scroll', sub:'Reels < 15 min/day', pts:10},
+    {id:'med',l:'Meditation',s:'10 min before phone',p:10},
+    {id:'cold',l:'Cold Shower',s:'Full cold — no skipping',p:10},
+    {id:'ns',l:'No Mindless Scroll',s:'Reels < 15 min/day',p:10},
   ],
   body:[
-    {id:'wkt', label:'Workout / 8-10k Steps', sub:'Gym or walk — no zero days', pts:40},
-    {id:'slp', label:'7–8 hrs Sleep', sub:'Phone out of room', pts:15},
-    {id:'nsmk',label:'No Smoking',    sub:'Track the streak', pts:10},
+    {id:'wkt',l:'Workout / 8–10k Steps',s:'Gym or walk — no zero days',p:40},
+    {id:'slp',l:'7–8 hrs Sleep',s:'Phone out of room',p:15},
+    {id:'nsmk',l:'No Smoking',s:'Track the streak',p:10},
   ],
   nutrition:[
-    {id:'prot',label:'120g Protein Hit',   sub:'Shakes + all meals', pts:20},
-    {id:'wtr', label:'2.5–3L Water',        sub:'Mark your bottle', pts:10},
-    {id:'veg', label:'Vegetables Eaten',    sub:'Thoran + dinner', pts:10},
-    {id:'mp',  label:'On Meal Plan',        sub:'No off-plan food', pts:15},
+    {id:'prot',l:'120g Protein Hit',s:'Shakes + all meals',p:20},
+    {id:'wtr',l:'2.5–3L Water',s:'Mark your bottle',p:10},
+    {id:'veg',l:'Vegetables Eaten',s:'Thoran + dinner',p:10},
+    {id:'mp',l:'On Meal Plan',s:'No off-plan food',p:15},
   ],
   growth:[
-    {id:'lc',  label:'LeetCode Done',  sub:'1+ problem today', pts:20},
-    {id:'rdg', label:'10 Pages Read',   sub:'From your book stack', pts:15},
+    {id:'lc2',l:'LeetCode Done',s:'1+ problem today',p:20},
+    {id:'rdg',l:'10 Pages Read',s:'From your book stack',p:15},
+    {id:'lrn2',l:'2hrs Backend Learning',s:'Theory + hands-on build session',p:20},
   ]
 };
-const ALL = Object.values(CHK).flat();
-const MAX_DAY_XP = ALL.reduce((a,c)=>a+c.pts,0);
+const ALL=Object.values(CHK).flat();
+const MAX_XP=ALL.reduce((a,c)=>a+c.p,0);
 
-// ── BOOKS ──
-const BOOKS = [
-  {id:'b1',title:'How to Win Friends & Influence People',auth:'Dale Carnegie',
-   why:'The foundation of charisma and likability. Learn how to make people feel valued, how to handle disagreements without making enemies, and how to lead people genuinely. Every interaction you have will improve.',pts:100},
-  {id:'b2',title:'Atomic Habits',auth:'James Clear',
-   why:'You are building 17 habits at once. Understand the cue-routine-reward loop. Identity-based habits: "I am someone who trains daily" — not "I want to." The difference is everything.',pts:100},
-  {id:'b3',title:'Deep Work',auth:'Cal Newport',
-   why:'LeetCode, coding, and serious learning all require uninterrupted focus. Protect your deep work blocks. Produce at your cognitive peak. This book rewires how you use your time.',pts:100},
-  {id:'b4',title:"Can't Hurt Me",auth:'David Goggins',
-   why:'For days you want to skip the gym. For the cold shower you want to avoid. Mental toughness is built deliberately. Read this on hard days.',pts:100},
-  {id:'b5',title:'The Lean Startup',auth:'Eric Ries',
-   why:'Build, measure, learn. Great mental model for solving any real problem efficiently. Even if you never start a company, thinking like a builder makes you sharper.',pts:100},
+// ══════ BOOKS ══════
+const BOOKS=[
+  {id:'b1',t:'How to Win Friends & Influence People',a:'Dale Carnegie',w:'Foundation of charisma. Make people feel valued. Handle disagreements without enemies. Lead people genuinely. Every interaction improves after this book.',p:100},
+  {id:'b2',t:'Atomic Habits',a:'James Clear',w:'You\'re building 17 habits simultaneously. Cue-routine-reward loop. Identity-based habits: "I am someone who trains daily." The difference is everything.',p:100},
+  {id:'b3',t:'Deep Work',a:'Cal Newport',w:'LeetCode + backend dev require uninterrupted focus. Protect your deep work blocks. Produce at your cognitive peak.',p:100},
+  {id:'b4',t:"Can't Hurt Me",a:'David Goggins',w:'For days you want to skip the gym. For the cold shower you want to avoid. Read on hard days.',p:100},
+  {id:'b5',t:'The Lean Startup',a:'Eric Ries',w:'Build, measure, learn. Great mental model for solving any real problem efficiently.',p:100},
 ];
 
-// ── LC DATA ──
-const LCA = [
-  {id:'a1',num:'#1',name:'Two Sum',diff:'easy'},
-  {id:'a2',num:'#121',name:'Best Time to Buy and Sell Stock',diff:'easy'},
-  {id:'a3',num:'#217',name:'Contains Duplicate',diff:'easy'},
-  {id:'a4',num:'#238',name:'Product of Array Except Self',diff:'medium'},
-  {id:'a5',num:'#53',name:'Maximum Subarray',diff:'medium'},
-  {id:'a6',num:'#88',name:'Merge Sorted Array',diff:'easy'},
-  {id:'a7',num:'#26',name:'Remove Duplicates from Sorted Array',diff:'easy'},
-  {id:'a8',num:'#66',name:'Plus One',diff:'easy'},
-  {id:'a9',num:'#283',name:'Move Zeroes',diff:'easy'},
-  {id:'a10',num:'#724',name:'Find Pivot Index',diff:'easy'},
-  {id:'a11',num:'#169',name:'Majority Element',diff:'easy'},
-  {id:'a12',num:'#189',name:'Rotate Array',diff:'medium'},
-  {id:'a13',num:'#136',name:'Single Number',diff:'easy'},
-  {id:'a14',num:'#350',name:'Intersection of Two Arrays II',diff:'easy'},
-  {id:'a15',num:'#118',name:"Pascal's Triangle",diff:'easy'},
-];
-const LCS = [
-  {id:'s1',num:'#242',name:'Valid Anagram',diff:'easy'},
-  {id:'s2',num:'#125',name:'Valid Palindrome',diff:'easy'},
-  {id:'s3',num:'#344',name:'Reverse String',diff:'easy'},
-  {id:'s4',num:'#387',name:'First Unique Character',diff:'easy'},
-  {id:'s5',num:'#14',name:'Longest Common Prefix',diff:'easy'},
-  {id:'s6',num:'#20',name:'Valid Parentheses',diff:'easy'},
-  {id:'s7',num:'#28',name:'Implement strStr()',diff:'easy'},
-  {id:'s8',num:'#58',name:'Length of Last Word',diff:'easy'},
-  {id:'s9',num:'#3',name:'Longest Substring Without Repeating',diff:'medium'},
-  {id:'s10',num:'#8',name:'String to Integer (atoi)',diff:'medium'},
-  {id:'s11',num:'#151',name:'Reverse Words in a String',diff:'medium'},
-  {id:'s12',num:'#49',name:'Group Anagrams',diff:'medium'},
-  {id:'s13',num:'#5',name:'Longest Palindromic Substring',diff:'medium'},
-  {id:'s14',num:'#205',name:'Isomorphic Strings',diff:'easy'},
-  {id:'s15',num:'#13',name:'Roman to Integer',diff:'easy'},
-];
-const LCH = [
-  {id:'h1',num:'#1',name:'Two Sum (HashMap approach)',diff:'easy'},
-  {id:'h2',num:'#49',name:'Group Anagrams (HashMap)',diff:'medium'},
-  {id:'h3',num:'#217',name:'Contains Duplicate',diff:'easy'},
-  {id:'h4',num:'#242',name:'Valid Anagram',diff:'easy'},
-  {id:'h5',num:'#771',name:'Jewels and Stones',diff:'easy'},
-  {id:'h6',num:'#383',name:'Ransom Note',diff:'easy'},
-  {id:'h7',num:'#205',name:'Isomorphic Strings',diff:'easy'},
-  {id:'h8',num:'#290',name:'Word Pattern',diff:'easy'},
-  {id:'h9',num:'#202',name:'Happy Number',diff:'easy'},
-  {id:'h10',num:'#219',name:'Contains Duplicate II',diff:'easy'},
-  {id:'h11',num:'#349',name:'Intersection of Two Arrays',diff:'easy'},
-  {id:'h12',num:'#36',name:'Valid Sudoku',diff:'medium'},
-  {id:'h13',num:'#347',name:'Top K Frequent Elements',diff:'medium'},
-  {id:'h14',num:'#560',name:'Subarray Sum Equals K',diff:'medium'},
-  {id:'h15',num:'#128',name:'Longest Consecutive Sequence',diff:'medium'},
+// ══════ LEETCODE ══════
+// ══════ LEETCODE — 70-Day 140-Problem 5-Phase Plan ══════
+// Status per problem: undefined=todo, 'done'=solved solo, 'hints'=needed help
+const LC_PHASES=[
+  {
+    id:'p1', label:'Phase 1', title:'Arrays & Strings',
+    days:'Days 1–14', color:'var(--g)',
+    desc:'Building blocks of every algorithm. Master these and you\'ll see the pattern in 80% of interview problems.',
+    weeks:[
+      {
+        week:'Week 1', days:'Days 1–7', topic:'Arrays — Iteration, Pointers & Matrix',
+        problems:[
+          {id:'lc1', n:'#1 Two Sum', d:'easy', day:1, pat:'Hash Map', why:'Interview #1 most asked. O(n) hash map lookup'},
+          {id:'lc2', n:'#121 Best Time to Buy & Sell Stock', d:'easy', day:1, pat:'Greedy/Scan', why:'Single-pass min tracking'},
+          {id:'lc3', n:'#217 Contains Duplicate', d:'easy', day:2, pat:'Hash Set', why:'Set vs sort tradeoff. O(n) dedup'},
+          {id:'lc4', n:'#238 Product of Array Except Self', d:'medium', day:2, pat:'Prefix/Suffix', why:'No division allowed. Prefix product mastery'},
+          {id:'lc5', n:'#53 Maximum Subarray', d:'medium', day:3, pat:"Kadane's", why:'Classic DP/greedy hybrid. Max contiguous sum'},
+          {id:'lc6', n:'#121 Best Time to Buy & Sell Stock II', d:'medium', day:3, pat:'Greedy', why:'Multi-transaction greedy decision making'},
+          {id:'lc7', n:'#88 Merge Sorted Array', d:'easy', day:4, pat:'Two Pointers', why:'In-place merge. Crucial for merge sort'},
+          {id:'lc8', n:'#26 Remove Duplicates from Sorted Array', d:'easy', day:4, pat:'Two Pointers', why:'In-place dedup. Write pointer pattern'},
+          {id:'lc9', n:'#283 Move Zeroes', d:'easy', day:5, pat:'Two Pointers', why:'Partition pattern. Appears in Quick Sort'},
+          {id:'lc10', n:'#724 Find Pivot Index', d:'easy', day:5, pat:'Prefix Sum', why:'Balanced sum. Foundation for prefix sum'},
+          {id:'lc11', n:'#169 Majority Element', d:'easy', day:6, pat:'Boyer-Moore', why:'Voting algorithm. Space O(1) elegance'},
+          {id:'lc12', n:'#189 Rotate Array', d:'medium', day:6, pat:'Reverse Trick', why:'In-place rotation — reverse 3 times'},
+          {id:'lc13', n:'#136 Single Number', d:'easy', day:7, pat:'Bit XOR', why:'XOR trick: a^a=0. Bit manipulation intro'},
+          {id:'lc14', n:"#118 Pascal's Triangle", d:'easy', day:7, pat:'2D Array', why:'Row-by-row construction. Array initialization'},
+        ]
+      },
+      {
+        week:'Week 2', days:'Days 8–14', topic:'Strings — Parsing, Pattern Matching & Manipulation',
+        problems:[
+          {id:'lc15', n:'#350 Intersection of Two Arrays II', d:'easy', day:8, pat:'Hash Map', why:'Frequency map intersection. Multi-set logic'},
+          {id:'lc16', n:'#66 Plus One', d:'easy', day:8, pat:'Carry Logic', why:'Digit carry propagation. Big number arithmetic'},
+          {id:'lc17', n:'#48 Rotate Image', d:'medium', day:9, pat:'Matrix/In-place', why:'Transpose + reverse. 2D array manipulation'},
+          {id:'lc18', n:'#73 Set Matrix Zeroes', d:'medium', day:9, pat:'Matrix Flag', why:'In-place marking. Space optimization technique'},
+          {id:'lc19', n:'#242 Valid Anagram', d:'easy', day:10, pat:'Freq Count', why:'Character frequency. Foundation of string comparison'},
+          {id:'lc20', n:'#125 Valid Palindrome', d:'easy', day:10, pat:'Two Pointers', why:'Clean + compare. String sanitization'},
+          {id:'lc21', n:'#344 Reverse String', d:'easy', day:11, pat:'Two Pointers', why:'In-place swap. Array mutation fundamentals'},
+          {id:'lc22', n:'#387 First Unique Character in a String', d:'easy', day:11, pat:'Freq Count', why:'Two-pass frequency. HashMap application'},
+          {id:'lc23', n:'#14 Longest Common Prefix', d:'easy', day:12, pat:'Vertical Scan', why:'Character-by-character column scan'},
+          {id:'lc24', n:'#20 Valid Parentheses', d:'easy', day:12, pat:'Stack', why:'Stack bracket matching. Every compiler uses this'},
+          {id:'lc25', n:'#28 Find the Index of First Occurrence', d:'easy', day:13, pat:'String Search', why:'KMP concept intro. indexOf() internals'},
+          {id:'lc26', n:'#151 Reverse Words in a String', d:'medium', day:13, pat:'Split/Reverse', why:'Tokenize + rebuild. Real parsing skill'},
+          {id:'lc27', n:'#5 Longest Palindromic Substring', d:'medium', day:14, pat:'Expand Center', why:'Expand around center. DP precursor pattern'},
+          {id:'lc28', n:'#8 String to Integer (atoi)', d:'medium', day:14, pat:'State Machine', why:'Edge case parsing. Input validation in production'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'p2', label:'Phase 2', title:'Hash Tables & Two Pointers',
+    days:'Days 15–28', color:'var(--y)',
+    desc:'Hash maps give O(1) lookup — the single most useful optimization. Two pointers eliminate nested loops. Together they solve a massive class of problems.',
+    weeks:[
+      {
+        week:'Week 3', days:'Days 15–21', topic:'Hash Tables — Frequency, Grouping & Lookup',
+        problems:[
+          {id:'lc29', n:'#49 Group Anagrams', d:'medium', day:15, pat:'Hash Map', why:'Sort key grouping. Real-world categorization'},
+          {id:'lc30', n:'#205 Isomorphic Strings', d:'easy', day:15, pat:'Hash Map', why:'Bidirectional map. Bijection concept'},
+          {id:'lc31', n:'#290 Word Pattern', d:'easy', day:16, pat:'Hash Map', why:'Pattern-to-word bijection. Config parsing'},
+          {id:'lc32', n:'#202 Happy Number', d:'easy', day:16, pat:'Fast & Slow', why:"Cycle detection via Floyd's algorithm intro"},
+          {id:'lc33', n:'#771 Jewels and Stones', d:'easy', day:17, pat:'Hash Set', why:'Set membership lookup. Instant filtering'},
+          {id:'lc34', n:'#383 Ransom Note', d:'easy', day:17, pat:'Freq Count', why:'Resource availability check. Supply logic'},
+          {id:'lc35', n:'#219 Contains Duplicate II', d:'easy', day:18, pat:'Sliding Window', why:'Window-based dedup. Distance-constrained search'},
+          {id:'lc36', n:'#349 Intersection of Two Arrays', d:'easy', day:18, pat:'Hash Set', why:'Set intersection. DB join concept'},
+          {id:'lc37', n:'#36 Valid Sudoku', d:'medium', day:19, pat:'Hash Set/Map', why:'Multi-dimensional constraint checking'},
+          {id:'lc38', n:'#347 Top K Frequent Elements', d:'medium', day:19, pat:'Bucket Sort', why:'Frequency bucket trick O(n). Heap alternative'},
+          {id:'lc39', n:'#560 Subarray Sum Equals K', d:'medium', day:20, pat:'Prefix+HashMap', why:'Prefix sum + hash map combo. Classic interview'},
+          {id:'lc40', n:'#128 Longest Consecutive Sequence', d:'medium', day:20, pat:'Hash Set', why:'O(n) sequence detection. No sorting needed'},
+          {id:'lc41', n:'#15 3Sum', d:'medium', day:21, pat:'Two Pointers', why:'Sort + two pointer. Multi-element sum template'},
+          {id:'lc42', n:'#167 Two Sum II (Sorted Array)', d:'medium', day:21, pat:'Two Pointers', why:'Sorted two pointer. Classic converge pattern'},
+        ]
+      },
+      {
+        week:'Week 4', days:'Days 22–28', topic:'Two Pointers — Convergence, Partitioning & Sorting',
+        problems:[
+          {id:'lc43', n:'#11 Container With Most Water', d:'medium', day:22, pat:'Two Pointers', why:'Greedy shrink. Max area optimization'},
+          {id:'lc44', n:'#42 Trapping Rain Water', d:'hard', day:22, pat:'Two Pointers', why:'Left/right max arrays. Fundamental pointer mastery'},
+          {id:'lc45', n:'#16 3Sum Closest', d:'medium', day:23, pat:'Two Pointers', why:'Target approximation. Useful in search problems'},
+          {id:'lc46', n:'#18 4Sum', d:'medium', day:23, pat:'Two Pointers', why:'Generalize k-sum. Recursive reduction pattern'},
+          {id:'lc47', n:'#75 Sort Colors (Dutch Flag)', d:'medium', day:24, pat:'3 Pointers', why:'Partition into 3 buckets in-place. Real sort logic'},
+          {id:'lc48', n:'#80 Remove Duplicates from Sorted Array II', d:'medium', day:24, pat:'Two Pointers', why:'Allow k duplicates. Write pointer generalization'},
+          {id:'lc49', n:'#977 Squares of a Sorted Array', d:'easy', day:25, pat:'Two Pointers', why:'Outward two pointer merge. Negative number handling'},
+          {id:'lc50', n:'#844 Backspace String Compare', d:'easy', day:25, pat:'Two Pointers', why:'Reverse simulation. Stack or pointer equivalent'},
+          {id:'lc51', n:'#13 Roman to Integer', d:'easy', day:26, pat:'String+Map', why:'Rule-based parsing. DSL interpretation skills'},
+          {id:'lc52', n:'#12 Integer to Roman', d:'medium', day:26, pat:'Greedy', why:'Greedy denomination selection. Reverse mapping'},
+          {id:'lc53', n:'#49 Group Anagrams (Freq Key variant)', d:'medium', day:27, pat:'Count Key', why:'Count array as key. O(n*k) vs O(n*k log k)'},
+          {id:'lc54', n:'#692 Top K Frequent Words', d:'medium', day:27, pat:'Heap+Map', why:'Heap for top-k. NLP pattern'},
+          {id:'lc55', n:'#454 4Sum II', d:'medium', day:28, pat:'Hash Map', why:'Pair sum + hash. Multi-array combination search'},
+          {id:'lc56', n:'#299 Bulls and Cows', d:'medium', day:28, pat:'Freq Count', why:'Two-pass frequency matching. Game logic'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'p3', label:'Phase 3', title:'Sliding Window, Linked Lists & Stacks',
+    days:'Days 29–42', color:'var(--b)',
+    desc:'Sliding window for subarray/substring problems. Linked lists train pure pointer thinking. Monotonic stacks unlock next-greater-element problems.',
+    weeks:[
+      {
+        week:'Week 5', days:'Days 29–35', topic:'Sliding Window & Linked Lists',
+        problems:[
+          {id:'lc57', n:'#643 Maximum Average Subarray I', d:'easy', day:29, pat:'Fixed Window', why:'Basic sliding window sum. Window template'},
+          {id:'lc58', n:'#209 Minimum Size Subarray Sum', d:'medium', day:29, pat:'Variable Window', why:'Shrink window on condition. Dynamic window'},
+          {id:'lc59', n:'#3 Longest Substring Without Repeating', d:'medium', day:30, pat:'Sliding+Set', why:'Classic window + set combo. String dedup'},
+          {id:'lc60', n:'#424 Longest Repeating Char Replacement', d:'medium', day:30, pat:'Sliding+Map', why:'Max count trick in window. Replacement strategy'},
+          {id:'lc61', n:'#567 Permutation in String', d:'medium', day:31, pat:'Fixed Window', why:'Anagram window check. Frequency comparison'},
+          {id:'lc62', n:'#76 Minimum Window Substring', d:'hard', day:31, pat:'Sliding+Map', why:'Two map window. Hard but fundamental'},
+          {id:'lc63', n:'#1004 Max Consecutive Ones III', d:'medium', day:32, pat:'Sliding Window', why:'Flip k zeros. Window with budget constraint'},
+          {id:'lc64', n:'#1208 Get Equal Substrings Within Budget', d:'medium', day:32, pat:'Sliding Window', why:'Cost-limited window. Budget constraint pattern'},
+          {id:'lc65', n:'#206 Reverse Linked List', d:'easy', day:33, pat:'Pointer Manip', why:'3-pointer reverse. Core linked list operation'},
+          {id:'lc66', n:'#21 Merge Two Sorted Lists', d:'easy', day:33, pat:'Two Pointers', why:'Merge step from merge sort. Dummy head pattern'},
+          {id:'lc67', n:'#141 Linked List Cycle', d:'easy', day:34, pat:'Fast & Slow', why:"Floyd's tortoise & hare. Cycle detection"},
+          {id:'lc68', n:'#142 Linked List Cycle II', d:'medium', day:34, pat:'Fast & Slow', why:"Find cycle start. Math behind Floyd's"},
+          {id:'lc69', n:'#876 Middle of the Linked List', d:'easy', day:35, pat:'Fast & Slow', why:'Find midpoint without length. Two-speed pointers'},
+          {id:'lc70', n:'#19 Remove Nth Node From End of List', d:'medium', day:35, pat:'Two Pointers', why:'Lag pointer trick. One-pass list operation'},
+        ]
+      },
+      {
+        week:'Week 6', days:'Days 36–42', topic:'Stacks — Monotonic, Design & Expression Parsing',
+        problems:[
+          {id:'lc71', n:'#143 Reorder List', d:'medium', day:36, pat:'Find+Reverse', why:'Mid + reverse + merge combo. Tests all LL skills'},
+          {id:'lc72', n:'#2 Add Two Numbers', d:'medium', day:36, pat:'LL Traversal', why:'Digit-by-digit addition. Carry propagation in list'},
+          {id:'lc73', n:'#24 Swap Nodes in Pairs', d:'medium', day:37, pat:'Pointer Manip', why:'Adjacent swap. Group-k reversal simpler version'},
+          {id:'lc74', n:'#25 Reverse Nodes in k-Group', d:'hard', day:37, pat:'Pointer Manip', why:'Reverse k nodes. Full pointer manipulation mastery'},
+          {id:'lc75', n:'#155 Min Stack', d:'medium', day:38, pat:'Stack Design', why:'Auxiliary min stack. Design + amortized O(1)'},
+          {id:'lc76', n:'#739 Daily Temperatures', d:'medium', day:38, pat:'Mono Stack', why:'Monotonic stack pattern. Next greater element'},
+          {id:'lc77', n:'#84 Largest Rectangle in Histogram', d:'hard', day:39, pat:'Mono Stack', why:'Stack-based area. Classic hard mono stack'},
+          {id:'lc78', n:'#496 Next Greater Element I', d:'easy', day:39, pat:'Mono Stack', why:'Map + mono stack. Simpler next-greater intro'},
+          {id:'lc79', n:'#232 Implement Queue using Stacks', d:'easy', day:40, pat:'Stack Design', why:'Amortized O(1) queue. Data structure design'},
+          {id:'lc80', n:'#225 Implement Stack using Queues', d:'easy', day:40, pat:'Queue Design', why:'Mirror of above. Design thinking'},
+          {id:'lc81', n:'#150 Evaluate Reverse Polish Notation', d:'medium', day:41, pat:'Stack', why:'RPN evaluator. Postfix expression parsing'},
+          {id:'lc82', n:'#22 Generate Parentheses', d:'medium', day:41, pat:'Backtrack', why:'Recursive generation. Intro to backtracking'},
+          {id:'lc83', n:'#71 Simplify Path', d:'medium', day:42, pat:'Stack', why:'Unix path normalization. Real filesystem logic'},
+          {id:'lc84', n:'#394 Decode String', d:'medium', day:42, pat:'Stack', why:'Nested decode. Recursive structure with stack'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'p4', label:'Phase 4', title:'Binary Search & Trees',
+    days:'Days 43–56', color:'var(--o)',
+    desc:'Binary search is not just for arrays — it\'s a paradigm for eliminating half your search space at every step. Trees are everywhere in software.',
+    weeks:[
+      {
+        week:'Week 7', days:'Days 43–49', topic:'Binary Search — Templates, Rotated Arrays & Search on Answer',
+        problems:[
+          {id:'lc85', n:'#704 Binary Search', d:'easy', day:43, pat:'Binary Search', why:'Template A. The pure form of binary search'},
+          {id:'lc86', n:'#35 Search Insert Position', d:'easy', day:43, pat:'Binary Search', why:'Lower bound. Where would X go? Insertion point'},
+          {id:'lc87', n:'#153 Find Min in Rotated Sorted Array', d:'medium', day:44, pat:'Binary Search', why:'Pivot finding. Modified binary search reasoning'},
+          {id:'lc88', n:'#33 Search in Rotated Sorted Array', d:'medium', day:44, pat:'Binary Search', why:'Determine sorted half. Classic interview variant'},
+          {id:'lc89', n:'#162 Find Peak Element', d:'medium', day:45, pat:'Binary Search', why:'Mountain peak search. Answer space reduction'},
+          {id:'lc90', n:'#875 Koko Eating Bananas', d:'medium', day:45, pat:'Binary Search', why:'Binary search on answer. Not array — powerful paradigm'},
+          {id:'lc91', n:'#74 Search a 2D Matrix', d:'medium', day:46, pat:'Binary Search', why:'Flatten or two-pass. 2D to 1D index mapping'},
+          {id:'lc92', n:'#378 Kth Smallest in Sorted Matrix', d:'medium', day:46, pat:'Bin Search+Heap', why:'Combined heap + binary search. Matrix navigation'},
+          {id:'lc93', n:'#410 Split Array Largest Sum', d:'hard', day:47, pat:'Binary Search', why:'Min-max binary search on answer. DP alternative'},
+          {id:'lc94', n:'#540 Single Element in Sorted Array', d:'medium', day:47, pat:'Binary Search', why:'Parity-based binary search. Subtle index trick'},
+          {id:'lc95', n:'#104 Maximum Depth of Binary Tree', d:'easy', day:48, pat:'DFS/Recursion', why:'Base case recursion. Tree traversal foundation'},
+          {id:'lc96', n:'#226 Invert Binary Tree', d:'easy', day:48, pat:'DFS', why:'Mirror swap. Pure recursive tree transformation'},
+          {id:'lc97', n:'#543 Diameter of Binary Tree', d:'easy', day:49, pat:'DFS', why:'Max path via global variable. Recursive return trick'},
+          {id:'lc98', n:'#572 Subtree of Another Tree', d:'easy', day:49, pat:'DFS', why:'Recursive tree equality. Structural comparison'},
+        ]
+      },
+      {
+        week:'Week 8', days:'Days 50–56', topic:'Trees — DFS, BFS, BST, Trie & Hard Tree Problems',
+        problems:[
+          {id:'lc99', n:'#102 Binary Tree Level Order Traversal', d:'medium', day:50, pat:'BFS', why:'Queue-based BFS. Level grouping pattern'},
+          {id:'lc100', n:'#103 Binary Tree Zigzag Level Order', d:'medium', day:50, pat:'BFS', why:'Direction flag in BFS. Deque usage'},
+          {id:'lc101', n:'#98 Validate Binary Search Tree', d:'medium', day:51, pat:'DFS+Bounds', why:'Min/max bound passing. BST invariant validation'},
+          {id:'lc102', n:'#230 Kth Smallest in BST', d:'medium', day:51, pat:'In-order DFS', why:'In-order = sorted BST. Classic BST property'},
+          {id:'lc103', n:'#105 Construct BT from Preorder+Inorder', d:'medium', day:52, pat:'DFS+HashMap', why:'Tree reconstruction. Index map optimization'},
+          {id:'lc104', n:'#236 Lowest Common Ancestor of BT', d:'medium', day:52, pat:'DFS', why:'LCA — used in network routing, version trees'},
+          {id:'lc105', n:'#297 Serialize and Deserialize BT', d:'hard', day:53, pat:'BFS/DFS', why:'Tree codec. Used in distributed systems & caching'},
+          {id:'lc106', n:'#124 Binary Tree Maximum Path Sum', d:'hard', day:53, pat:'DFS', why:'Max path any-to-any. Recursive global max'},
+          {id:'lc107', n:'#235 LCA of Binary Search Tree', d:'easy', day:54, pat:'BST Navigation', why:'BST property shortcut for LCA. O(h) solution'},
+          {id:'lc108', n:'#700 Search in a BST', d:'easy', day:54, pat:'BST Navigation', why:'Basic BST search. Foundation for all BST problems'},
+          {id:'lc109', n:'#450 Delete Node in a BST', d:'medium', day:55, pat:'BST Mutation', why:'3-case BST deletion. Node restructuring'},
+          {id:'lc110', n:'#669 Trim a Binary Search Tree', d:'medium', day:55, pat:'BST+Recursion', why:'Range pruning on BST. Practical filtering'},
+          {id:'lc111', n:'#208 Implement Trie', d:'medium', day:56, pat:'Trie', why:'Prefix tree. Autocomplete, spell check backbone'},
+          {id:'lc112', n:'#212 Word Search II', d:'hard', day:56, pat:'Trie+DFS', why:'Trie + backtracking. Real search engine concept'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'p5', label:'Phase 5', title:'Graphs & Dynamic Programming',
+    days:'Days 57–70', color:'var(--p)',
+    desc:'Graphs model every real-world network. DP is the hardest and most rewarding topic — once it clicks you can solve "impossible" problems elegantly. DP starts Day 63.',
+    weeks:[
+      {
+        week:'Week 9', days:'Days 57–62', topic:'Graphs — DFS, BFS, Topological Sort & Union-Find',
+        problems:[
+          {id:'lc113', n:'#200 Number of Islands', d:'medium', day:57, pat:'DFS/BFS', why:'Grid traversal. Component counting pattern'},
+          {id:'lc114', n:'#695 Max Area of Island', d:'medium', day:57, pat:'DFS', why:'Component size max. Extends island counting'},
+          {id:'lc115', n:'#133 Clone Graph', d:'medium', day:58, pat:'BFS+HashMap', why:'Graph cloning. Node identity vs value distinction'},
+          {id:'lc116', n:'#207 Course Schedule', d:'medium', day:58, pat:'Topological', why:'Cycle detection in directed graph. Dependency resolution'},
+          {id:'lc117', n:'#210 Course Schedule II', d:'medium', day:59, pat:'Topological', why:'Return topo order. Build system, package manager logic'},
+          {id:'lc118', n:'#417 Pacific Atlantic Water Flow', d:'medium', day:59, pat:'Multi-src BFS', why:'Reverse flow BFS from both coasts'},
+          {id:'lc119', n:'#130 Surrounded Regions', d:'medium', day:60, pat:'DFS/BFS', why:'Boundary DFS first. Connected component isolation'},
+          {id:'lc120', n:'#994 Rotting Oranges', d:'medium', day:60, pat:'BFS', why:'Multi-source BFS with time. Spread simulation'},
+          {id:'lc121', n:'#286 Walls and Gates', d:'medium', day:61, pat:'BFS', why:'Multi-source BFS shortest path. Grid distance fill'},
+          {id:'lc122', n:'#127 Word Ladder', d:'hard', day:61, pat:'BFS', why:'Shortest path in word graph. BFS on implicit graph'},
+          {id:'lc123', n:'#684 Redundant Connection', d:'medium', day:62, pat:'Union-Find', why:'Cycle detection with DSU. Connected components'},
+          {id:'lc124', n:'#323 Number of Connected Components', d:'medium', day:62, pat:'Union-Find', why:'DSU fundamentals. Graph component tracking'},
+        ]
+      },
+      {
+        week:'Week 10', days:'Days 63–70', topic:'🎯 Dynamic Programming — 1D → 2D → Knapsack → Interval',
+        problems:[
+          {id:'lc125', n:'#70 Climbing Stairs', d:'easy', day:63, pat:'1D DP', why:'Fibonacci DP. Optimal substructure intro — Day 1 of DP'},
+          {id:'lc126', n:'#198 House Robber', d:'medium', day:63, pat:'1D DP', why:'Linear DP with state. Max non-adjacent sum'},
+          {id:'lc127', n:'#213 House Robber II', d:'medium', day:64, pat:'1D DP', why:'Circular DP. Run twice, take max. Elegant trick'},
+          {id:'lc128', n:'#322 Coin Change', d:'medium', day:64, pat:'Unbounded KS', why:'Bottom-up BFS/DP. Infinite supply knapsack classic'},
+          {id:'lc129', n:'#300 Longest Increasing Subsequence', d:'medium', day:65, pat:'1D DP', why:'O(n²) DP or O(n log n) patience sort. Must-know'},
+          {id:'lc130', n:'#416 Partition Equal Subset Sum', d:'medium', day:65, pat:'0/1 Knapsack', why:'Subset DP. Boolean knapsack — intro to 2D DP'},
+          {id:'lc131', n:'#1143 Longest Common Subsequence', d:'medium', day:66, pat:'2D DP', why:'2D table DP. String alignment, diff tools use this'},
+          {id:'lc132', n:'#72 Edit Distance', d:'medium', day:66, pat:'2D DP', why:'Levenshtein distance. Spell-check, DNA alignment'},
+          {id:'lc133', n:'#139 Word Break', d:'medium', day:67, pat:'DP+Set', why:'String segmentation DP. NLP tokenization concept'},
+          {id:'lc134', n:'#152 Maximum Product Subarray', d:'medium', day:67, pat:'State DP', why:'Track min & max. State machine DP'},
+          {id:'lc135', n:'#91 Decode Ways', d:'medium', day:68, pat:'1D DP', why:'Conditional DP transitions. Parsing validation'},
+          {id:'lc136', n:'#62 Unique Paths', d:'medium', day:68, pat:'2D DP', why:'Grid path counting. Combinatorics meets DP'},
+          {id:'lc137', n:'#64 Minimum Path Sum', d:'medium', day:69, pat:'2D DP', why:'Grid DP accumulation. Classic 2D recurrence'},
+          {id:'lc138', n:'#312 Burst Balloons', d:'hard', day:69, pat:'Interval DP', why:'Interval DP — the hardest pattern. Think backwards'},
+          {id:'lc139', n:'#647 Palindromic Substrings', d:'medium', day:70, pat:'Expand Center', why:'Count all palindromes. DP or expand. String mastery'},
+          {id:'lc140', n:'#516 Longest Palindromic Subsequence', d:'medium', day:70, pat:'2D DP', why:'LPS = LCS of s and reverse(s). DP combination'},
+        ]
+      }
+    ]
+  },
 ];
 
-// ── REWARDS ──
-const RWDS = [
-  {day:7,xp:400,icon:'🎧',title:'New Playlist or Spotify Premium',desc:"Build your workout + focus playlist. After 7 days of showing up, you've earned music that fuels you.",cost:'Free trial or ₹119'},
-  {day:21,xp:1400,icon:'📖',title:'Buy Your Next Book',desc:"210+ pages done. You're a reader now. Buy the next book in the stack — knowledge compounds.",cost:'₹300–600'},
-  {day:30,xp:2000,icon:'👕',title:'New Gym T-Shirt or Shorts',desc:"One well-fitted piece. No splurge — one item that matches the identity you've been building.",cost:'₹500–900'},
-  {day:45,xp:3200,icon:'🍱',title:'One Planned Cheat Meal',desc:"Not a cheat day — one single meal at a place you love. Enjoy it fully. Then straight back to the plan.",cost:'₹200–500'},
-  {day:60,xp:4500,icon:'💈',title:'Premium Haircut + Grooming',desc:"Your body has changed. Now let the outside match. A sharp cut and a fresh grooming session. You look the part.",cost:'₹400–900'},
-  {day:75,xp:5800,icon:'🏃',title:'New Running Shoes',desc:"Your feet have logged thousands of steps. Reward them with a quality pair that makes you want to move even more.",cost:'₹1500–3000'},
-  {day:90,xp:7000,icon:'🍽️',title:'Dinner Anywhere You Want',desc:"Day 90. You did it. Go to the restaurant you've been saving. Eat what you want. You earned this completely.",cost:'₹500–1500'},
+// ══════ LEARNING DATA ══════
+// ── FULL weekly breakdown data ──
+const LRN={
+  ph1:[
+    {id:'w1',phase:'PHASE 1 · Month 1–2 · WEEK 1',title:'Linux Basics',
+     theory:'The Linux Command Line Ch 1–8 (Shotts) — free online. File system navigation, users, groups, permissions.',
+     practical:'Set up Ubuntu VM (VirtualBox or WSL2). Navigate without GUI. Break and fix permissions. Write a file organiser bash script.',
+     goal:'Comfortable in terminal. Can navigate, edit files, manage processes without GUI.',
+     wkd:'30min: Read Ch1-2 → 45min: Practice commands → 15min: Notes',
+     wke:'Sat: 2hr Ch3-6 + VM setup. Sun: 2.5hr permissions lab + script',p:30},
+    {id:'w2',phase:'PHASE 1 · Month 1–2 · WEEK 2',title:'Linux Advanced — Processes, SSH, Cron',
+     theory:'Ch 9–16: Processes, shell scripts, text processing, SSH key authentication.',
+     practical:'Write a bash monitoring script tracking CPU, memory, disk. Set up SSH key auth. Create a cron job. Read logs in /var/log.',
+     goal:'Can automate tasks. Understand processes and signals. SSH without password.',
+     wkd:'30min: Review Ch9-10 → 45min: Process management practice → 15min: Notes',
+     wke:'Sat: 2hr scripting deep dive. Sun: 2hr SSH + cron lab + real automation',p:30},
+    {id:'w3',phase:'PHASE 1 · Month 1–2 · WEEK 3',title:'Networking I — TCP/IP & DNS',
+     theory:'Kurose Ch 1–2. Hussein Nasser TCP/IP and DNS video playlist (free YouTube).',
+     practical:'Use tcpdump to sniff traffic. Trace a DNS lookup step by step. Build a raw TCP socket server in your language.',
+     goal:'Understand what happens when you type a URL and hit Enter. Every layer, no mystery.',
+     wkd:'30min: Watch 1 Hussein Nasser video → 45min: tcpdump lab → 15min: Notes',
+     wke:'Sat: 2hr Kurose Ch2 + DNS tracing. Sun: 2.5hr TCP socket server build',p:30},
+    {id:'w4',phase:'PHASE 1 · Month 1–2 · WEEK 4',title:'Networking II — HTTP/HTTPS & Nginx',
+     theory:'Kurose Ch 3–4. HTTP/2, HTTPS, TLS handshake, load balancers, reverse proxies.',
+     practical:'Set up Nginx as reverse proxy. Simulate TLS locally with mkcert. Test HTTP caching headers with curl. See the TLS handshake.',
+     goal:'Understand full HTTP lifecycle. Can configure a web server and proxy from scratch.',
+     wkd:'30min: Read Kurose Ch3 → 45min: Nginx config practice → 15min: Notes',
+     wke:'Sat: 2hr HTTPS/TLS lab. Sun: 2.5hr Load balancer config + curl experiments',p:30},
+    {id:'w5',phase:'PHASE 1 · Month 1–2 · WEEK 5',title:'How Computers Work — Nand2Tetris',
+     theory:'Nand2Tetris Part 1 Projects 1–4 (free at nand2tetris.org). Logic gates to ALU to CPU. How your code becomes electrons.',
+     practical:'Build the projects in the simulator. Study how your language compiles and runs: JIT, GC, memory layout.',
+     goal:'Demystified forever. No more black boxes. Understand what malloc actually does.',
+     wkd:'30min: Nand2Tetris lecture → 45min: Simulator project → 15min: Notes',
+     wke:'Sat: 3hr Projects 1-3. Sun: 2.5hr Project 4 + compilation deep dive',p:30},
+    {id:'w6',phase:'PHASE 1 · Month 1–2 · WEEK 6',title:'Shell Mastery + Review',
+     theory:'Shell scripting deep dive. Linux troubleshooting patterns. strace, perf, /proc filesystem.',
+     practical:'Build a full server monitoring dashboard as a bash script. Simulate 5 real prod issues: OOM, disk full, zombie process, high CPU, locked file.',
+     goal:'Can diagnose a broken server cold. Shell scripts feel natural. Phase 1 solid.',
+     wkd:'30min: Review weakest area → 45min: Monitoring script build → 15min: Notes',
+     wke:'Sat: 2.5hr full dashboard build. Sun: 3hr 5 prod simulations + strace lab',p:30},
+  ],
+  ph2:[
+    {id:'w7',phase:'PHASE 2 · Month 2–3 · WEEK 7',title:'Database Foundations — Indexing & Storage',
+     theory:'DDIA Ch 1–3 (Kleppmann — buy this book ~₹3000, worth every rupee). B-trees, LSM trees, how DBs store on disk. CMU Database Group intro videos.',
+     practical:'Spin up Postgres. Write queries, run EXPLAIN ANALYZE. Create a 1 million row table. Compare indexed vs non-indexed query times. See the difference.',
+     goal:'Understand WHY indexes exist and when to use them. Never write a slow query without knowing why.',
+     wkd:'30min: DDIA chapter review → 45min: Postgres query lab → 15min: Notes',
+     wke:'Sat: 2.5hr DDIA Ch1-2 + indexing experiments. Sun: 3hr 1M row table + EXPLAIN ANALYZE',p:35},
+    {id:'w8',phase:'PHASE 2 · Month 2–3 · WEEK 8',title:'Transactions & ACID — Concurrency',
+     theory:'DDIA Ch 7. Isolation levels: Read Committed, Repeatable Read, Serializable. Locks, deadlocks, MVCC.',
+     practical:'Simulate race conditions in Postgres. Test each isolation level. Deliberately cause a deadlock and fix it. Learn connection pooling with PgBouncer.',
+     goal:'Can reason about concurrent database access. Know what isolation level to use and why.',
+     wkd:'30min: Isolation level theory → 45min: Race condition simulation → 15min: Notes',
+     wke:'Sat: 2.5hr DDIA Ch7 + deadlock lab. Sun: 3hr MVCC experiments + PgBouncer setup',p:35},
+    {id:'w9',phase:'PHASE 2 · Month 2–3 · WEEK 9',title:'Distributed Systems — Replication & CAP',
+     theory:'DDIA Ch 5–6. Replication, partitioning, CAP theorem, consistency models, eventual consistency.',
+     practical:'Set up Postgres replication (primary + replica). Simulate a failover. Understand what data you lose at the moment of failure.',
+     goal:'Understand why distributed systems are hard. The trade-offs feel real, not theoretical.',
+     wkd:'30min: DDIA Ch5-6 review → 45min: Replication config → 15min: Notes',
+     wke:'Sat: 3hr Postgres replication setup + failover. Sun: 2.5hr CAP scenarios + ByteByteGo videos',p:35},
+    {id:'w10',phase:'PHASE 2 · Month 2–3 · WEEK 10',title:'Caching — Redis',
+     theory:'Cache strategies: write-through, write-back, cache-aside. TTL, LRU, cache stampede. DDIA Ch 10 partial.',
+     practical:'Add Redis to an existing app. Implement cache-aside pattern. Benchmark before/after. Simulate a cache stampede and fix it with a lock.',
+     goal:'Can implement caching in production. Know when NOT to cache (and why it can make things worse).',
+     wkd:'30min: Cache strategy theory → 45min: Redis commands practice → 15min: Notes',
+     wke:'Sat: 2.5hr Redis integration + benchmark. Sun: 3hr cache stampede simulation + solution',p:35},
+    {id:'w11',phase:'PHASE 2 · Month 2–3 · WEEK 11',title:'Message Queues — Async Processing',
+     theory:'DDIA Ch 11. Stream processing, queues, at-least-once vs exactly-once delivery, pub/sub patterns.',
+     practical:'Build a job queue with Redis or RabbitMQ. Process tasks async. Handle failures and retries with exponential backoff (3 retries: 5s, 25s, 125s). Dead letter queue.',
+     goal:'Can design async systems. Understand reliability guarantees. Know when queues save your life.',
+     wkd:'30min: Queue theory + DDIA review → 45min: Queue implementation → 15min: Notes',
+     wke:'Sat: 3hr full queue system build. Sun: 2.5hr retry logic + dead letter queue + crash tests',p:35},
+    {id:'w12',phase:'PHASE 2 · Month 2–3 · WEEK 12',title:'API Design, N+1, Performance',
+     theory:'REST best practices: idempotency, versioning, rate limiting, pagination, proper status codes.',
+     practical:'Audit an API you built. Fix: bad status codes, missing pagination, no rate limiting. Find and fix the N+1 problem. Load test with k6 or wrk. Tune connection pool.',
+     goal:'APIs you build are clean, predictable, production-ready. Can find and fix performance bottlenecks.',
+     wkd:'30min: REST patterns review → 45min: API audit + fix → 15min: Notes',
+     wke:'Sat: 2.5hr N+1 hunt and fix + load test. Sun: 3hr rate limiting + pagination + connection tuning',p:35},
+  ],
+  ph3:[
+    {id:'w13',phase:'PHASE 3 · Month 3–4 · WEEK 13',title:'AWS Core — EC2, VPC, S3, IAM',
+     theory:'AWS SAA Stephane Maarek (Udemy ~$15 on sale). EC2, VPC, IAM roles vs users. Security groups vs NACLs. S3 bucket policies.',
+     practical:'Launch EC2 in a custom VPC. Set up proper security groups. Host a static site on S3. Lock down IAM with least privilege. Zero wildcard permissions.',
+     goal:'Can provision basic AWS infrastructure securely from scratch. No ClickOps — understand every setting.',
+     wkd:'30min: Maarek video → 45min: AWS console hands-on → 15min: Cost calculation',
+     wke:'Sat: 3hr VPC + EC2 lab. Sun: 2.5hr S3 + IAM hardening + cost estimate',p:40},
+    {id:'w14',phase:'PHASE 3 · Month 3–4 · WEEK 14',title:'AWS Databases — RDS, Aurora, DynamoDB, ElastiCache',
+     theory:'When to use each. Multi-AZ vs read replicas. Aurora vs RDS. DynamoDB access patterns. ElastiCache Redis vs Memcached.',
+     practical:'Move your local Postgres to RDS. Add ElastiCache Redis. Test failover (simulate AZ failure). Calculate and compare monthly cost for each option.',
+     goal:'Can architect and cost a production database setup on AWS. Know which DB for which use case.',
+     wkd:'30min: Maarek DB section → 45min: RDS setup + config → 15min: Cost calc',
+     wke:'Sat: 3hr RDS + ElastiCache setup. Sun: 2.5hr failover testing + cost modelling 3 options',p:40},
+    {id:'w15',phase:'PHASE 3 · Month 3–4 · WEEK 15',title:'Serverless — Lambda, SQS, EventBridge',
+     theory:'Lambda: cold starts, memory settings, timeout limits, pricing. When Lambda is wrong. API Gateway patterns. EventBridge vs SNS vs SQS.',
+     practical:'Build a Lambda that resizes uploaded S3 images. Trigger via SQS. Deploy first via Console, then via CLI. Understand cold start cost.',
+     goal:'Understand serverless trade-offs deeply. Know when NOT to use Lambda.',
+     wkd:'30min: Lambda internals theory → 45min: Lambda function build → 15min: Notes',
+     wke:'Sat: 3hr S3 trigger + Lambda resize build. Sun: 2.5hr EventBridge + cold start experiments',p:40},
+    {id:'w16',phase:'PHASE 3 · Month 3–4 · WEEK 16',title:'Terraform — Infrastructure as Code',
+     theory:'State model, providers, modules, plan/apply/destroy. Remote state in S3. TechWorld with Nana (free YouTube).',
+     practical:'Rewrite your Week 13 AWS architecture entirely in Terraform. Version control it. Destroy and rebuild in 5 minutes.',
+     goal:'Infrastructure is reproducible and version controlled. No more manual clicks that you cannot repeat.',
+     wkd:'30min: Terraform docs + video → 45min: Terraform config writing → 15min: Notes',
+     wke:'Sat: 3hr full Terraform rewrite of Week 13. Sun: 2.5hr modules + remote state + destroy/rebuild',p:40},
+    {id:'w17',phase:'PHASE 3 · Month 3–4 · WEEK 17',title:'CI/CD — GitHub Actions',
+     theory:'Pipeline stages, secrets management, build artifacts, deployment strategies, rollback.',
+     practical:'Build full pipeline: push code → run tests → build Docker image → push to ECR → deploy to EC2. Add automatic rollback on test failure.',
+     goal:'Deployments are fully automated. No more manual SSH deploys. Rollback in one click.',
+     wkd:'30min: GitHub Actions docs → 45min: Pipeline step build → 15min: Notes',
+     wke:'Sat: 3hr full pipeline end-to-end. Sun: 2.5hr rollback + secrets + multi-env setup',p:40},
+    {id:'w18',phase:'PHASE 3 · Month 3–4 · WEEK 18',title:'Monitoring — CloudWatch, Logs, Alerts',
+     theory:'The 3 pillars: logs, metrics, traces. Structured JSON logging. Log levels. Alert fatigue vs meaningful alerts.',
+     practical:'Add structured logging to an app. Create a CloudWatch dashboard with real metrics. Set up alarm that triggers on error rate spike. Test it by breaking your app.',
+     goal:'Can observe a system in production. Know when it breaks BEFORE your users do.',
+     wkd:'30min: Observability theory → 45min: Structured logging implementation → 15min: Notes',
+     wke:'Sat: 3hr CloudWatch dashboard + alarms. Sun: 2.5hr cost model (1k/100k/1M users) + AWS calculator',p:40},
+    {id:'w19',phase:'PHASE 3 · Month 3–4 · WEEK 19',title:'AWS SAA-C03 Certification',
+     theory:'Full exam prep. Maarek practice exams (included in Udemy course). Review everything from Weeks 13–18.',
+     practical:'Do 3 full practice exams. Score 80%+. Review every wrong answer. Book the real exam (~$150 USD). Pass it.',
+     goal:'AWS Solutions Architect Associate certified. Credential that opens doors. Real knowledge behind it.',
+     wkd:'30min: Review weak areas → 45min: Practice exam questions → 15min: Wrong answer review',
+     wke:'Sat: 4hr full practice exam + review. Sun: 5hr final weak area drill + exam day',p:100},
+  ],
+  ph4:[
+    {id:'w20',phase:'PHASE 4 · Month 4–6 · WEEK 20',title:'Design Patterns — Resilience',
+     theory:'CQRS, event sourcing, saga pattern, circuit breaker, bulkhead, retry. System Design Interview Vol 1 (Alex Xu).',
+     practical:'Implement circuit breaker pattern from scratch. Add it to an existing service. Test it by killing a downstream service. Watch the circuit open.',
+     goal:'Can identify and implement resilience patterns. Systems you build fail gracefully.',
+     wkd:'30min: Pattern theory → 45min: Circuit breaker implementation → 15min: Notes',
+     wke:'Sat: 3hr CQRS + event sourcing implementation. Sun: 2.5hr saga pattern + bulkhead',p:50},
+    {id:'w21',phase:'PHASE 4 · Month 4–6 · WEEK 21',title:'Docker & Containers',
+     theory:'Images, layers, volumes, networking, multi-stage builds. Container registries (ECR). Image optimisation.',
+     practical:'Dockerize two of your existing projects. Write proper multi-stage Dockerfiles. Push to ECR. Compare image sizes: naive vs optimised.',
+     goal:'All your projects are containerised. Infrastructure is fully reproducible.',
+     wkd:'30min: Docker concepts → 45min: Dockerfile writing → 15min: Notes',
+     wke:'Sat: 3hr multi-stage Dockerfile builds. Sun: 2.5hr ECR + compose + networking',p:50},
+    {id:'w22',phase:'PHASE 4 · Month 4–6 · WEEK 22',title:'Kubernetes Basics',
+     theory:'Pods, deployments, services, ingress, HPA, ConfigMaps, Secrets. Fireship K8s crash course (free YouTube).',
+     practical:'Deploy one app to EKS or local minikube. Set up Horizontal Pod Autoscaler. Simulate pod failure. Watch self-healing.',
+     goal:'Can operate a basic Kubernetes cluster. Not scared of k8s. Know enough to be effective.',
+     wkd:'30min: K8s concepts video → 45min: minikube deployment → 15min: Notes',
+     wke:'Sat: 3hr EKS/minikube full deploy + HPA. Sun: 2.5hr pod failure simulation + ingress',p:50},
+    {id:'w23',phase:'PHASE 4 · Month 4–6 · WEEK 23',title:'System Design — Trade-offs & Scale',
+     theory:'System Design Interview Vol 2. Latency vs throughput, consistency vs availability, cost vs performance. ByteByteGo case studies.',
+     practical:'Design 3 systems: URL shortener, chat app, notification system — at 1k, 100k, 1M users each. Cost model using AWS Pricing Calculator.',
+     goal:'Can walk into any design meeting and reason about trade-offs with numbers.',
+     wkd:'30min: ByteByteGo video → 45min: Design exercise → 15min: Document decisions',
+     wke:'Sat: 3hr 3-system design + cost model. Sun: 2.5hr architecture review + scale analysis',p:50},
+    {id:'w24',phase:'PHASE 4 · Month 4–6 · WEEKS 24–35',title:'Capstone Projects — Portfolio Build',
+     theory:'system-design-primer on GitHub (free). ADRs for every decision. Post-mortems for things that broke.',
+     practical:'Build Projects 4–9 from the projects section. Each one: Terraform infra + CI/CD + monitoring + proper README + architecture diagram.',
+     goal:'Portfolio complete. Can talk about every technical decision you made and why. Interview-ready.',
+     wkd:'45min: Design/architecture → 1hr: Code build → 15min: Commit + document',
+     wke:'Sat: 4hr focused build. Sun: 5hr deep build + document + test',p:100},
+    {id:'w25',phase:'PHASE 4 · Month 5–6 · FINAL',title:'Interview Prep & Mock System Design',
+     theory:'Practice explaining your projects out loud. Write post-mortems. Read Architecture Decision Records (ADRs).',
+     practical:'Mock system design interviews (with a friend or record yourself). Write ADRs for each project. Explain every trade-off you made.',
+     goal:'Interview-ready. Can articulate trade-offs in every project. No gaps in your reasoning.',
+     wkd:'30min: Read an ADR → 45min: Mock explanation practice → 15min: Notes',
+     wke:'Sat: 3hr full mock interview. Sun: 2.5hr portfolio review + GitHub cleanup',p:50},
+  ],
+  proj:[
+    {id:'p1',phase:'PROJECT 1 · Phase 1 · 1 week',title:'Linux System Monitor',
+     sub:'Bash · cron · SMTP alerts · log rotation · 24hr summary report',
+     practical:'Real-time terminal dashboard (ncurses-style). Cron job logging every 5 min. Email alert when CPU > 80% for 3 min. Log rotation so file doesn\'t grow forever.',
+     goal:'Completed project. Bash feels natural. Understand processes, cron, file I/O, signals.',p:60},
+    {id:'p2',phase:'PROJECT 2 · Phase 2 · 1.5 weeks',title:'URL Shortener with Analytics',
+     sub:'PostgreSQL · Redis · Nginx · rate limiting · click analytics',
+     practical:'Shorten URL → short code (collision-resistant). Redirect < 10ms. Track clicks/referrer/country. Rate limit: 100 creates/hr/IP. Redis caching hot URLs.',
+     goal:'First real benchmark. Understand caching, rate limiting, DB indexing, collision handling.',p:60},
+    {id:'p3',phase:'PROJECT 3 · Phase 2 · 1.5 weeks',title:'Async Job Queue System',
+     sub:'Redis/RabbitMQ · PostgreSQL · priority queues · retry logic · dead letter queue',
+     practical:'Job types: image resize, CSV export, email send. Priority: CRITICAL/HIGH/NORMAL/LOW. Exponential backoff (3 retries: 5s, 25s, 125s). Worker scaling when queue depth > 100.',
+     goal:'Async architecture mastered. Failure handling real. Deliberately crash workers and watch retry work.',p:60},
+    {id:'p4',phase:'PROJECT 4 · Phase 3 · 1 week',title:'Full AWS Infrastructure (Terraform)',
+     sub:'EC2 + RDS + ElastiCache + ALB + Route53 + CloudWatch · all IaC',
+     practical:'VPC with public/private subnets across 2 AZs. ALB + Auto Scaling Group. RDS Multi-AZ + ElastiCache Redis. CloudFront CDN. Route53 + SSL. CI/CD via GitHub Actions.',
+     goal:'IaC mastered. Calculate monthly cost at 3 traffic levels. SAA certification knowledge applied.',p:80},
+    {id:'p5',phase:'PROJECT 5 · Phase 4 · 1.5 weeks',title:'Auth Service from Scratch',
+     sub:'JWT · refresh token rotation · OAuth2 · MFA (TOTP) · AWS Secrets Manager',
+     practical:'Registration + email verification. JWT (15min) + refresh token (7 days) rotation. OAuth2 social login (GitHub/Google). MFA with TOTP. Account lockout after 5 fails.',
+     goal:'Security architecture understood from the inside. Every auth decision has a reason.',p:80},
+    {id:'p6',phase:'PROJECT 6 · Phase 4 · 2 weeks',title:'Real-time Chat API',
+     sub:'WebSockets · Redis Pub/Sub · PostgreSQL · ECS · horizontal scaling',
+     practical:'Handle 1000+ concurrent WebSocket connections. Rooms + DMs. Online presence. Redis Pub/Sub to sync messages across instances. Deploy to ECS behind ALB.',
+     goal:'Stateful connection scaling solved. Horizontal WebSocket scaling understood.',p:80},
+    {id:'p7',phase:'PROJECT 7 · Phase 4 · 2 weeks',title:'Real-time Notification System',
+     sub:'SQS · SNS · Lambda · DynamoDB · SES · Terraform · multi-channel',
+     practical:'Email (SES), SMS (SNS), push (FCM), in-app. Fan-out architecture. Delivery tracking. User preferences + quiet hours. Cost analysis at 100k/1M/10M per day.',
+     goal:'Full event-driven architecture on AWS serverless. Cost modelled. Senior-level project.',p:80},
+    {id:'p8',phase:'PROJECT 8 · Phase 4 · 3 weeks',title:'E-commerce Order Processing',
+     sub:'Saga pattern · Stripe · outbox pattern · PostgreSQL · SQS · full distributed',
+     practical:'Catalog + inventory. Cart with optimistic concurrency. Saga: order→reserve→charge→confirm→fulfill→notify (with compensating transactions). Load test: 500 orders/min.',
+     goal:'THE portfolio project. Distributed transactions without XA. Front and centre in every interview.',p:100},
+    {id:'p9',phase:'PROJECT 9 · Phase 4 · 2–3 weeks',title:'Your Signature Project',
+     sub:'Something you\'d actually use. OpenAPI docs. SDK. Public GitHub. Blog post.',
+     practical:'Solve a real problem you\'ve encountered. Full auth + rate limiting + monitoring + IaC + CI/CD. Architecture diagram. Write-up explaining every decision.',
+     goal:'This is what they\'ll remember. Make it something you\'re proud of.',p:100},
+    {id:'p10',phase:'PROJECT 10 · From Month 3 · Ongoing',title:'Open Source Contribution',
+     sub:'Find a project you use. Read the codebase. Contribute meaningfully.',
+     practical:'Start with docs or small bug fixes. Graduate to feature contributions. Engage in code reviews. Goal: 3+ accepted PRs by Month 6 in an active project.',
+     goal:'Code review experience. Large codebase navigation. Hiring managers notice open source.',p:60},
+  ],
+  sec:[
+    {id:'s1',phase:'SECURITY · Month 1–2 · Operations',title:'Linux Security Fundamentals',
+     sub:'SUID/SGID, SSH hardening, ufw/iptables, fail2ban, principle of least privilege.',
+     practical:'Disable SSH password auth — key only. Disable root login. Set up fail2ban. Configure firewall: only ports 22 + 443 open. Verify with nmap from another machine.',
+     goal:'Server locked down. Know what you\'re exposing and why. Think like an attacker.',p:30},
+    {id:'s2',phase:'SECURITY · Month 2–3 · OWASP Top 10',title:'SQL Injection + Broken Auth',
+     sub:'#1 SQL Injection — parameterised queries always. #2 Broken Auth — bcrypt/argon2, refresh token rotation, MFA.',
+     practical:'Lab: PortSwigger Web Security Academy (free). Exploit a SQL injection. Fix it with prepared statements. Implement proper password hashing in one of your projects.',
+     goal:'Never concatenate user input into SQL. Never. Password hashing is second nature.',p:30},
+    {id:'s3',phase:'SECURITY · Month 2–3 · OWASP Top 10',title:'Broken Access Control + Data Exposure + Misconfiguration',
+     sub:'#3 Access control (most common breach). #4 PII in logs/errors. #5 Debug endpoints in prod, S3 public, verbose errors.',
+     practical:'Audit one existing app: can User A access User B\'s data? Fix all broken access checks. Search your logs for passwords or tokens. Turn off all debug endpoints.',
+     goal:'Server-side ownership checks on every request. No PII in logs ever.',p:30},
+    {id:'s4',phase:'SECURITY · Month 2–3 · OWASP Top 10',title:'XSS, CSRF, SSRF, Dependencies, Logging',
+     sub:'#6 XSS — sanitise output, CSP headers. #7 CSRF — SameSite cookies. #8 SSRF — block internal IPs. #9 Vulnerable deps. #10 No monitoring.',
+     practical:'Use OWASP ZAP (free) to scan your app. Fix every finding. Set up Dependabot on GitHub. Add CloudWatch alerts for auth failures and unusual patterns.',
+     goal:'OWASP Top 10 applied to your real code. Monitoring in place before you need it.',p:30},
+    {id:'s5',phase:'SECURITY · Month 3–4 · Cloud',title:'AWS Security — IAM, S3, Secrets, CloudTrail',
+     sub:'Never use root after setup. Roles for services. Block public S3. Secrets Manager for everything. CloudTrail in every region.',
+     practical:'Audit all your IAM policies: remove all wildcards. Block S3 public access at account level. Move ALL secrets to AWS Secrets Manager — zero env var secrets. Enable CloudTrail.',
+     goal:'Cloud security is a mindset, not a checklist. Zero hardcoded credentials anywhere.',p:40},
+    {id:'s6',phase:'SECURITY · Every Project',title:'The Security Checklist',
+     sub:'Run this on EVERY project before calling it done.',
+     practical:'1. Who can access this? (Auth solid?) 2. Should they? (Server-side ownership check?) 3. Malicious input? (Parameterised?) 4. Any sensitive data in logs? 5. Blast radius if compromised? 6. Will I know if attacked?',
+     goal:'If you can\'t answer all 6 confidently — the system is not ready.',p:20},
+  ],
+  ai:[
+    {id:'ai1',phase:'AI USAGE · Foundations first',title:'The Core Principle',
+     sub:'AI is a force multiplier. It amplifies what you already have. Build the foundation first — then AI becomes a genuine superpower.',
+     practical:'Month 1–2: Use AI ONLY for error messages. Everything else: docs, man pages, Stack Overflow. You need to struggle with fundamentals. That struggle is the learning.',
+     goal:'Understand the difference between AI-delivered understanding (evaporates) vs building-understanding (permanent).',p:0},
+    {id:'ai2',phase:'AI USAGE · USE for these',title:'High Value, Low Risk Uses',
+     sub:'✅ Boilerplate & scaffolding · ✅ Error messages & stack traces · ✅ Syntax lookups · ✅ Writing tests · ✅ Documentation & README · ✅ Rubber duck debugging',
+     practical:'Month 3–4: Terraform boilerplate, CLI commands. Month 4–6: Scaffolding, tests, documentation. The Golden Test before shipping any AI code: Can you explain it line by line? Modify it? Debug it at 2am?',
+     goal:'AI makes you 3–5x faster when you have the foundation. Use it for the right things.',p:0},
+    {id:'ai3',phase:'AI USAGE · DO NOT USE for these',title:'High Risk Uses',
+     sub:'❌ Learning fundamentals — builds credential without understanding. ❌ System design decisions — AI gives generic answers, not YOUR context. ❌ Debugging prod issues — short-circuits the instinct-building. ❌ Security-critical code — subtle errors attackers find.',
+     practical:'The irony: the more you know, the more useful AI becomes. A senior using AI is a master chef with a food processor. A junior is someone who\'s never cooked using one. Build the craft first.',
+     goal:'Know when to use it and when not to. That judgment separates builders from vibe-coders.',p:0},
+  ],
+  res:[
+    {id:'r1',phase:'RESOURCES · Books (Priority Order)',title:'Designing Data-Intensive Applications',
+     sub:'Martin Kleppmann · ~₹3000 · Read in Month 2. Read it twice.',
+     practical:'This is the backend bible. Databases, distributed systems, stream processing. Every chapter directly applies to the projects you\'ll build.',
+     goal:'Own this book physically. Annotate it. Reference it constantly.',p:0},
+    {id:'r2',phase:'RESOURCES · Books',title:'The Linux Command Line + System Design Interviews',
+     sub:'Linux (Shotts) — FREE online · System Design Vol 1 + Vol 2 (Alex Xu) ~$60 total',
+     practical:'Linux: Start Month 1 Day 1. System Design Vol 1: Month 3. Vol 2: Month 4. Read alongside building — never passively.',
+     goal:'Technical fluency in Linux + ability to design any commonly-asked system.',p:0},
+    {id:'r3',phase:'RESOURCES · Courses',title:'AWS SAA — Stephane Maarek (Udemy)',
+     sub:'~$15 on sale (always on sale). All sections. Build alongside every lesson.',
+     practical:'This course + AWS Free Tier + your own hands-on building = SAA-C03 pass. Do not just watch. Build everything in your own account.',
+     goal:'Pass SAA-C03 exam (~$150 USD) at end of Month 4.',p:0},
+    {id:'r4',phase:'RESOURCES · Free Tools You Will Use Daily',title:'Essential Free Tools',
+     sub:'VS Code · VirtualBox/WSL2 · Postman · Docker Desktop · DBeaver · k6 · GitHub · OWASP ZAP · PortSwigger Labs · TryHackMe',
+     practical:'GitHub: Every project, every experiment, every bash script from Day 1. Proper README every time. The habit of writing documentation while building is a career-defining skill.',
+     goal:'GitHub profile that shows consistent work. Every commit tells a story.',p:0},
+    {id:'r5',phase:'RESOURCES · Total Investment',title:'What This Costs',
+     sub:'Books: ~$230 · Udemy: ~$15 · SAA exam: ~$150 · AWS (6 months): ~$50–100 · Security tools: Free',
+     practical:'Total: approximately $450–550 USD over 6 months. One month of a bootcamp costs $2,000–5,000 and teaches you less.',
+     goal:'Best ROI of anything you can spend money on right now.',p:0},
+  ]
+};
+
+// ══════ REWARDS ══════
+const RWDS=[
+  {day:7,xp:400,icon:'🎧',t:'New Playlist or Spotify Premium',d:"7 straight days of showing up. Build your workout + focus playlist.",c:'Free trial or ₹119'},
+  {day:21,xp:1400,icon:'📖',t:'Buy Your Next Book',d:"210+ pages read. You're a reader now. Buy the next in the stack.",c:'₹300–600'},
+  {day:30,xp:2000,icon:'👕',t:'New Gym T-Shirt or Shorts',d:"One well-fitted piece. Dress the identity you've been building.",c:'₹500–900'},
+  {day:45,xp:3200,icon:'🍱',t:'One Planned Cheat Meal',d:"Not a day — one meal. Enjoy fully. Back to the plan after.",c:'₹200–500'},
+  {day:60,xp:4500,icon:'💈',t:'Premium Haircut + Grooming',d:"Body transformed. Let the outside match. Sharp cut + grooming.",c:'₹400–900'},
+  {day:75,xp:5800,icon:'🏃',t:'New Running Shoes',d:"Thousands of steps earned these. Quality pair that makes you want to move.",c:'₹1500–3000'},
+  {day:90,xp:7000,icon:'🍽️',t:'Dinner Anywhere You Want',d:"Day 90. You did it. Go wherever you want. You earned this completely.",c:'₹500–1500'},
 ];
 
-// ── HABITS ──
-const HABS = [
-  {id:'hw',name:'Workout',col:'var(--o)'},
-  {id:'hm',name:'Meditation',col:'var(--b)'},
-  {id:'hc',name:'Cold Shower',col:'#47d6f5'},
-  {id:'hp',name:'Protein Goal',col:'var(--g)'},
-  {id:'hr',name:'10 Pages',col:'var(--y)'},
-  {id:'hl',name:'LeetCode',col:'var(--o)'},
-  {id:'hn',name:'No Scroll',col:'var(--r)'},
-  {id:'hs',name:'8hr Sleep',col:'#a47af5'},
+// ══════ HABITS ══════
+const HABS=[
+  {id:'hw',n:'Workout',c:'var(--o)'},{id:'hm',n:'Meditation',c:'var(--b)'},
+  {id:'hc',n:'Cold Shower',c:'#47d6f5'},{id:'hp',n:'Protein Goal',c:'var(--g)'},
+  {id:'hr',n:'10 Pages',c:'var(--y)'},{id:'hl',n:'LeetCode',c:'var(--o)'},
+  {id:'hn',n:'No Scroll',c:'var(--r)'},{id:'hs',n:'8hr Sleep',c:'var(--p)'},
 ];
 
-const BUDGET = 4133;
+// ══════ SKILLS DATA ══════
+const SKILLS={
+  tech:[
+    {n:'Linux & Shell Scripting',l:'Intermediate',pct:65,c:'var(--g)',why:'6 weeks of Linux fundamentals + bash mastery from the backend roadmap'},
+    {n:'Networking (TCP/IP, HTTP, DNS)',l:'Solid',pct:60,c:'var(--b)',why:'Weeks 3–4 of Phase 1 + Hussein Nasser deep dives'},
+    {n:'PostgreSQL & SQL',l:'Intermediate',pct:60,c:'var(--y)',why:'Phase 2 — indexing, ACID, transactions, query optimisation'},
+    {n:'Redis & Caching',l:'Working',pct:50,c:'var(--r)',why:'Phase 2 — cache strategies, stampede handling, benchmarking'},
+    {n:'REST API Design',l:'Solid',pct:65,c:'var(--o)',why:'Phase 2 — idempotency, rate limiting, versioning, error patterns'},
+    {n:'DSA / LeetCode Patterns',l:'Growing',pct:45,c:'var(--y)',why:'45 LC problems — arrays, strings, hash maps mastered'},
+    {n:'AWS (EC2, VPC, S3, RDS, Lambda)',l:'Associate',pct:55,c:'var(--o)',why:'Phase 3 — SAA-C03 certified. Core services built hands-on'},
+    {n:'Terraform (IaC)',l:'Working',pct:45,c:'var(--p)',why:'Phase 3 — state model, modules, destroy/rebuild in 5 min'},
+    {n:'Docker & Containers',l:'Working',pct:50,c:'var(--b)',why:'Phase 4 — multi-stage builds, ECR, containerised projects'},
+    {n:'CI/CD (GitHub Actions)',l:'Working',pct:50,c:'var(--g)',why:'Phase 3 — full automated pipeline: test → build → deploy → rollback'},
+    {n:'System Design Thinking',l:'Growing',pct:55,c:'var(--y)',why:'Phase 4 — trade-offs, CQRS, circuit breakers, cost modelling'},
+    {n:'Security (OWASP)',l:'Aware',pct:40,c:'var(--r)',why:'Phase 4 — audited own apps, fixed OWASP top 10, Secrets Manager'},
+  ],
+  body:[
+    {n:'Raw Strength',l:'Noticeably Up',pct:70,c:'var(--o)',why:'Progressive overload over 90 days — all major lifts increased'},
+    {n:'Body Composition',l:'Leaner',pct:65,c:'var(--y)',why:'1500 kcal cut + 120–130g protein = fat loss with muscle retention'},
+    {n:'Cardiovascular Endurance',l:'Improved',pct:55,c:'var(--g)',why:'Conditioning days + 8–10k steps daily'},
+    {n:'Core Strength',l:'Solid',pct:60,c:'var(--b)',why:'Day 4 core circuit 3× per week for 90 days'},
+    {n:'Recovery Management',l:'Smart',pct:65,c:'var(--p)',why:'Know when to push, when to hold. DOMS handled correctly.'},
+    {n:'Sleep Discipline',l:'Consistent',pct:70,c:'#47d6f5',why:'7–8hr target tracked daily. Phone out of room habit locked.'},
+    {n:'Nutritional Awareness',l:'High',pct:75,c:'var(--g)',why:'Macros tracked. Know protein content of every meal. No guessing.'},
+    {n:'Cold Exposure Tolerance',l:'High',pct:70,c:'var(--b)',why:'Full cold showers daily from week 3. Dopamine baseline lifted.'},
+  ],
+  mind:[
+    {n:'Focus & Deep Work',l:'Strong',pct:70,c:'var(--b)',why:'Screen time rules + meditation + no scroll habit = longer focus windows'},
+    {n:'Emotional Regulation',l:'Better',pct:60,c:'var(--p)',why:'Daily meditation — pause between stimulus and response widened'},
+    {n:'Discipline & Follow-through',l:'High',pct:80,c:'var(--y)',why:'90 days of doing hard things when you didn\'t feel like it'},
+    {n:'Decision Making',l:'Cleaner',pct:65,c:'var(--g)',why:'Less decision fatigue from structured routine. Finance discipline = practised trade-offs'},
+    {n:'Mental Toughness',l:'Real',pct:75,c:'var(--o)',why:'Cold showers + gym + consistency built voluntary hardship tolerance'},
+    {n:'Self-Awareness',l:'Higher',pct:65,c:'var(--p)',why:'Tracking habits daily surfaces patterns in your own behaviour'},
+    {n:'Learning Agility',l:'Fast',pct:70,c:'var(--y)',why:'LeetCode + backend roadmap + books = trained learning-how-to-learn'},
+  ],
+  soc:[
+    {n:'Conversation Skills',l:'Noticeably Better',pct:65,c:'var(--y)',why:'How to Win Friends — listen more, ask better questions, follow up on what was actually said'},
+    {n:'Likability & Warmth',l:'Genuine',pct:65,c:'var(--g)',why:'Carnegie principles applied daily — making people feel heard and valued'},
+    {n:'Conflict Handling',l:'Calmer',pct:55,c:'var(--b)',why:'Meditation + Carnegie = space between trigger and response in disagreements'},
+    {n:'First Impressions',l:'Much Stronger',pct:70,c:'var(--o)',why:'Better body, posture, grooming, eye contact — all compound into presence'},
+    {n:'Physical Presence',l:'Commanding',pct:70,c:'var(--y)',why:'Posture improved from workouts. Shoulders back habit. Confident movement.'},
+    {n:'Reliability',l:'Rock Solid',pct:80,c:'var(--g)',why:'90 days of doing what you said. People notice. This builds reputation.'},
+    {n:'Listening',l:'Active',pct:65,c:'var(--p)',why:'Carnegie principle: stop planning your reply, actually hear what they said.'},
+    {n:'Influence',l:'Growing',pct:55,c:'var(--b)',why:'Earned through consistency, follow-through, and genuine interest in others.'},
+  ],
+  fin:[
+    {n:'Budget Discipline',l:'Locked',pct:75,c:'var(--g)',why:'Tracked every rupee for 90 days. Knows where money goes without thinking.'},
+    {n:'Impulse Control',l:'Strong',pct:70,c:'var(--y)',why:'48-hour rule applied consistently. Most wants dissolve. Big savings.'},
+    {n:'Financial Awareness',l:'High',pct:65,c:'var(--b)',why:'Income → fixed costs → variable budget → savings. Clear mental model.'},
+    {n:'Savings Habit',l:'Started',pct:55,c:'var(--g)',why:'Survival month discipline extended to saving % in April and beyond.'},
+    {n:'Cost Trade-off Thinking',l:'Getting Good',pct:60,c:'var(--o)',why:'AWS cost modelling in backend roadmap applies to personal spending too.'},
+  ],
+  lead:[
+    {n:'Leading by Example',l:'Natural',pct:75,c:'var(--y)',why:'People who show up consistently become someone others follow. That\'s you now.'},
+    {n:'Self-Leadership',l:'High',pct:80,c:'var(--g)',why:'You followed a plan for 90 days without anyone telling you to. That\'s rare.'},
+    {n:'Long-term Thinking',l:'Stronger',pct:65,c:'var(--b)',why:'Discipline requires delaying gratification. 90 days trains this muscle deeply.'},
+    {n:'Communication Clarity',l:'Cleaner',pct:65,c:'var(--o)',why:'Carnegie + daily writing (3 things learned) + explaining code = clearer articulation.'},
+    {n:'Accountability',l:'High',pct:75,c:'var(--p)',why:'Tracking habits and XP daily = no hiding from yourself. Growth requires honesty.'},
+    {n:'Composure Under Pressure',l:'Better',pct:60,c:'var(--y)',why:'Cold showers + meditation = stress response is slower and calmer.'},
+  ]
+};
 
-// ── HELPERS ──
+// ══════ SLIDER CONFIG ══════
+
+// ══════ HELPERS ══════
 function $(id){return document.getElementById(id)}
-let toastTmr;
-function toast(msg){
-  const t=$('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(toastTmr);toastTmr=setTimeout(()=>t.classList.remove('show'),1800);
-}
+let tT;
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),1800);}
 
-function computeXP(){
-  let x=80; // 4 pre-done LC
-  ALL.forEach(c=>{if(S.checks[c.id])x+=c.pts});
-  Object.values(S.workouts).forEach(p=>x+=p);
-  const pre=['a1','a2','a3','a4'];
-  Object.keys(S.lcStatus).forEach(id=>{if(S.lcStatus[id]&&!pre.includes(id))x+=20});
+function cXP(){
+  let x=0;
+  ALL.forEach(c=>{if(S.checks[c.id])x+=c.p});
+  Object.values(S.wkt).forEach(p=>x+=p);
+  // Only 'done' (solved solo) gets XP — hints don't
+  Object.keys(S.lc).forEach(id=>{if(S.lc[id]==='done')x+=20});
   x+=S.books.length*100;
+  Object.keys(S.lrn).forEach(id=>{if(S.lrn[id]){const m=Object.values(LRN).flat().find(l=>l.id===id);if(m)x+=m.p;}});
   return x;
 }
-function refreshXP(){
-  const xp=computeXP();
+function rXP(){
+  const xp=cXP();
   const lv=Math.floor(xp/100)+1;
-  const inLv=xp%100;
-  $('xpT').textContent=xp;
-  $('xpF').style.width=inLv+'%';
-  $('lvl').textContent=lv;
-  $('xpN').textContent=100-inLv;
+  const inL=xp%100;
+  $('xpT').textContent=xp;$('xF').style.width=inL+'%';
+  $('lv').textContent=lv;$('xN').textContent=100-inL;
   $('totXP').textContent=xp;
   if($('rXP'))$('rXP').textContent=xp+' XP';
 }
 
-// ── NAV ──
+// ══════ NAV ══════
 function go(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   $('p-'+id).classList.add('on');
   if(btn)btn.classList.add('on');
-  else document.querySelectorAll('.nb').forEach(b=>{if(b.textContent.toLowerCase().includes(id.slice(0,4)))b.classList.add('on')});
-  if(id==='dash')updateDash();
-  if(id==='rewards'){refreshXP();buildRewards();}
-  if(id==='finance')buildExpenses();
+  if(id==='dash')updDash();
+  if(id==='rewards'){rXP();buildRewards();}
+  if(id==='finance')buildExp();
+  if(id==='skills')buildSkills();
+  if(id==='learning')buildLrn();
 }
 
-// ── DAY ──
-function chDay(d){S.day=Math.max(1,Math.min(90,S.day+d));updateDash();}
+// ══════ DAY ══════
+function chDay(d){S.day=Math.max(1,Math.min(90,S.day+d));updDash();}
 
-// ── DASH ──
-function updateDash(){
+// ══════ DASH ══════
+function updDash(){
   const day=S.day;
-  $('dDay').textContent=day;
-  $('dPill').textContent=day;
-  $('wkLbl').textContent=Math.ceil(day/7);
+  $('dD').textContent=day;$('dP').textContent=day;
+  $('wkL').textContent=Math.ceil(day/7);
   const pct=Math.round(day/90*100);
-  $('mProg').style.width=pct+'%';
-  $('rPct').textContent=pct+'%';
-  const c=176,off=c-(c*pct/100);
-  $('rCircle').style.strokeDashoffset=off;
-  const todXP=ALL.filter(c=>S.checks[c.id]).reduce((a,c)=>a+c.pts,0);
+  $('mPg').style.width=pct+'%';$('rPct').textContent=pct+'%';
+  const c=163,off=c-(c*pct/100);$('ring').style.strokeDashoffset=off;
+  const todX=ALL.filter(c=>S.checks[c.id]).reduce((a,c)=>a+c.p,0);
   const dn=ALL.filter(c=>S.checks[c.id]).length;
-  $('d-xp').textContent=todXP;
-  $('d-done').textContent=dn;
-  $('d-left').textContent=ALL.length-dn;
-  buildQuick();
-  refreshXP();
+  $('d-xp').textContent=todX;$('d-dn').textContent=dn;$('d-lf').textContent=ALL.length-dn;
+  buildQuick();rXP();
 }
 
 function buildQuick(){
-  const el=$('qList');if(!el)return;
+  const el=$('qL');if(!el)return;
   el.innerHTML=ALL.slice(0,5).map(c=>`
-    <div class="ci ${S.checks[c.id]?'done':''}" onclick="togCheck('${c.id}',this)">
+    <div class="ci ${S.checks[c.id]?'done':''}" onclick="togC('${c.id}',this)">
       <div class="cb">${S.checks[c.id]?'✓':''}</div>
-      <div class="ci-label">${c.label}</div>
-      <div class="ci-pts">+${c.pts}</div>
+      <div class="cl">${c.l}</div>
+      <div class="cp">+${c.p}</div>
     </div>`).join('');
 }
 
-// ── CHECKS ──
-function buildChecks(){
+// ══════ CHECKS ══════
+function buildChks(){
   Object.entries(CHK).forEach(([cat,items])=>{
     const el=$('ch-'+cat);if(!el)return;
     el.innerHTML=items.map(c=>`
-      <div class="ci ${S.checks[c.id]?'done':''}" id="ci-${c.id}" onclick="togCheck('${c.id}',this)">
+      <div class="ci ${S.checks[c.id]?'done':''}" id="ci-${c.id}" onclick="togC('${c.id}',this)">
         <div class="cb">${S.checks[c.id]?'✓':''}</div>
-        <div class="ci-text">
-          <div class="ci-label">${c.label}</div>
-          <div class="ci-sub">${c.sub}</div>
-        </div>
-        <div class="ci-pts">+${c.pts} XP</div>
+        <div style="flex:1"><div class="cl">${c.l}</div><div class="csb">${c.s}</div></div>
+        <div class="cp">+${c.p} XP</div>
       </div>`).join('');
   });
   updDayScore();
 }
 
-function togCheck(id,el){
+// ── Check → Habit sync map (check id → habit id) ──
+// Every daily check → its habit tracker row
+const CHECK_HABIT_MAP={
+  // Mind
+  med:'hm',   cold:'hc',  ns:'hn',
+  // Body
+  wkt:'hw',   slp:'hs',
+  // Nutrition — all map to Protein Goal (most critical nutrition habit)
+  prot:'hp',  wtr:'hp',   veg:'hp',   mp:'hp',
+  // Growth
+  lc2:'hl',   rdg:'hr',   lrn2:'hr',
+};
+
+// Mark today's habit dot for a habit — updates state + live DOM dot if rendered
+function markHabitToday(habitId, on){
+  const dotIdx=S.day-1; // dots are 0-indexed
+  const key=habitId+'_'+dotIdx;
+  const hab=HABS.find(h=>h.id===habitId);
+  if(!hab)return;
+
+  if(on && !S.habits[key]){
+    S.habits[key]=true;
+  } else if(!on && S.habits[key]){
+    // don't un-mark — unchecking a daily shouldn't erase a manually set habit dot
+    return;
+  } else {
+    return; // no change
+  }
+
+  // Live-update the DOM dot directly without rebuilding all 90×8 dots
+  // Each habit card is rendered in order — find the card for this habit
+  const cards=document.querySelectorAll('#hG .card');
+  const habIdx=HABS.findIndex(h=>h.id===habitId);
+  if(habIdx>=0 && cards[habIdx]){
+    const dots=cards[habIdx].querySelectorAll('.hd');
+    if(dots[dotIdx]){
+      dots[dotIdx].classList.remove('e');
+      dots[dotIdx].classList.add('f');
+      dots[dotIdx].style.background=hab.c;
+    }
+    // Update the count label
+    const cnt=Array.from({length:90},(_,i)=>S.habits[habitId+'_'+i]).filter(Boolean).length;
+    const countEl=cards[habIdx].querySelector('.hab-count');
+    if(countEl)countEl.textContent=cnt+'/90';
+  }
+}
+
+function togC(id,el){
   S.checks[id]=!S.checks[id];
   const on=S.checks[id];
   el.classList.toggle('done',on);
   el.querySelector('.cb').textContent=on?'✓':'';
-  if(on)toast('+'+ALL.find(c=>c.id===id).pts+' XP!');
-  refreshXP();updateDash();updDayScore();buildQuick();
+  if(on){
+    toast('+'+ALL.find(c=>c.id===id).p+' XP!');
+    // Auto-sync habit dot
+    if(CHECK_HABIT_MAP[id])markHabitToday(CHECK_HABIT_MAP[id],true);
+  }
+  rXP();updDash();updDayScore();buildQuick();
 }
 
 function updDayScore(){
-  const x=ALL.filter(c=>S.checks[c.id]).reduce((a,c)=>a+c.pts,0);
-  if($('tScore'))$('tScore').textContent=x;
-  if($('dailyXPshow'))$('dailyXPshow').textContent=x;
-  if($('tProg'))$('tProg').style.width=Math.min(100,x/MAX_DAY_XP*100)+'%';
+  const x=ALL.filter(c=>S.checks[c.id]).reduce((a,c)=>a+c.p,0);
+  if($('tSc'))$('tSc').textContent=x;
+  if($('dXPs'))$('dXPs').textContent=x;
+  if($('tPg'))$('tPg').style.width=Math.min(100,x/MAX_XP*100)+'%';
 }
 
-function resetToday(){S.checks={};buildChecks();buildQuick();refreshXP();updateDash();toast('Day reset');}
-
-// ── WORKOUT ──
-function showW(id,btn){
+// ══════ WORKOUT ══════
+function sW(id,btn){
   ['w1','w2','w3','w4'].forEach(w=>{const e=$(w);if(e)e.style.display=w===id?'block':'none';});
-  document.querySelectorAll('#p-workout .wtab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#p-workout .tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
 }
 function logW(type,pts){
-  if(S.workouts[type]){toast('Already logged!');return;}
-  S.workouts[type]=pts;
-  S.checks['wkt']=true;
-  const ci=$('ci-wkt');
-  if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
-  refreshXP();updateDash();updDayScore();buildQuick();
-  toast('+'+pts+' XP! Workout done 💪');
+  if(S.wkt[type]){toast('Already logged!');return;}
+  S.wkt[type]=pts;S.checks['wkt']=true;
+  const ci=$('ci-wkt');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
+  markHabitToday('hw',true); // sync workout habit
+  rXP();updDash();updDayScore();buildQuick();toast('+'+pts+' XP! 💪');
 }
 
-// ── LEETCODE ──
+// ══════ LEETCODE ══════
 function buildLC(){
-  buildLCList('ll-a',LCA);buildLCList('ll-s',LCS);buildLCList('ll-h',LCH);updLCStats();
+  // Build each phase panel
+  LC_PHASES.forEach(phase=>{
+    const el=$('ll-'+phase.id);if(!el)return;
+    el.innerHTML=phase.weeks.map(week=>`
+      <div class="card" style="border-left:3px solid ${phase.color};margin-bottom:8px">
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:${phase.color};font-family:var(--mo)">${week.week} · ${week.days}</div>
+          <div style="font-size:12px;font-weight:700;margin-top:2px">${week.topic}</div>
+        </div>
+        <table class="wt" style="font-size:10px">
+          <tr>
+            <th style="width:28px">Day</th>
+            <th>Problem</th>
+            <th style="width:52px">Level</th>
+            <th>Pattern</th>
+            <th style="width:24px">XP</th>
+          </tr>
+          ${week.problems.map(p=>{
+            const st=S.lc[p.id]; // undefined, 'done', or 'hints'
+            return`<tr class="${st==='done'?'lc-done':st==='hints'?'lc-hints':''}" id="lrow-${p.id}" style="cursor:pointer" onclick="cycleLC('${p.id}',this)">
+              <td style="font-family:var(--mo);font-size:9px;color:var(--mu)">${p.day}</td>
+              <td style="${st==='done'?'text-decoration:line-through;color:var(--mu)':''}">${p.n}
+                ${p.why?`<div style="font-size:9px;color:var(--mu);margin-top:1px">${p.why}</div>`:''}
+              </td>
+              <td><span class="tag ${p.d==='easy'?'te':p.d==='hard'?'th':'tm'}">${p.d}</span></td>
+              <td style="font-size:9px;color:var(--mu)">${p.pat}</td>
+              <td style="font-family:var(--mo);font-size:9px;text-align:right">
+                ${st==='done'?'<span style="color:var(--g)">✓</span>':st==='hints'?'<span style="color:var(--o)">⚡</span>':'<span style="color:var(--s3)">○</span>'}
+              </td>
+            </tr>`;
+          }).join('')}
+        </table>
+        <div style="font-size:9px;color:var(--mu);margin-top:7px;font-family:var(--mo)">Tap a row: ○ → ✅ Done (+20 XP) → ⚡ Hints (revisit) → ○ Todo</div>
+      </div>`).join('');
+  });
+  buildLCPhaseBar();
+  updLCS();
 }
-function buildLCList(elId,data){
-  const el=$(elId);if(!el)return;
-  const pre=['a1','a2','a3','a4'];
-  el.innerHTML=data.map(p=>{
-    const dn=S.lcStatus[p.id]||false;
-    const isHints=p.id==='a4';
-    return`<div class="lc-row ${dn?'done':''}" onclick="togLC('${p.id}',this)">
-      <div class="lc-cb">${dn?'✓':''}</div>
-      <div class="lc-n">${p.num} ${p.name}</div>
-      <span class="tag ${p.diff==='easy'?'te':'tm'}">${p.diff}</span>
-      ${isHints?'<span class="tag th">hints</span>':''}
-      <div class="lc-p">+20</div>
+
+function buildLCPhaseBar(){
+  const el=$('lcPhaseBar');if(!el)return;
+  const allProbs=LC_PHASES.flatMap(ph=>ph.weeks.flatMap(w=>w.problems));
+  el.innerHTML=LC_PHASES.map(ph=>{
+    const phProbs=ph.weeks.flatMap(w=>w.problems);
+    const done=phProbs.filter(p=>S.lc[p.id]==='done').length;
+    const hints=phProbs.filter(p=>S.lc[p.id]==='hints').length;
+    const pct=Math.round((done+hints)/phProbs.length*100);
+    return`<div style="margin-bottom:7px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+        <span style="font-size:10px;font-weight:700;color:${ph.color}">${ph.label}: ${ph.title}</span>
+        <span style="font-family:var(--mo);font-size:9px;color:var(--mu)">${done}✓ ${hints}⚡ / ${phProbs.length}</span>
+      </div>
+      <div style="height:5px;background:var(--s3);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${ph.color};border-radius:3px;transition:width .4s"></div>
+      </div>
     </div>`;
   }).join('');
 }
-function togLC(id,el){
-  const pre=['a1','a2','a3','a4'];
-  if(pre.includes(id)){toast('Already counted!');return;}
-  S.lcStatus[id]=!S.lcStatus[id];
-  el.classList.toggle('done',S.lcStatus[id]);
-  el.querySelector('.lc-cb').textContent=S.lcStatus[id]?'✓':'';
-  if(S.lcStatus[id]){
-    S.checks['lc']=true;
-    const ci=$('ci-lc');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
-    toast('+20 XP! LC done 🔥');
+
+// Cycle: undefined → 'done' → 'hints' → undefined
+function cycleLC(id,row){
+  const cur=S.lc[id];
+  if(!cur){
+    S.lc[id]='done';
+    // Sync daily check + habit
+    S.checks['lc2']=true;
+    const ci=$('ci-lc2');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
+    markHabitToday('hl',true);
+    toast('+20 XP! ✅ Solved');
+  } else if(cur==='done'){
+    S.lc[id]='hints';
+    toast('⚡ Marked hints — revisit in 3 days');
+  } else {
+    delete S.lc[id];
+    toast('Unmarked');
   }
-  refreshXP();updLCStats();updateDash();updDayScore();
+  // Update the row visuals inline
+  const st=S.lc[id];
+  const nameTd=row.querySelectorAll('td')[1];
+  const xpTd=row.querySelectorAll('td')[4];
+  if(nameTd)nameTd.style.cssText=st==='done'?'text-decoration:line-through;color:var(--mu)':'';
+  if(xpTd)xpTd.innerHTML=st==='done'?'<span style="color:var(--g)">✓</span>':st==='hints'?'<span style="color:var(--o)">⚡</span>':'<span style="color:var(--s3)">○</span>';
+  row.className=st==='done'?'lc-done':st==='hints'?'lc-hints':'';
+  buildLCPhaseBar();
+  rXP();updLCS();updDash();updDayScore();
 }
-function updLCStats(){
-  const pre=['a1','a2','a3','a4'];
-  const ex=Object.keys(S.lcStatus).filter(id=>S.lcStatus[id]&&!pre.includes(id)).length;
-  const tot=4+ex;
-  if($('lcD'))$('lcD').textContent=tot;
-  if($('lcL'))$('lcL').textContent=45-tot;
-  if($('lcX'))$('lcX').textContent=tot*20;
+
+function updLCS(){
+  const allProbs=LC_PHASES.flatMap(ph=>ph.weeks.flatMap(w=>w.problems));
+  const done=allProbs.filter(p=>S.lc[p.id]==='done').length;
+  const hints=allProbs.filter(p=>S.lc[p.id]==='hints').length;
+  const tot=done+hints;
+  if($('lcD'))$('lcD').textContent=done;
+  if($('lcL'))$('lcL').textContent=140-tot;
+  if($('lcX'))$('lcX').textContent=done*20;
 }
-function showLC(id,btn){
-  ['la','ls','lh'].forEach(s=>{const e=$(s);if(e)e.style.display=s===id?'block':'none';});
-  document.querySelectorAll('#p-lc .wtab').forEach(b=>b.classList.remove('on'));
+
+function sLC(id,btn){
+  ['lp1','lp2','lp3','lp4','lp5'].forEach(s=>{const e=$(s);if(e)e.style.display=s===id?'block':'none';});
+  document.querySelectorAll('#p-lc .tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
 }
 
-// ── BOOKS ──
+// ══════ LEARNING ══════
+function buildLrn(){
+  // Phases with weekly cards
+  const phaseKeys=['ph1','ph2','ph3','ph4','proj','sec','ai','res'];
+  phaseKeys.forEach(phase=>{
+    const el=$('lrn-'+phase);if(!el)return;
+    const items=LRN[phase]||[];
+    if(!items.length)return;
+    el.innerHTML=items.map(item=>{
+      const done=!!S.lrn[item.id];
+      const isTrack=item.p>0;
+      // colour by phase
+      const col=phase==='ph1'?'var(--g)':phase==='ph2'?'var(--y)':phase==='ph3'?'var(--b)':phase==='ph4'?'var(--o)':phase==='proj'?'var(--p)':phase==='sec'?'var(--r)':'var(--mu)';
+      return`<div class="lcard" style="${done?'opacity:.5':''}">
+        <div class="lphase" style="color:${col}">${item.phase}</div>
+        <div class="ltl">${done?'✓ ':''} ${item.title}</div>
+        ${item.sub?`<div class="lsub" style="color:var(--p);margin-bottom:6px;font-size:10px">${item.sub}</div>`:''}
+
+        ${item.theory?`<div style="margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:${col};font-family:var(--mo);margin-bottom:3px">📖 THEORY</div>
+          <div style="font-size:11px;color:var(--mu);line-height:1.6">${item.theory}</div>
+        </div>`:''}
+
+        ${item.practical?`<div style="margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--y);font-family:var(--mo);margin-bottom:3px">🛠 PRACTICAL BUILD</div>
+          <div style="font-size:11px;color:var(--mu);line-height:1.6">${item.practical}</div>
+        </div>`:''}
+
+        ${(item.wkd||item.wke)?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+          ${item.wkd?`<div style="background:rgba(66,135,245,.08);border:1px solid rgba(66,135,245,.2);border-radius:6px;padding:8px">
+            <div style="font-size:9px;font-weight:700;color:var(--b);font-family:var(--mo);margin-bottom:3px">📅 WEEKDAY (2hrs)</div>
+            <div style="font-size:10px;color:var(--mu);line-height:1.6">${item.wkd}</div>
+          </div>`:''}
+          ${item.wke?`<div style="background:rgba(66,245,168,.08);border:1px solid rgba(66,245,168,.2);border-radius:6px;padding:8px">
+            <div style="font-size:9px;font-weight:700;color:var(--g);font-family:var(--mo);margin-bottom:3px">🗓 WEEKEND (5–6hrs)</div>
+            <div style="font-size:10px;color:var(--mu);line-height:1.6">${item.wke}</div>
+          </div>`:''}
+        </div>`:''}
+
+        ${item.goal?`<div style="background:rgba(245,230,66,.06);border:1px solid rgba(245,230,66,.18);border-radius:6px;padding:8px;margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--y);font-family:var(--mo);margin-bottom:2px">🎯 WEEKLY GOAL</div>
+          <div style="font-size:11px;color:var(--tx);font-weight:600;line-height:1.5">${item.goal}</div>
+        </div>`:''}
+
+        ${isTrack?`<div class="lck ${done?'done':''}" onclick="togLrn('${item.id}',this)">
+          <div class="lchk">${done?'✓':''}</div>
+          <div class="lcklabel">${done?'Completed!':'Mark Complete'}</div>
+          <div class="lckpts">+${item.p} XP</div>
+        </div>`:''}
+      </div>`;
+    }).join('');
+  });
+  updLrnStats();
+}
+function togLrn(id,el){
+  S.lrn[id]=!S.lrn[id];
+  const on=S.lrn[id];
+  el.classList.toggle('done',on);
+  el.querySelector('.lchk').textContent=on?'✓':'';
+  el.querySelector('.lcklabel').textContent=on?'Completed!':'Mark Complete';
+  if(on){const m=Object.values(LRN).flat().find(l=>l.id===id);if(m)toast('+'+m.p+' XP! Week done 🎓');}
+  rXP();updLrnStats();updDash();
+  // refresh the card parent done style
+  const card=el.closest('.lcard');if(card)card.style.opacity=on?'.5':'1';
+}
+function updLrnStats(){
+  const allItems=Object.values(LRN).flat().filter(l=>l.p>0);
+  const done=allItems.filter(l=>S.lrn[l.id]).length;
+  if($('lrnD'))$('lrnD').textContent=done;
+  const xp=allItems.filter(l=>S.lrn[l.id]).reduce((a,l)=>a+l.p,0);
+  if($('lrnX'))$('lrnX').textContent=xp;
+  // phase detection
+  const ph1done=LRN.ph1.filter(l=>S.lrn[l.id]).length;
+  const ph2done=LRN.ph2.filter(l=>S.lrn[l.id]).length;
+  const ph3done=LRN.ph3.filter(l=>S.lrn[l.id]).length;
+  const phase=ph3done>0?4:ph2done>0?3:ph1done>0?2:1;
+  if($('lrnPh'))$('lrnPh').textContent=phase;
+}
+function sLn(id,btn){
+  ['ph1','ph2','ph3','ph4','proj','sec','ai','res'].forEach(s=>{const e=$(s);if(e)e.style.display=s===id?'block':'none';});
+  document.querySelectorAll('#p-learning .tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ══════ BOOKS ══════
 function buildBooks(){
   const el=$('bookList');if(!el)return;
   el.innerHTML=BOOKS.map((b,i)=>`
-    <div class="book-item ${S.books.includes(b.id)?'done-b':''}" onclick="togBook('${b.id}',this)">
-      <div class="bn">${i+1}</div>
+    <div class="bi ${S.books.includes(b.id)?'db2':''}" onclick="togBook('${b.id}')">
+      <div class="bnum">${i+1}</div>
       <div>
-        <div class="bt">${S.books.includes(b.id)?'✓ ':''} ${b.title}</div>
-        <div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-bottom:3px">${b.auth}</div>
-        <div class="bw">${b.why}</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--y);margin-top:4px">Finish → +100 XP</div>
+        <div class="btl">${S.books.includes(b.id)?'✓ ':''} ${b.t}</div>
+        <div style="font-size:9px;color:var(--mu);font-family:var(--mo);margin-bottom:2px">${b.a}</div>
+        <div class="bwy">${b.w}</div>
+        <div style="font-family:var(--mo);font-size:9px;color:var(--y);margin-top:3px">Finish → +100 XP</div>
       </div>
     </div>`).join('');
   if($('bkFin'))$('bkFin').textContent=S.books.length;
 }
 function togBook(id){
   if(S.books.includes(id)){S.books=S.books.filter(b=>b!==id);}
-  else{S.books.push(id);toast('+100 XP! Book finished 📚');}
-  buildBooks();refreshXP();updateDash();
+  else{S.books.push(id);toast('+100 XP! Book done 📚');}
+  buildBooks();rXP();updDash();
 }
 
-// ── FINANCE ──
-function addExp(){
-  const n=$('eN').value.trim();
-  const a=parseFloat($('eA').value);
-  const c=$('eC').value;
-  if(!n||!a||a<=0){toast('Enter name + amount');return;}
-  S.expenses.push({n,a,c,id:Date.now()});
-  $('eN').value='';$('eA').value='';
-  buildExpenses();
+// ══════ FINANCE ══════
+function setMonth(m){
+  S.month=m;
+  // Dynamic labels based on real calendar
+  const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now=new Date();
+  const curMoIdx=now.getMonth(); // 0-based
+  // Tab 1 = March (or current if past), Tab 2 = April (or next)
+  // We use real month names for the two slots
+  const tab1Mo=2; // March (0-based)
+  const tab2Mo=3; // April (0-based)
+  const t1=document.getElementById('m1tab');
+  const t2=document.getElementById('m2tab');
+  if(t1)t1.textContent=monthNames[tab1Mo]+(tab1Mo===curMoIdx?' (This Month)':curMoIdx>tab1Mo?' (Past)':'');
+  if(t2)t2.textContent=monthNames[tab2Mo]+(tab2Mo===curMoIdx?' (This Month)':curMoIdx>tab2Mo?' (Past)':'');
+
+  $('m1tab').classList.toggle('on',m===1);
+  $('m2tab').classList.toggle('on',m===2);
+  $('marchView').style.display=m===1?'block':'none';
+  $('aprilView').style.display=m===2?'block':'none';
+  const budget=m===1?BUDGET_MARCH:BUDGET_APRIL;
+  $('budgetLbl').textContent='Budget: ₹'+budget.toLocaleString('en-IN');
+  $('finLbl').textContent=m===1?'MARCH REMAINING':'APRIL REMAINING';
+  buildExp();
 }
-function delExp(id){S.expenses=S.expenses.filter(e=>e.id!==id);buildExpenses();}
-function buildExpenses(){
-  const spent=S.expenses.reduce((a,e)=>a+e.a,0);
-  const left=BUDGET-spent;
-  const pct=Math.max(0,left/BUDGET*100);
-  if($('finL'))$('finL').textContent='₹'+Math.max(0,left).toLocaleString('en-IN');
-  if($('spentSF'))$('spentSF').textContent='₹'+spent.toLocaleString('en-IN');
+
+function addExp(){
+  const n=$('eN').value.trim(),a=parseFloat($('eA').value),c=$('eC').value,m=S.month;
+  if(!n||!a||a<=0){toast('Enter name + amount');return;}
+  S.expenses.push({n,a,c,m,id:Date.now()});
+  $('eN').value='';$('eA').value='';
+  buildExp();
+}
+function delExp(id){S.expenses=S.expenses.filter(e=>e.id!==id);buildExp();}
+
+function buildExp(){
+  const m=S.month;
+  const budget=m===1?BUDGET_MARCH:BUDGET_APRIL;
+  const monthExp=S.expenses.filter(e=>e.m===m);
+  const spent=monthExp.reduce((a,e)=>a+e.a,0);
+  const left=budget-spent;
+  const pct=Math.max(0,left/budget*100);
+  $('finL').textContent='₹'+Math.max(0,left).toLocaleString('en-IN');
+  $('spF').textContent='₹'+spent.toLocaleString('en-IN');
   const bar=$('finBar');
-  if(bar){
-    bar.style.width=pct+'%';
-    bar.style.background=pct>50?'linear-gradient(90deg,var(--g),var(--y))':pct>20?'linear-gradient(90deg,var(--y),var(--o))':'var(--r)';
-  }
+  if(bar){bar.style.width=pct+'%';bar.style.background=pct>50?'linear-gradient(90deg,var(--g),var(--y))':pct>20?'linear-gradient(90deg,var(--y),var(--o))':'var(--r)';}
   const el=$('eList');if(!el)return;
-  if(!S.expenses.length){el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:11px;padding:14px;font-family:var(--mono)">No expenses logged yet</div>';return;}
-  const icons={food:'🥦',transport:'🚌',misc:'📦',impulse:'⚠'};
-  el.innerHTML=S.expenses.slice().reverse().map(e=>`
+  if(!monthExp.length){el.innerHTML='<div style="text-align:center;color:var(--mu);font-size:10px;padding:12px;font-family:var(--mo)">No expenses logged</div>';return;}
+  const ico={food:'🥦',transport:'🚌',savings:'💰',invest:'📈',essential:'🏠',want:'🎯',impulse:'⚠'};
+  el.innerHTML=monthExp.slice().reverse().map(e=>`
     <div class="eli">
-      <span>${icons[e.c]||'•'} ${e.n}</span>
-      <div style="display:flex;align-items:center;gap:7px">
-        <span style="font-family:var(--mono);color:var(--o);font-size:12px">₹${e.a.toLocaleString('en-IN')}</span>
+      <span>${ico[e.c]||'•'} ${e.n}</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-family:var(--mo);color:var(--o);font-size:11px">₹${e.a.toLocaleString('en-IN')}</span>
         <button class="db" onclick="delExp(${e.id})">✕</button>
       </div>
     </div>`).join('');
-  const imp=S.expenses.filter(e=>e.c==='impulse');
-  if(imp.length)el.innerHTML+=`<div style="padding:9px;background:rgba(245,66,66,.1);border-radius:7px;margin-top:7px;font-size:11px;color:var(--r);font-family:var(--mono)">⚠ ${imp.length} impulse spend(s). Did you use the 48-hr rule?</div>`;
+  const imp=monthExp.filter(e=>e.c==='impulse');
+  if(imp.length)el.innerHTML+=`<div style="padding:8px;background:rgba(245,66,66,.1);border-radius:6px;margin-top:6px;font-size:10px;color:var(--r);font-family:var(--mo)">⚠ ${imp.length} impulse spend(s). 48-hr rule?</div>`;
 }
 
-// ── HABITS ──
+// ══════ HABITS ══════
 function buildHabits(){
-  const el=$('hGrids');if(!el)return;
+  const el=$('hG');if(!el)return;
   el.innerHTML=HABS.map(h=>{
     const cnt=Array.from({length:90},(_,i)=>S.habits[h.id+'_'+i]).filter(Boolean).length;
     const dots=Array.from({length:90},(_,i)=>{
       const k=h.id+'_'+i,on=S.habits[k];
-      return`<div class="hd ${on?'f':'e'}" style="${on?'background:'+h.col:''}" onclick="togHabit('${k}','${h.col}',this)" title="Day ${i+1}"></div>`;
+      return`<div class="hd ${on?'f':'e'}" style="${on?'background:'+h.c:''}" onclick="togHab('${k}','${h.c}',this)" title="Day ${i+1}"></div>`;
     }).join('');
-    return`<div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-weight:700;font-size:13px">${h.name}</div>
-        <div style="font-family:var(--mono);font-size:10px;color:${h.col}">${cnt}/90</div>
-      </div>
-      <div class="hdots">${dots}</div>
-    </div>`;
+    return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><div style="font-weight:700;font-size:13px">${h.n}</div><div class="hab-count" style="font-family:var(--mo);font-size:9px;color:${h.c}">${cnt}/90</div></div><div class="hdots">${dots}</div></div>`;
   }).join('');
 }
-function togHabit(key,col,el){
+function togHab(key,col,el){
   S.habits[key]=!S.habits[key];
-  el.classList.toggle('f',S.habits[key]);
-  el.classList.toggle('e',!S.habits[key]);
+  el.classList.toggle('f',S.habits[key]);el.classList.toggle('e',!S.habits[key]);
   el.style.background=S.habits[key]?col:'';
-  buildHabits();
+  // update count in header
+  const parts=key.split('_');
+  const hab=HABS.find(h=>h.id===parts[0]);
+  if(!hab)return;
+  const cnt=Array.from({length:90},(_,i)=>S.habits[hab.id+'_'+i]).filter(Boolean).length;
+  // find and update count display
+  document.querySelectorAll('#hG .card').forEach(card=>{
+    const title=card.querySelector('[style*="font-weight:700"]');
+    if(title&&title.textContent===hab.n){
+      const countEl=card.querySelector('[style*="font-family:var(--mo)"]');
+      if(countEl)countEl.textContent=cnt+'/90';
+    }
+  });
 }
 
-// ── REWARDS ──
+// ══════ SKILLS ══════
+function buildSkills(){
+  Object.entries(SKILLS).forEach(([cat,items])=>{
+    const el=$('sk'+cat.charAt(0).toUpperCase()+cat.slice(1));
+    if(!el)return;
+    el.innerHTML=`<div class="skcat">
+      ${items.map(s=>`
+        <div class="skbar">
+          <div class="skhd">
+            <span style="font-weight:600;font-size:12px">${s.n}</span>
+            <span class="skill-lvl" style="background:${s.c}22;color:${s.c}">${s.l}</span>
+          </div>
+          <div class="pb"><div class="pf" style="width:${s.pct}%;background:${s.c}"></div></div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px;font-family:var(--mo);line-height:1.4">${s.why}</div>
+        </div>`).join('')}
+    </div>`;
+  });
+}
+function sSk(id,btn){
+  ['sk-tech','sk-body','sk-mind','sk-soc','sk-fin','sk-lead'].forEach(s=>{const e=$(s);if(e)e.style.display=s===id?'block':'none';});
+  document.querySelectorAll('#p-skills .tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ══════ REWARDS ══════
 function buildRewards(){
-  const el=$('rList');if(!el)return;
-  const xp=computeXP(),day=S.day;
+  const el=$('rL');if(!el)return;
+  const xp=cXP(),day=S.day;
   el.innerHTML=RWDS.map(r=>{
     const ok=day>=r.day&&xp>=r.xp;
-    return`<div class="rcard ${ok?'':'locked'}">
+    return`<div class="rc ${ok?'':'locked'}">
       ${ok?'<div class="ub">UNLOCKED ✓</div>':''}
       <div class="ri">${r.icon}</div>
       <div style="flex:1">
         <div class="rm">Day ${r.day} · ${r.xp} XP needed</div>
-        <div class="rtl">${r.title}</div>
-        <div class="rd">${r.desc}</div>
-        <div class="rc">Budget: ${r.cost}</div>
+        <div class="rtl">${r.t}</div>
+        <div class="rd">${r.d}</div>
+        <div class="rco">Budget: ${r.c}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-// ── INIT ──
-buildChecks();buildLC();buildBooks();buildHabits();buildExpenses();buildRewards();updateDash();
+// ══════ MODALS + RESET ══════
+function showModal(id){$('modal-'+id).classList.add('show');}
+function closeModal(id){$('modal-'+id).classList.remove('show');}
+function doResetDay(){
+  S.checks={};S.wkt={};
+  buildChks();buildQuick();rXP();updDash();updDayScore();
+  closeModal('reset-day');toast('Day reset ✓');
+}
+function doResetMonth(){
+  // Clear only the current month's expenses
+  S.expenses=S.expenses.filter(e=>e.m!==S.month);
+  buildExp();
+  closeModal('reset-month');
+  const mName=S.month===1?'March':'April';
+  toast(mName+' expenses cleared ✓');
+}
+function doResetAll(){
+  Object.assign(S,{day:1,checks:{},lc:{},wkt:{},habits:{},expenses:[],books:[],lrn:{},month:autoMonth(),meals:[]});
+  buildChks();buildLC();buildBooks();buildHabits();buildExp();buildRewards();
+  buildNutriQuick();buildNutriLog();
+  if($('lrnD'))updLrnStats();
+  rXP();updDash();updDayScore();updLCS();
+  closeModal('reset-all');toast('Everything reset ✓');
+}
+
+// close modal on bg click
+document.querySelectorAll('.modal-bg').forEach(bg=>{
+  bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('show');});
+});
+
+// ══════ NUTRITION ══════
+const NTARGETS={kcal:1500,prot:125,carb:80,fat:50};
+
+const QUICK_MEALS=[
+  {name:'Morning Whey Shake',meal:'morning-shake',kcal:190,prot:30,carb:14,fat:2},
+  {name:'Breakfast (1 egg + 2 whites + spinach thoran)',meal:'breakfast',kcal:139,prot:16,carb:4,fat:6},
+  {name:'Chicken 150g (grilled)',meal:'lunch',kcal:247,prot:33,carb:0,fat:6},
+  {name:'Fish 150g',meal:'lunch',kcal:195,prot:33,carb:0,fat:4},
+  {name:'Paneer 100g',meal:'lunch',kcal:260,prot:19,carb:4,fat:20},
+  {name:'Beetroot + Horse gram thoran',meal:'lunch',kcal:140,prot:9,carb:22,fat:2},
+  {name:'Spinach + Horse gram thoran',meal:'lunch',kcal:130,prot:10,carb:18,fat:2},
+  {name:'Post-workout Whey Shake',meal:'post-shake',kcal:120,prot:25,carb:3,fat:1},
+  {name:'Dinner: Chicken 165g + vegetables + pumpkin seeds',meal:'dinner',kcal:375,prot:43,carb:12,fat:11},
+];
+
+const MEAL_ICONS={
+  'morning-shake':'🌅','breakfast':'🍳','lunch':'🍚',
+  'post-shake':'💪','dinner':'🌙','snack':'🍎'
+};
+const MEAL_LABELS={
+  'morning-shake':'Morning Shake','breakfast':'Breakfast','lunch':'Lunch',
+  'post-shake':'Post-workout Shake','dinner':'Dinner','snack':'Snack/Other'
+};
+
+function buildNutriQuick(){
+  const el=$('nt-quickadd');if(!el)return;
+  el.innerHTML=QUICK_MEALS.map((q,i)=>`
+    <div onclick="quickAddMeal(${i})"
+      style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--s2);border-radius:7px;margin-bottom:4px;cursor:pointer;border:1px solid transparent;transition:.12s"
+      onmouseover="this.style.borderColor='var(--bd)'" onmouseout="this.style.borderColor='transparent'">
+      <span style="font-size:15px">${MEAL_ICONS[q.meal]||'🍽'}</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">${q.name}</div>
+        <div style="font-family:var(--mo);font-size:9px;color:var(--mu)">
+          ${q.kcal}kcal · ${q.prot}g protein · ${q.carb}g carbs · ${q.fat}g fat
+        </div>
+      </div>
+      <span style="font-size:16px;color:var(--g);font-weight:700">+</span>
+    </div>`).join('');
+}
+
+function quickAddMeal(i){
+  const q=QUICK_MEALS[i];
+  S.meals.push({id:Date.now(),name:q.name,meal:q.meal,kcal:q.kcal,prot:q.prot,carb:q.carb,fat:q.fat});
+  buildNutriLog();
+  toast(`+${q.kcal}kcal logged!`);
+}
+
+function addMeal(){
+  const name=$('nt-name').value.trim();
+  const meal=$('nt-meal').value;
+  const kcal=parseFloat($('nt-kcal-in').value)||0;
+  const prot=parseFloat($('nt-prot-in').value)||0;
+  const carb=parseFloat($('nt-carb-in').value)||0;
+  const fat=parseFloat($('nt-fat-in').value)||0;
+  if(!name){toast('Enter meal name');return;}
+  if(!kcal&&!prot){toast('Enter at least kcal or protein');return;}
+  S.meals.push({id:Date.now(),name,meal,kcal,prot,carb,fat});
+  $('nt-name').value='';$('nt-kcal-in').value='';
+  $('nt-prot-in').value='';$('nt-carb-in').value='';$('nt-fat-in').value='';
+  buildNutriLog();
+  toast(`${name} logged!`);
+}
+
+function delMeal(id){
+  S.meals=S.meals.filter(m=>m.id!==id);
+  buildNutriLog();
+}
+
+function clearMeals(){S.meals=[];buildNutriLog();toast('Day cleared');}
+
+function buildNutriLog(){
+  // Totals
+  const totK=S.meals.reduce((a,m)=>a+m.kcal,0);
+  const totP=S.meals.reduce((a,m)=>a+m.prot,0);
+  const totC=S.meals.reduce((a,m)=>a+m.carb,0);
+  const totF=S.meals.reduce((a,m)=>a+m.fat,0);
+
+  // Update dashboard numbers
+  if($('nt-kcal'))$('nt-kcal').textContent=Math.round(totK);
+  if($('nt-prot'))$('nt-prot').textContent=Math.round(totP);
+  if($('nt-carb'))$('nt-carb').textContent=Math.round(totC);
+  if($('nt-fat'))$('nt-fat').textContent=Math.round(totF);
+
+  // Macro bars
+  const kPct=Math.min(100,totK/NTARGETS.kcal*100);
+  const pPct=Math.min(100,totP/NTARGETS.prot*100);
+  if($('nt-bar-kcal'))$('nt-bar-kcal').style.width=kPct+'%';
+  if($('nt-bar-prot'))$('nt-bar-prot').style.width=pPct+'%';
+  if($('nt-kcal-pct'))$('nt-kcal-pct').textContent=Math.round(kPct)+'% of 1500';
+  if($('nt-prot-pct'))$('nt-prot-pct').textContent=Math.round(pPct)+'% of 125g';
+
+  // Colour the kcal number based on how close to target
+  const kEl=$('nt-kcal');
+  if(kEl){
+    kEl.style.color=totK>1550?'var(--r)':totK>1400?'var(--g)':'var(--y)';
+  }
+
+  // Remaining
+  const rem=Math.max(0,NTARGETS.kcal-totK);
+  if($('nt-remain'))$('nt-remain').textContent=rem>0?`${Math.round(rem)} kcal left`:`${Math.round(totK-NTARGETS.kcal)} kcal over`;
+
+  // Log list
+  const el=$('nt-log');if(!el)return;
+  if(!S.meals.length){
+    el.innerHTML='<div style="text-align:center;color:var(--mu);font-size:11px;padding:14px;font-family:var(--mo)">No meals logged yet</div>';
+    return;
+  }
+  // Group by meal time
+  const order=['morning-shake','breakfast','lunch','post-shake','dinner','snack'];
+  const groups={};
+  S.meals.forEach(m=>{if(!groups[m.meal])groups[m.meal]=[];groups[m.meal].push(m);});
+  let html='';
+  order.forEach(mkey=>{
+    if(!groups[mkey])return;
+    const items=groups[mkey];
+    const gK=items.reduce((a,m)=>a+m.kcal,0);
+    const gP=items.reduce((a,m)=>a+m.prot,0);
+    html+=`<div style="margin-bottom:8px">
+      <div style="font-size:10px;font-weight:700;color:var(--mu);font-family:var(--mo);letter-spacing:1px;padding:3px 0;border-bottom:1px solid var(--bd);margin-bottom:4px">
+        ${MEAL_ICONS[mkey]} ${MEAL_LABELS[mkey].toUpperCase()} · ${Math.round(gK)}kcal · ${Math.round(gP)}g protein
+      </div>`;
+    items.forEach(m=>{
+      html+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--s2);border-radius:6px;margin-bottom:3px;font-size:11px">
+        <div style="flex:1">
+          <div style="font-weight:600">${m.name}</div>
+          <div style="font-family:var(--mo);font-size:9px;color:var(--mu);margin-top:1px">
+            ${m.kcal?m.kcal+'kcal':''} ${m.prot?'· '+m.prot+'g P':''} ${m.carb?'· '+m.carb+'g C':''} ${m.fat?'· '+m.fat+'g F':''}
+          </div>
+        </div>
+        <button class="db" onclick="delMeal(${m.id})">✕</button>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+
+  // Update protein check if ≥ 120g
+  if(totP>=120){
+    S.checks['prot']=true;
+    const ci=$('ci-prot');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
+    updDayScore();
+  }
+}
+
+function sNt(id,btn){
+  ['nt-ref-shakes','nt-ref-meals','nt-ref-thoran'].forEach(s=>{
+    const e=$(s);if(e)e.style.display=s===id?'block':'none';
+  });
+  document.querySelectorAll('#p-nutrition .tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ══════ INIT ══════
+buildChks();buildLC();buildBooks();buildHabits();buildExp();buildLrn();buildRewards();
+buildNutriQuick();buildNutriLog();
+setMonth(autoMonth());updDash();
 </script>
 </body>
 </html>
