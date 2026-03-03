@@ -430,6 +430,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     </div>
   </div>
 
+  <!-- Previous days history -->
+  <div class="card">
+    <div class="ct">📅 Previous Days</div>
+    <div id="nt-history">
+      <div style="text-align:center;color:var(--mu);font-size:11px;padding:12px;font-family:var(--mo)">No previous days logged yet</div>
+    </div>
+  </div>
+
   <!-- Meal plan reference -->
   <div class="card">
     <div class="ct">📖 Your Meal Plan Reference</div>
@@ -751,10 +759,64 @@ const S={
   day:1,checks:{},lc:{},
   wkt:{},habits:{},expenses:[],books:[],lrn:{},
   month:autoMonth(),
-  meals:[] // {id, name, meal, kcal, prot, carb, fat}
+  meals:[],       // today's meals (current tracker day)
+  mealLog:{},     // {dayN: [meals]} — permanent history per day
+  lastRealDate:'' // 'YYYY-MM-DD' — used to auto-advance day on new calendar day
 };
 
 const BUDGET_MARCH=4133, BUDGET_APRIL=37133;
+
+// ══════ PERSISTENCE ══════
+const STORE_KEY='p90_state_v3';
+
+function saveS(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(S));}catch(e){}
+}
+
+function loadS(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(!raw)return;
+    const saved=JSON.parse(raw);
+    // Merge saved into S, keeping defaults for any new keys
+    Object.assign(S,saved);
+    if(!S.mealLog)S.mealLog={};
+    if(!S.meals)S.meals=[];
+    if(!S.lastRealDate)S.lastRealDate='';
+    if(!S.expenses)S.expenses=[];
+    if(!S.habits)S.habits={};
+    if(!S.lc)S.lc={};
+    if(!S.lrn)S.lrn={};
+  }catch(e){}
+}
+
+// Check if real calendar date has changed → auto-archive today's meals and advance day
+function checkDayRollover(){
+  const today=new Date().toISOString().slice(0,10); // 'YYYY-MM-DD'
+  if(!S.lastRealDate){
+    // First ever run — just record today
+    S.lastRealDate=today;
+    saveS();
+    return;
+  }
+  if(S.lastRealDate===today)return; // same day, no rollover
+
+  // New day detected — archive today's meals under current tracker day
+  if(S.meals&&S.meals.length>0){
+    S.mealLog[S.day]=[...(S.mealLog[S.day]||[]),...S.meals];
+  }
+  // Archive checks/workout so they're also stored in history
+  S.mealLog['checks_'+S.day]=S.checks;
+  S.mealLog['wkt_'+S.day]=S.wkt;
+
+  // Reset daily items
+  S.meals=[];
+  S.checks={};
+  S.wkt={};
+  S.lastRealDate=today;
+  saveS();
+  toast('New day! Yesterday\'s meals saved 📅');
+}
 
 // ══════ CHECK DATA ══════
 const CHK={
@@ -1412,7 +1474,7 @@ function go(id,btn){
 }
 
 // ══════ DAY ══════
-function chDay(d){S.day=Math.max(1,Math.min(90,S.day+d));updDash();}
+function chDay(d){S.day=Math.max(1,Math.min(90,S.day+d));saveS();updDash();}
 
 // ══════ DASH ══════
 function updDash(){
@@ -1506,10 +1568,9 @@ function togC(id,el){
   el.querySelector('.cb').textContent=on?'✓':'';
   if(on){
     toast('+'+ALL.find(c=>c.id===id).p+' XP!');
-    // Auto-sync habit dot
     if(CHECK_HABIT_MAP[id])markHabitToday(CHECK_HABIT_MAP[id],true);
   }
-  rXP();updDash();updDayScore();buildQuick();
+  saveS();rXP();updDash();updDayScore();buildQuick();
 }
 
 function updDayScore(){
@@ -1529,8 +1590,8 @@ function logW(type,pts){
   if(S.wkt[type]){toast('Already logged!');return;}
   S.wkt[type]=pts;S.checks['wkt']=true;
   const ci=$('ci-wkt');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
-  markHabitToday('hw',true); // sync workout habit
-  rXP();updDash();updDayScore();buildQuick();toast('+'+pts+' XP! 💪');
+  markHabitToday('hw',true);
+  saveS();rXP();updDash();updDayScore();buildQuick();toast('+'+pts+' XP! 💪');
 }
 
 // ══════ LEETCODE ══════
@@ -1619,7 +1680,7 @@ function cycleLC(id,row){
   if(xpTd)xpTd.innerHTML=st==='done'?'<span style="color:var(--g)">✓</span>':st==='hints'?'<span style="color:var(--o)">⚡</span>':'<span style="color:var(--s3)">○</span>';
   row.className=st==='done'?'lc-done':st==='hints'?'lc-hints':'';
   buildLCPhaseBar();
-  rXP();updLCS();updDash();updDayScore();
+  saveS();rXP();updLCS();updDash();updDayScore();
 }
 
 function updLCS(){
@@ -1699,7 +1760,7 @@ function togLrn(id,el){
   el.querySelector('.lchk').textContent=on?'✓':'';
   el.querySelector('.lcklabel').textContent=on?'Completed!':'Mark Complete';
   if(on){const m=Object.values(LRN).flat().find(l=>l.id===id);if(m)toast('+'+m.p+' XP! Week done 🎓');}
-  rXP();updLrnStats();updDash();
+  saveS();rXP();updLrnStats();updDash();
   // refresh the card parent done style
   const card=el.closest('.lcard');if(card)card.style.opacity=on?'.5':'1';
 }
@@ -1740,7 +1801,7 @@ function buildBooks(){
 function togBook(id){
   if(S.books.includes(id)){S.books=S.books.filter(b=>b!==id);}
   else{S.books.push(id);toast('+100 XP! Book done 📚');}
-  buildBooks();rXP();updDash();
+  saveS();buildBooks();rXP();updDash();
 }
 
 // ══════ FINANCE ══════
@@ -1774,9 +1835,9 @@ function addExp(){
   if(!n||!a||a<=0){toast('Enter name + amount');return;}
   S.expenses.push({n,a,c,m,id:Date.now()});
   $('eN').value='';$('eA').value='';
-  buildExp();
+  saveS();buildExp();
 }
-function delExp(id){S.expenses=S.expenses.filter(e=>e.id!==id);buildExp();}
+function delExp(id){S.expenses=S.expenses.filter(e=>e.id!==id);saveS();buildExp();}
 
 function buildExp(){
   const m=S.month;
@@ -1882,20 +1943,20 @@ function buildRewards(){
 function showModal(id){$('modal-'+id).classList.add('show');}
 function closeModal(id){$('modal-'+id).classList.remove('show');}
 function doResetDay(){
-  S.checks={};S.wkt={};
-  buildChks();buildQuick();rXP();updDash();updDayScore();
+  S.checks={};S.wkt={};S.meals=[];
+  saveS();buildChks();buildQuick();buildNutriLog();rXP();updDash();updDayScore();
   closeModal('reset-day');toast('Day reset ✓');
 }
 function doResetMonth(){
-  // Clear only the current month's expenses
   S.expenses=S.expenses.filter(e=>e.m!==S.month);
-  buildExp();
+  saveS();buildExp();
   closeModal('reset-month');
   const mName=S.month===1?'March':'April';
   toast(mName+' expenses cleared ✓');
 }
 function doResetAll(){
-  Object.assign(S,{day:1,checks:{},lc:{},wkt:{},habits:{},expenses:[],books:[],lrn:{},month:autoMonth(),meals:[]});
+  Object.assign(S,{day:1,checks:{},lc:{},wkt:{},habits:{},expenses:[],books:[],lrn:{},month:autoMonth(),meals:[],mealLog:{},lastRealDate:new Date().toISOString().slice(0,10)});
+  saveS();
   buildChks();buildLC();buildBooks();buildHabits();buildExp();buildRewards();
   buildNutriQuick();buildNutriLog();
   if($('lrnD'))updLrnStats();
@@ -1952,7 +2013,7 @@ function buildNutriQuick(){
 function quickAddMeal(i){
   const q=QUICK_MEALS[i];
   S.meals.push({id:Date.now(),name:q.name,meal:q.meal,kcal:q.kcal,prot:q.prot,carb:q.carb,fat:q.fat});
-  buildNutriLog();
+  saveS();buildNutriLog();
   toast(`+${q.kcal}kcal logged!`);
 }
 
@@ -1968,16 +2029,16 @@ function addMeal(){
   S.meals.push({id:Date.now(),name,meal,kcal,prot,carb,fat});
   $('nt-name').value='';$('nt-kcal-in').value='';
   $('nt-prot-in').value='';$('nt-carb-in').value='';$('nt-fat-in').value='';
-  buildNutriLog();
+  saveS();buildNutriLog();
   toast(`${name} logged!`);
 }
 
 function delMeal(id){
   S.meals=S.meals.filter(m=>m.id!==id);
-  buildNutriLog();
+  saveS();buildNutriLog();
 }
 
-function clearMeals(){S.meals=[];buildNutriLog();toast('Day cleared');}
+function clearMeals(){S.meals=[];saveS();buildNutriLog();toast('Day cleared');}
 
 function buildNutriLog(){
   // Totals
@@ -2049,8 +2110,41 @@ function buildNutriLog(){
   if(totP>=120){
     S.checks['prot']=true;
     const ci=$('ci-prot');if(ci){ci.classList.add('done');ci.querySelector('.cb').textContent='✓';}
-    updDayScore();
+    saveS();updDayScore();
   }
+
+  // Meal history — show previous days
+  const histEl=$('nt-history');if(!histEl)return;
+  const logDays=Object.keys(S.mealLog)
+    .filter(k=>!k.startsWith('checks_')&&!k.startsWith('wkt_'))
+    .map(Number).filter(n=>!isNaN(n)).sort((a,b)=>b-a); // most recent first
+
+  if(!logDays.length){
+    histEl.innerHTML='<div style="text-align:center;color:var(--mu);font-size:11px;padding:12px;font-family:var(--mo)">No previous days logged yet</div>';
+    return;
+  }
+  histEl.innerHTML=logDays.map(dayN=>{
+    const dayMeals=S.mealLog[dayN]||[];
+    const dk=dayMeals.reduce((a,m)=>a+m.kcal,0);
+    const dp=dayMeals.reduce((a,m)=>a+m.prot,0);
+    const kCol=dk>1550?'var(--r)':dk>1400?'var(--g)':'var(--y)';
+    return`<div style="background:var(--s2);border-radius:8px;padding:10px 12px;margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:11px;font-weight:700">Day ${dayN}</div>
+        <div style="font-family:var(--mo);font-size:10px">
+          <span style="color:${kCol}">${Math.round(dk)} kcal</span>
+          <span style="color:var(--mu)"> · </span>
+          <span style="color:var(--g)">${Math.round(dp)}g P</span>
+          <span style="color:var(--mu)"> · ${dayMeals.length} items</span>
+        </div>
+      </div>
+      ${dayMeals.map(m=>`
+        <div style="display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px solid var(--bd)">
+          <span>${m.name}</span>
+          <span style="font-family:var(--mo);color:var(--mu)">${m.kcal?m.kcal+'kcal':''} ${m.prot?m.prot+'g P':''}</span>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
 }
 
 function sNt(id,btn){
@@ -2062,9 +2156,11 @@ function sNt(id,btn){
 }
 
 // ══════ INIT ══════
+loadS();           // restore from localStorage first
+checkDayRollover(); // auto-advance if new real date
 buildChks();buildLC();buildBooks();buildHabits();buildExp();buildLrn();buildRewards();
 buildNutriQuick();buildNutriLog();
-setMonth(autoMonth());updDash();
+setMonth(S.month||autoMonth());updDash();
 </script>
 </body>
 </html>
