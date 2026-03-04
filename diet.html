@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diet Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0E13;--s1:#111720;--s2:#181F2A;--bd:rgba(255,255,255,0.07);--g:#2ECC71;--gd:rgba(46,204,113,0.1);--r:#E74C3C;--rd:rgba(231,76,60,0.1);--b:#3498DB;--bd2:rgba(52,152,219,0.1);--y:#F39C12;--yd:rgba(243,156,18,0.1);--p:#9B59B6;--pd:rgba(155,89,182,0.1);--t:#1ABC9C;--td2:rgba(26,188,156,0.1);--tx:#ECF0F1;--tm:#95A5A6;--tdim:#5D6D7E}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);font-family:'Lato',sans-serif;color:var(--tx);min-height:100vh;font-size:14px}
+
+/* NAV */
+.nav{background:rgba(10,14,19,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);padding:0 20px;position:sticky;top:0;z-index:100}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.ntb{background:none;border:none;cursor:pointer;color:var(--tm);font-family:'Lato',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;padding:13px 14px;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.ntb:hover{color:var(--tx)}.ntb.act{color:var(--g);border-bottom-color:var(--g)}
+
+/* PAGES */
+main{max-width:900px;margin:0 auto;padding:28px 20px 60px}
+.page{display:none;animation:fi .2s ease}.page.act{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* TYPOGRAPHY */
+.page-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:4px}
+.page-sub{color:var(--tm);font-size:12px;font-weight:300;margin-bottom:22px;line-height:1.6}
+.section-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin:22px 0 12px}
+.div{border:none;border-top:1px solid var(--bd);margin:20px 0}
+
+/* CARDS & LAYOUT */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+@media(max-width:580px){.g2,.g3{grid-template-columns:1fr}}
+
+/* TAG */
+.tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+.tag.g{background:var(--gd);color:var(--g);border:1px solid rgba(46,204,113,.2)}
+.tag.r{background:var(--rd);color:var(--r);border:1px solid rgba(231,76,60,.2)}
+.tag.b{background:var(--bd2);color:var(--b);border:1px solid rgba(52,152,219,.2)}
+.tag.y{background:var(--yd);color:var(--y);border:1px solid rgba(243,156,18,.2)}
+.tag.p{background:var(--pd);color:var(--p);border:1px solid rgba(155,89,182,.2)}
+.tag.t{background:var(--td2);color:var(--t);border:1px solid rgba(26,188,156,.2)}
+
+/* MEAL ACCORDION */
+.day-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.dtab{background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:7px 14px;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--tm);cursor:pointer;transition:all .2s}
+.dtab.act{background:var(--gd);border-color:rgba(46,204,113,.3);color:var(--g)}
+.dc{display:none}.dc.act{display:block}
+
+.meal{background:var(--s1);border:1px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.meal-head{padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.meal-time{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;color:var(--tdim);white-space:nowrap}
+.meal-name{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;flex:1}
+.meal-cals{font-size:11px;font-weight:700;color:var(--r);margin-right:4px}
+.meal-arr{color:var(--tdim);font-size:11px;transition:transform .2s}
+.meal.open .meal-arr{transform:rotate(180deg)}
+.meal-body{padding:0 16px;max-height:0;overflow:hidden;transition:all .3s}
+.meal.open .meal-body{padding:12px 16px;max-height:900px}
+
+/* FOOD ITEMS */
+.food-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.food-item:last-of-type{border-bottom:none}
+.fdot{width:5px;height:5px;border-radius:50%;background:var(--g);margin-top:7px;flex-shrink:0}
+.food-info{flex:1}
+.food-name{font-size:13px;color:var(--tx);font-weight:400}
+.food-macros{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.fm{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.fm.p{background:rgba(46,204,113,.1);color:var(--g)}
+.fm.c{background:rgba(52,152,219,.1);color:var(--b)}
+.fm.f{background:rgba(243,156,18,.1);color:var(--y)}
+.fm.k{background:rgba(231,76,60,.1);color:var(--r)}
+.fm.v{background:rgba(155,89,182,.1);color:var(--p)}
+.food-qty{font-size:11px;color:var(--tdim);flex-shrink:0;text-align:right}
+
+/* MEAL TOTAL */
+.meal-total{display:flex;gap:10px;flex-wrap:wrap;padding:10px 0 2px;border-top:1px solid rgba(255,255,255,.06);margin-top:8px}
+.mt-item{font-size:11px;font-weight:700}
+
+/* TIP */
+.tip{padding:8px 12px;border-radius:0 8px 8px 0;font-size:11px;margin-top:10px;border-left:2px solid;line-height:1.5}
+.tip.g{background:var(--gd);border-color:var(--g);color:var(--g)}
+.tip.b{background:var(--bd2);border-color:var(--b);color:var(--b)}
+.tip.y{background:var(--yd);border-color:var(--y);color:var(--y)}
+.tip.r{background:var(--rd);border-color:var(--r);color:var(--r)}
+
+/* DAY TOTAL BAR */
+.day-total{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:12px 16px;margin-top:6px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+
+/* STEPS */
+.steps-timeline{display:flex;flex-direction:column;gap:0}
+.st-item{display:grid;grid-template-columns:70px 1fr;gap:14px;position:relative;padding-bottom:0}
+.st-left{display:flex;flex-direction:column;align-items:center;gap:0}
+.st-time{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--g);text-align:center;line-height:1.2}
+.st-line{width:2px;background:var(--bd);flex:1;margin-top:6px;min-height:20px}
+.st-right{padding:12px 0 20px}
+.st-label{font-weight:700;font-size:13px;margin-bottom:3px}
+.st-steps{font-size:11px;font-weight:700;color:var(--g)}
+.st-desc{font-size:12px;color:var(--tm);font-weight:300;line-height:1.6;margin-top:2px}
+
+/* ROTATION GRID */
+.rot-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px}
+@media(max-width:600px){.rot-week{grid-template-columns:repeat(4,1fr)}}
+.rot-day{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:10px 7px;text-align:center}
+.rot-dayname{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:800;color:var(--tdim);letter-spacing:1px;margin-bottom:5px}
+.rot-type{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;margin-bottom:6px;display:inline-block}
+.rot-content{font-size:10px;color:var(--tm);line-height:1.6}
+
+/* NUTRITION TABLE */
+.nt{width:100%;border-collapse:collapse;font-size:12px}
+.nt th{background:var(--s2);color:var(--tdim);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:9px 10px;text-align:left;border-bottom:1px solid var(--bd)}
+.nt td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.nt tr:last-child td{border-bottom:none}
+.nt tr:hover td{background:rgba(255,255,255,.015)}
+.hi{font-weight:700}
+
+/* PUMPKIN VERDICT */
+.verdict-box{background:linear-gradient(135deg,rgba(155,89,182,.1),rgba(26,188,156,.07));border:1px solid rgba(155,89,182,.25);border-radius:13px;padding:20px;margin-bottom:20px}
+
+/* RULES */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.rules-grid{grid-template-columns:1fr}}
+.rule-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.rule-card.do{border-top:2px solid var(--g)}.rule-card.dn{border-top:2px solid var(--r)}
+.rule-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;margin-bottom:12px}
+.rule-card.do .rule-title{color:var(--g)}.rule-card.dn .rule-title{color:var(--r)}
+.rule-item{display:flex;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.5}
+.rule-item:last-child{border-bottom:none}
+
+/* STAT CHIPS */
+.stat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.stat{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 14px}
+.stat .sl{font-size:9px;color:var(--tdim);letter-spacing:1.5px;text-transform:uppercase;display:block}
+.stat .sv{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700}
+
+@media(max-width:480px){main{padding:20px 14px 50px}}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <button class="ntb act" onclick="pg('meals',this)">🍽️ Meals</button>
+    <button class="ntb" onclick="pg('rotation',this)">🔄 Rotation</button>
+    <button class="ntb" onclick="pg('nutrition',this)">📋 Nutrition</button>
+    <button class="ntb" onclick="pg('steps',this)">🚶 10K Steps</button>
+    <button class="ntb" onclick="pg('seeds',this)">🌱 Pumpkin Seeds</button>
+    <button class="ntb" onclick="pg('rules',this)">✅ Rules</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══ MEALS ═══ -->
+<div id="p-meals" class="page act">
+  <div class="page-title">Daily Meal Plan</div>
+  <div class="page-sub">All nutrition values per meal. Chicken salami only (no ham). Post-workout shake = water. Afternoon shake = skimmed milk.</div>
+
+  <div class="stat-row">
+    <div class="stat"><span class="sl">Daily Target</span><span class="sv" style="color:var(--r)">1,500 kcal</span></div>
+    <div class="stat"><span class="sl">Protein</span><span class="sv" style="color:var(--g)">125g</span></div>
+    <div class="stat"><span class="sl">Carbs</span><span class="sv" style="color:var(--b)">80g</span></div>
+    <div class="stat"><span class="sl">Fat</span><span class="sv" style="color:var(--y)">50g</span></div>
+  </div>
+
+  <div class="day-tabs">
+    <button class="dtab act" onclick="dayTab('mg',this)">🌅 Morning Gym</button>
+    <button class="dtab" onclick="dayTab('eg',this)">🌆 Evening Gym</button>
+    <button class="dtab" onclick="dayTab('rd',this)">😴 Rest Day</button>
+  </div>
+
+  <!-- MORNING GYM -->
+  <div id="d-mg" class="dc act">
+
+    <div class="meal open">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">5:30 AM</div>
+        <div class="meal-name">Pre-Workout</div>
+        <div class="meal-cals">~95 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">4–5 Medjool dates (no banana!)</div><div class="food-macros"><span class="fm k">90 kcal</span><span class="fm c">22g carbs</span><span class="fm p">1g protein</span><span class="fm v">Potassium, Fiber</span></div></div><div class="food-qty">~60g</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Black coffee, no sugar</div><div class="food-macros"><span class="fm k">5 kcal</span><span class="fm v">Caffeine boost</span></div></div><div class="food-qty">1 cup</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~95 kcal</span>
+          <span class="mt-item" style="color:var(--g)">1g protein</span>
+          <span class="mt-item" style="color:var(--b)">22g carbs</span>
+        </div>
+        <div class="tip y">⚡ Fast carbs = energy for gym. No shake here — save it for after workout for maximum recovery.</div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">7:30 AM ★</div>
+        <div class="meal-name">Post-Workout — Shake + Breakfast</div>
+        <div class="meal-cals">~430 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">⚡ Protein Shake — WATER only (Shake 1)</div><div class="food-macros"><span class="fm k">120 kcal</span><span class="fm p">25g protein</span><span class="fm c">3g carbs</span><span class="fm v">Fast absorption post-gym</span></div></div><div class="food-qty">250ml water</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">1 whole egg + 2 egg whites, scrambled</div><div class="food-macros"><span class="fm k">130 kcal</span><span class="fm p">22g protein</span><span class="fm f">5g fat</span><span class="fm v">Choline, B12, Vit D</span></div></div><div class="food-qty">3 eggs</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">3 slices chicken salami</div><div class="food-macros"><span class="fm k">120 kcal</span><span class="fm p">9g protein</span><span class="fm f">8g fat</span><span class="fm c">1g carbs</span><span class="fm v">B12, Zinc</span></div></div><div class="food-qty">~50g</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Chia seeds (soaked overnight)</div><div class="food-macros"><span class="fm k">58 kcal</span><span class="fm p">2g protein</span><span class="fm f">4g fat</span><span class="fm c">5g carbs</span><span class="fm v">Omega-3, Fiber 4g</span></div></div><div class="food-qty">1 tbsp</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Spinach thoran (½ cup, from prep)</div><div class="food-macros"><span class="fm k">40 kcal</span><span class="fm p">3g protein</span><span class="fm c">3g carbs</span><span class="fm v">Iron, Vit K, Folate</span></div></div><div class="food-qty">½ cup</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~468 kcal</span>
+          <span class="mt-item" style="color:var(--g)">61g protein</span>
+          <span class="mt-item" style="color:var(--b)">12g carbs</span>
+          <span class="mt-item" style="color:var(--y)">17g fat</span>
+        </div>
+        <div class="tip g">💪 Drink the shake FIRST within 5 min of leaving gym. Eat real food 15 min after. This is your biggest protein meal — 61g in one window.</div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">12:00 PM</div>
+        <div class="meal-name">Office Lunch</div>
+        <div class="meal-cals">~390 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Milky Mist Skyr (plain, 150g)</div><div class="food-macros"><span class="fm k">145 kcal</span><span class="fm p">18g protein</span><span class="fm c">15g carbs</span><span class="fm f">2g fat</span><span class="fm v">Calcium 470mg, Probiotics</span></div></div><div class="food-qty">150g</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Horse gram curry (pre-cooked batch)</div><div class="food-macros"><span class="fm k">140 kcal</span><span class="fm p">10g protein</span><span class="fm c">18g carbs</span><span class="fm f">1g fat</span><span class="fm v">Iron, Folate, Resistant starch</span></div></div><div class="food-qty">½ cup</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Today's rotation thoran (see Rotation tab)</div><div class="food-macros"><span class="fm k">75 kcal</span><span class="fm p">4g protein</span><span class="fm c">7g carbs</span><span class="fm v">Vitamins vary by type</span></div></div><div class="food-qty">¾ cup</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Matta rice (½ cup cooked)</div><div class="food-macros"><span class="fm k">115 kcal</span><span class="fm c">24g carbs</span><span class="fm p">2g protein</span><span class="fm v">Fiber 3g, Antioxidants</span></div></div><div class="food-qty">½ cup</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~475 kcal</span>
+          <span class="mt-item" style="color:var(--g)">34g protein</span>
+          <span class="mt-item" style="color:var(--b)">64g carbs</span>
+          <span class="mt-item" style="color:var(--y)">3g fat</span>
+        </div>
+        <div class="tip b">🥡 Pack in tiffin box the night before. Skyr goes in a separate cold container.</div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">4:00 PM</div>
+        <div class="meal-name">Snack + Shake 2</div>
+        <div class="meal-cals">~345 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Protein Shake — 200ml skimmed milk (Shake 2)</div><div class="food-macros"><span class="fm k">190 kcal</span><span class="fm p">32g protein</span><span class="fm c">13g carbs</span><span class="fm v">Calcium, slower release than water</span></div></div><div class="food-qty">200ml skimmed milk</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Pumpkin seeds (see Seeds tab for best timing!)</div><div class="food-macros"><span class="fm k">85 kcal</span><span class="fm p">4g protein</span><span class="fm f">7g fat</span><span class="fm v">Zinc, Magnesium — move to dinner if prefer</span></div></div><div class="food-qty">1 tbsp</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Peanuts, roasted unsalted</div><div class="food-macros"><span class="fm k">145 kcal</span><span class="fm p">7g protein</span><span class="fm f">12g fat</span><span class="fm v">Vit E, Magnesium</span></div></div><div class="food-qty">25g</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~345 kcal</span>
+          <span class="mt-item" style="color:var(--g)">43g protein</span>
+          <span class="mt-item" style="color:var(--b)">13g carbs</span>
+          <span class="mt-item" style="color:var(--y)">19g fat</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">7:30 PM</div>
+        <div class="meal-name">Dinner — No Rice</div>
+        <div class="meal-cals">~370 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Grilled chicken breast (Mon/Wed/Fri) — OR Paneer tikka (Tue/Thu/Sun)</div><div class="food-macros"><span class="fm k">190 kcal / 265 kcal</span><span class="fm p">30g / 20g protein</span><span class="fm f">4g / 18g fat</span><span class="fm v">B6, B12, Zinc (chicken) | Casein, Calcium (paneer)</span></div></div><div class="food-qty">150g / 100g</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Today's rotation thoran (different from lunch!)</div><div class="food-macros"><span class="fm k">75 kcal</span><span class="fm p">4g protein</span><span class="fm c">7g carbs</span><span class="fm v">Squeeze lemon → boosts iron absorption</span></div></div><div class="food-qty">1 cup</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Pumpkin seeds sprinkled on thoran — BEST TIME (see Seeds tab)</div><div class="food-macros"><span class="fm k">85 kcal</span><span class="fm p">4g protein</span><span class="fm f">7g fat</span><span class="fm v">Zinc, Mg, Tryptophan → better sleep + muscle repair</span></div></div><div class="food-qty">1 tbsp</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~350–440 kcal</span>
+          <span class="mt-item" style="color:var(--g)">38g protein</span>
+          <span class="mt-item" style="color:var(--b)">7g carbs</span>
+          <span class="mt-item" style="color:var(--y)">15g fat</span>
+        </div>
+        <div class="tip r">🌙 No matta rice at dinner. Carbs only at lunch. Low carb dinner = fat burns overnight while you sleep.</div>
+      </div>
+    </div>
+
+    <div class="day-total">
+      <span style="font-size:11px;color:var(--tm)"><strong style="color:var(--tx)">Morning Gym Day Total</strong></span>
+      <span style="font-size:12px;font-weight:700;color:var(--r)">~1,500 kcal</span>
+      <span style="font-size:12px;font-weight:700;color:var(--g)">~127g protein ✅</span>
+      <span style="font-size:12px;font-weight:700;color:var(--b)">~82g carbs</span>
+      <span style="font-size:12px;font-weight:700;color:var(--y)">~50g fat</span>
+    </div>
+  </div>
+
+  <!-- EVENING GYM -->
+  <div id="d-eg" class="dc">
+
+    <div class="meal open">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">7:00 AM</div>
+        <div class="meal-name">Breakfast + Shake 2 (skimmed milk)</div>
+        <div class="meal-cals">~440 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Protein Shake — 200ml skimmed milk (Shake 2)</div><div class="food-macros"><span class="fm k">190 kcal</span><span class="fm p">32g protein</span><span class="fm c">13g carbs</span><span class="fm v">Slow release — sustains office morning</span></div></div><div class="food-qty">200ml skimmed milk</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">1 whole egg + 2 egg whites + 3 salami slices (scrambled)</div><div class="food-macros"><span class="fm k">250 kcal</span><span class="fm p">31g protein</span><span class="fm f">13g fat</span><span class="fm v">B12, Choline, Zinc</span></div></div><div class="food-qty">rotate style daily</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Chia seeds soaked</div><div class="food-macros"><span class="fm k">58 kcal</span><span class="fm f">4g fat</span><span class="fm v">Omega-3</span></div></div><div class="food-qty">1 tbsp</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~498 kcal</span>
+          <span class="mt-item" style="color:var(--g)">63g protein</span>
+          <span class="mt-item" style="color:var(--b)">13g carbs</span>
+          <span class="mt-item" style="color:var(--y)">17g fat</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">12:30 PM</div>
+        <div class="meal-name">Office Lunch (same as morning gym)</div>
+        <div class="meal-cals">~475 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Skyr 150g + Horse gram ½ cup + Rotation thoran + ½ cup matta rice</div><div class="food-macros"><span class="fm k">~475 kcal</span><span class="fm p">34g protein</span><span class="fm c">64g carbs</span></div></div><div class="food-qty">packed tiffin</div></div>
+        <div class="tip b">🥡 Same as morning gym day. Pack night before.</div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">5:30 PM</div>
+        <div class="meal-name">Pre-Workout (after office)</div>
+        <div class="meal-cals">~95 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">4–5 dates OR 1 apple</div><div class="food-macros"><span class="fm k">90 kcal</span><span class="fm c">22g carbs</span><span class="fm v">Fast fuel for gym</span></div></div><div class="food-qty">~60g</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Black coffee</div><div class="food-macros"><span class="fm v">Performance boost</span></div></div><div class="food-qty">1 cup</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~95 kcal</span>
+          <span class="mt-item" style="color:var(--b)">22g carbs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">8:30 PM ★</div>
+        <div class="meal-name">POST-GYM — Shake 1 (water) + Dinner</div>
+        <div class="meal-cals">~440 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">⚡ Protein Shake — WATER only (Shake 1)</div><div class="food-macros"><span class="fm k">120 kcal</span><span class="fm p">25g protein</span><span class="fm v">Drink immediately after gym — max recovery</span></div></div><div class="food-qty">250ml water</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Grilled chicken breast OR Paneer tikka</div><div class="food-macros"><span class="fm k">190 / 265 kcal</span><span class="fm p">30g / 20g protein</span><span class="fm f">4g / 18g fat</span></div></div><div class="food-qty">150g / 100g</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Rotation thoran + pumpkin seeds (1 tbsp)</div><div class="food-macros"><span class="fm k">160 kcal</span><span class="fm p">8g protein</span><span class="fm v">Zinc + Tryptophan → muscle repair + sleep</span></div></div><div class="food-qty">1 cup + 1 tbsp</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~470 kcal</span>
+          <span class="mt-item" style="color:var(--g)">55g protein</span>
+          <span class="mt-item" style="color:var(--b)">7g carbs</span>
+          <span class="mt-item" style="color:var(--y)">15g fat</span>
+        </div>
+        <div class="tip g">💪 Shake immediately on leaving gym. Eat dinner 15–20 min later. Total protein today: ~125g ✅</div>
+      </div>
+    </div>
+
+    <div class="day-total">
+      <span style="font-size:11px;color:var(--tm)"><strong style="color:var(--tx)">Evening Gym Day Total</strong></span>
+      <span style="font-size:12px;font-weight:700;color:var(--r)">~1,490 kcal</span>
+      <span style="font-size:12px;font-weight:700;color:var(--g)">~128g protein ✅</span>
+      <span style="font-size:12px;font-weight:700;color:var(--b)">~78g carbs</span>
+    </div>
+  </div>
+
+  <!-- REST DAY -->
+  <div id="d-rd" class="dc">
+    <div style="background:var(--yd);border:1px solid rgba(243,156,18,.25);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--y);margin-bottom:12px">😴 Rest day: ~1,350 kcal. Skip matta rice at lunch. Both shakes with skimmed milk. No pre-workout dates needed.</div>
+
+    <div class="meal open">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">7:30 AM</div>
+        <div class="meal-name">Breakfast</div>
+        <div class="meal-cals">~440 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Shake 1 — skimmed milk (no gym rush today)</div><div class="food-macros"><span class="fm k">190 kcal</span><span class="fm p">32g protein</span><span class="fm c">13g carbs</span></div></div><div class="food-qty">200ml</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">1 whole egg + 2 egg whites + 2 salami slices (boiled eggs + side salami)</div><div class="food-macros"><span class="fm k">210 kcal</span><span class="fm p">28g protein</span><span class="fm f">11g fat</span></div></div><div class="food-qty">simple boil</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Chia + pumpkin seeds in water</div><div class="food-macros"><span class="fm k">143 kcal</span><span class="fm f">11g fat</span><span class="fm v">Omega-3, Zinc</span></div></div><div class="food-qty">1 tbsp each</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~543 kcal</span>
+          <span class="mt-item" style="color:var(--g)">60g protein</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">12:30 PM</div>
+        <div class="meal-name">Lunch — No Rice Today</div>
+        <div class="meal-cals">~360 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Skyr 150g + Horse gram ½ cup + 2 thorans (extra thoran replaces rice)</div><div class="food-macros"><span class="fm k">~360 kcal</span><span class="fm p">32g protein</span><span class="fm c">40g carbs</span></div></div><div class="food-qty">generous</div></div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">4:00 PM</div>
+        <div class="meal-name">Shake 2 + Light Snack</div>
+        <div class="meal-cals">~265 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Shake 2 — skimmed milk</div><div class="food-macros"><span class="fm k">190 kcal</span><span class="fm p">32g protein</span></div></div><div class="food-qty">200ml</div></div>
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Peanuts only (no extra seeds — already had at breakfast)</div><div class="food-macros"><span class="fm k">145 kcal</span><span class="fm p">7g protein</span><span class="fm f">12g fat</span></div></div><div class="food-qty">25g</div></div>
+        <div class="meal-total">
+          <span class="mt-item" style="color:var(--r)">~335 kcal</span>
+          <span class="mt-item" style="color:var(--g)">39g protein</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-head" onclick="toggleMeal(this)">
+        <div class="meal-time">7:30 PM</div>
+        <div class="meal-name">Dinner</div>
+        <div class="meal-cals">~370 kcal</div>
+        <div class="meal-arr">▼</div>
+      </div>
+      <div class="meal-body">
+        <div class="food-item"><div class="fdot"></div><div class="food-info"><div class="food-name">Chicken or paneer + thoran + pumpkin seeds (1 tbsp at dinner)</div><div class="food-macros"><span class="fm k">~370 kcal</span><span class="fm p">38g protein</span><span class="fm v">Pumpkin seeds at dinner = best for sleep</span></div></div><div class="food-qty">full dinner</div></div>
+      </div>
+    </div>
+
+    <div class="day-total">
+      <span style="font-size:11px;color:var(--tm)"><strong style="color:var(--tx)">Rest Day Total</strong></span>
+      <span style="font-size:12px;font-weight:700;color:var(--r)">~1,350 kcal</span>
+      <span style="font-size:12px;font-weight:700;color:var(--g)">~122g protein ✅</span>
+      <span style="font-size:12px;font-weight:700;color:var(--b)">~53g carbs</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ROTATION ═══ -->
+<div id="p-rotation" class="page">
+  <div class="page-title">Weekly Food Rotation</div>
+  <div class="page-sub">Every meal different across the week. No ham — chicken salami only. No bhurji. Batch cooked Sunday so weekday cooking is minimal.</div>
+
+  <div class="section-title">7-Day Overview</div>
+  <div class="rot-week">
+    <div class="rot-day"><div class="rot-dayname">MON</div><div class="rot-type" style="background:var(--gd);color:var(--g)">Gym</div><div class="rot-content">Salami Scramble<br>Spinach/Horse gram<br>Grilled Chicken</div></div>
+    <div class="rot-day"><div class="rot-dayname">TUE</div><div class="rot-type" style="background:var(--bd2);color:var(--b)">Office</div><div class="rot-content">Salami Omelette<br>Payar/Horse gram<br>Paneer Tikka</div></div>
+    <div class="rot-day"><div class="rot-dayname">WED</div><div class="rot-type" style="background:var(--gd);color:var(--g)">Gym</div><div class="rot-content">Skyr Bowl<br>Beetroot/Horse gram<br>Grilled Chicken</div></div>
+    <div class="rot-day"><div class="rot-dayname">THU</div><div class="rot-type" style="background:var(--bd2);color:var(--b)">Office</div><div class="rot-content">Salami Wrap<br>Cabbage/Horse gram<br>Paneer Sauté</div></div>
+    <div class="rot-day"><div class="rot-dayname">FRI</div><div class="rot-type" style="background:var(--gd);color:var(--g)">Gym</div><div class="rot-content">Egg+Salami Bowl<br>Spinach/Horse gram<br>Grilled Chicken</div></div>
+    <div class="rot-day"><div class="rot-dayname">SAT</div><div class="rot-type" style="background:var(--pd);color:var(--p)">Flex</div><div class="rot-content">Salami Scramble<br>Payar/Horse gram<br>🍛 Chicken Curry</div></div>
+    <div class="rot-day"><div class="rot-dayname">SUN</div><div class="rot-type" style="background:var(--yd);color:var(--y)">Rest+Prep</div><div class="rot-content">Skyr+Egg Bowl<br>Cabbage/Horse gram<br>Paneer Tikka</div></div>
+  </div>
+
+  <div class="div"></div>
+  <div class="section-title">Breakfast Rotation — 5 Types (No Banana, No Bhurji)</div>
+  <div class="g3" style="gap:10px">
+    <div class="card"><div class="tag g">MON & SAT</div><div style="font-weight:700;margin-bottom:5px;font-size:.88rem">Salami Scramble</div><div style="font-size:11px;color:var(--tm);font-weight:300">Pan scramble: 1 egg + 2 whites + 3 salami slices + spinach + bell pepper. 8 min.<br><strong style="color:var(--g)">~468 kcal · 31g P</strong></div></div>
+    <div class="card"><div class="tag b">TUE</div><div style="font-weight:700;margin-bottom:5px;font-size:.88rem">Salami Flat Omelette</div><div style="font-size:11px;color:var(--tm);font-weight:300">Flat fold: eggs + 3 salami + onion + green chili. Crisp edges. 7 min.<br><strong style="color:var(--g)">~420 kcal · 31g P</strong></div></div>
+    <div class="card"><div class="tag t">WED & SUN</div><div style="font-weight:700;margin-bottom:5px;font-size:.88rem">Skyr Power Bowl</div><div style="font-size:11px;color:var(--tm);font-weight:300">No cooking: 150g Skyr + soaked chia + pumpkin seeds + 4 dates + cinnamon. 2 min.<br><strong style="color:var(--g)">~330 kcal · 28g P</strong></div></div>
+    <div class="card"><div class="tag y">THU</div><div style="font-weight:700;margin-bottom:5px;font-size:.88rem">Salami Wrap</div><div style="font-size:11px;color:var(--tm);font-weight:300">Eggs + 3 salami + avocado + rocket in whole wheat wrap. Office-portable. 10 min.<br><strong style="color:var(--g)">~450 kcal · 33g P</strong></div></div>
+    <div class="card"><div class="tag p">FRI</div><div style="font-weight:700;margin-bottom:5px;font-size:.88rem">Egg + Salami Bowl</div><div style="font-size:11px;color:var(--tm);font-weight:300">Boiled eggs (1 full + 2 whites) + 2 salami slices + 100g Skyr side + seeds. No stove scramble.<br><strong style="color:var(--g)">~440 kcal · 35g P</strong></div></div>
+  </div>
+
+  <div class="div"></div>
+  <div class="section-title">Thoran Rotation — Cook 2 Types Per Session (Not Daily)</div>
+  <div class="g2">
+    <div class="card"><div class="tag g">SUNDAY COOK → Mon+Tue</div><div style="font-weight:700;margin-bottom:5px">Spinach Thoran</div><div style="font-size:11px;color:var(--tm);font-weight:300;line-height:1.7">2 cups spinach · 3 tbsp coconut · mustard seeds · curry leaves · 1 shallot · turmeric · coconut oil<br><em>Heat oil → mustard → shallot+curry leaves → turmeric → spinach 2 min → coconut → done. Squeeze lemon before eating.</em><br><strong style="color:var(--g)">75 kcal · 4g P · 6g C · Iron, Vit K</strong></div></div>
+    <div class="card"><div class="tag g">SUNDAY COOK → Mon+Tue</div><div style="font-weight:700;margin-bottom:5px">Payar Thoran</div><div style="font-size:11px;color:var(--tm);font-weight:300;line-height:1.7">1.5 cups long beans · 3 tbsp coconut · mustard · curry leaves · 2 shallots · turmeric · dried red chili<br><em>Heat oil → mustard → chili → shallot+curry leaves → payar → 2 tbsp water → cover 3 min → coconut → done.</em><br><strong style="color:var(--g)">75 kcal · 5g P · 8g C · Vit C, Folate</strong></div></div>
+    <div class="card"><div class="tag p">WED COOK → Thu+Fri</div><div style="font-weight:700;margin-bottom:5px">Beetroot Thoran</div><div style="font-size:11px;color:var(--tm);font-weight:300;line-height:1.7">1 medium beetroot grated · 3 tbsp coconut · mustard · curry leaves · 1 shallot · turmeric<br><em>Heat oil → mustard → shallot+curry leaves → turmeric → beetroot 3 min → coconut 1 min → done.</em><br><strong style="color:var(--g)">70 kcal · 2g P · 10g C · Nitrates, Folate</strong></div></div>
+    <div class="card"><div class="tag p">WED COOK → Thu+Fri+Sat</div><div style="font-weight:700;margin-bottom:5px">Cabbage Thoran</div><div style="font-size:11px;color:var(--tm);font-weight:300;line-height:1.7">2 cups cabbage shredded · 3 tbsp coconut · mustard · curry leaves · 1 shallot · green chili · turmeric<br><em>Heat oil → mustard → green chili+shallot+curry leaves → turmeric → cabbage 4 min → coconut → done.</em><br><strong style="color:var(--g)">65 kcal · 2g P · 8g C · Vit C, Vit K</strong></div></div>
+    <div class="card" style="grid-column:1/-1"><div class="tag y">SUNDAY BATCH → All Week</div><div style="font-weight:700;margin-bottom:5px">Horse Gram Curry (5 servings — fridge 5 days)</div><div style="font-size:11px;color:var(--tm);font-weight:300;line-height:1.7">1 cup horse gram (soak overnight Sat) · 1 onion · 1 tomato · cumin · coriander · turmeric · chili pwd · curry leaves · coconut oil<br><em>Pressure cook gram 3–4 whistles. Fry onion → tomato → spices → add gram → simmer 5 min. Store fridge. Reheat 2 min daily.</em><br><strong style="color:var(--g)">140 kcal · 10g P · 18g C · Iron, Folate, Resistant starch — fat loss superfood</strong></div></div>
+  </div>
+
+  <div class="div"></div>
+  <div class="section-title">Pre-Workout Carb Options (No Banana)</div>
+  <div class="g4">
+    <div class="card"><div class="tag g">Option A · Best</div><div style="font-weight:700;font-size:.85rem;margin-bottom:3px">4–5 Medjool Dates</div><div style="font-size:11px;color:var(--tm);font-weight:300">22g fast carbs · Natural sugar · Dense energy · Pre-workout ideal</div></div>
+    <div class="card"><div class="tag b">Option B</div><div style="font-weight:700;font-size:.85rem;margin-bottom:3px">1 Apple</div><div style="font-size:11px;color:var(--tm);font-weight:300">15g carbs · Lower GI · Good on lighter gym days</div></div>
+    <div class="card"><div class="tag y">Option C · Seasonal</div><div style="font-weight:700;font-size:.85rem;margin-bottom:3px">½ Mango</div><div style="font-size:11px;color:var(--tm);font-weight:300">18g carbs · Vit C · Refreshing · Only in season</div></div>
+    <div class="card"><div class="tag p">Option D</div><div style="font-weight:700;font-size:.85rem;margin-bottom:3px">½ cup matta rice</div><div style="font-size:11px;color:var(--tm);font-weight:300">24g slow carbs · Only if 45+ min before workout</div></div>
+  </div>
+</div>
+
+<!-- ═══ NUTRITION TABLE ═══ -->
+<div id="p-nutrition" class="page">
+  <div class="page-title">Nutrition Reference</div>
+  <div class="page-sub">Full macros and key nutrients for every food in your plan.</div>
+  <div style="overflow-x:auto">
+  <table class="nt">
+    <thead><tr><th>Food</th><th>Qty</th><th>Kcal</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Key Vitamins & Minerals</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Milky Mist Skyr</strong></td><td>150g</td><td class="hi" style="color:var(--r)">145</td><td class="hi" style="color:var(--g)">18g</td><td>15g</td><td>2g</td><td style="color:var(--tm)">Calcium 470mg, Probiotics, B12</td></tr>
+      <tr><td><strong>Protein Powder (1 scoop)</strong></td><td>30g</td><td class="hi" style="color:var(--r)">120</td><td class="hi" style="color:var(--g)">25g</td><td>3g</td><td>1g</td><td style="color:var(--tm)">Complete amino acids, BCAA</td></tr>
+      <tr><td><strong>1 Whole Egg + 2 Whites</strong></td><td>~130g</td><td class="hi" style="color:var(--r)">130</td><td class="hi" style="color:var(--g)">22g</td><td>1g</td><td>5g</td><td style="color:var(--tm)">Choline, B12, Vit D, Selenium</td></tr>
+      <tr><td><strong>Chicken Salami</strong></td><td>50g (3 sl.)</td><td style="color:var(--r)">120</td><td class="hi" style="color:var(--g)">9g</td><td>1g</td><td>8g</td><td style="color:var(--tm)">B12, Zinc — max 3×/week (sodium)</td></tr>
+      <tr><td><strong>Chicken Breast (grilled)</strong></td><td>150g</td><td style="color:var(--r)">190</td><td class="hi" style="color:var(--g)">30g</td><td>0g</td><td>4g</td><td style="color:var(--tm)">B6, B12, Zinc, Selenium</td></tr>
+      <tr><td><strong>Paneer</strong></td><td>100g</td><td style="color:var(--r)">265</td><td class="hi" style="color:var(--g)">20g</td><td>4g</td><td>18g</td><td style="color:var(--tm)">Casein protein, Calcium 480mg, B2</td></tr>
+      <tr><td><strong>Horse Gram (cooked)</strong></td><td>½ cup</td><td style="color:var(--r)">140</td><td class="hi" style="color:var(--g)">10g</td><td>18g</td><td>1g</td><td style="color:var(--tm)">Iron, Folate, Resistant starch — fat blocker</td></tr>
+      <tr><td><strong>Matta Rice (cooked)</strong></td><td>½ cup</td><td style="color:var(--r)">115</td><td>2g</td><td>24g</td><td>0.5g</td><td style="color:var(--tm)">Fiber 3g, Antioxidants (10× brown rice), GI ~55</td></tr>
+      <tr><td><strong>Spinach Thoran</strong></td><td>1 cup</td><td style="color:var(--r)">80</td><td>5g</td><td>6g</td><td>3g</td><td style="color:var(--tm)">Iron 4mg, Vit K, Folate — squeeze lemon!</td></tr>
+      <tr><td><strong>Payar Thoran</strong></td><td>¾ cup</td><td style="color:var(--r)">75</td><td>5g</td><td>8g</td><td>3g</td><td style="color:var(--tm)">Vit C, Folate, Fiber 4g</td></tr>
+      <tr><td><strong>Beetroot Thoran</strong></td><td>½ cup</td><td style="color:var(--r)">70</td><td>2g</td><td>10g</td><td>3g</td><td style="color:var(--tm)">Nitrates (endurance +16%), Folate, Vit C</td></tr>
+      <tr><td><strong>Cabbage Thoran</strong></td><td>¾ cup</td><td style="color:var(--r)">65</td><td>2g</td><td>8g</td><td>3g</td><td style="color:var(--tm)">Vit C, Vit K, Fiber</td></tr>
+      <tr><td><strong>Chia Seeds</strong></td><td>1 tbsp</td><td style="color:var(--r)">58</td><td>2g</td><td>5g</td><td>4g</td><td style="color:var(--tm)">Omega-3 ALA 2.5g, Fiber 4g, Calcium</td></tr>
+      <tr><td><strong>Pumpkin Seeds</strong></td><td>1 tbsp (15g)</td><td style="color:var(--r)">85</td><td>4g</td><td>2g</td><td>7g</td><td style="color:var(--tm)">Zinc 2.5mg, Magnesium 75mg, Tryptophan</td></tr>
+      <tr><td><strong>Peanuts (roasted)</strong></td><td>25g</td><td style="color:var(--r)">145</td><td>7g</td><td>4g</td><td>12g</td><td style="color:var(--tm)">Vit E 3mg, Magnesium, B3</td></tr>
+      <tr><td><strong>Medjool Dates</strong></td><td>4–5 dates</td><td style="color:var(--r)">90</td><td>1g</td><td>22g</td><td>0g</td><td style="color:var(--tm)">Potassium, Fiber, fast energy</td></tr>
+      <tr><td><strong>Skimmed Milk</strong></td><td>200ml</td><td style="color:var(--r)">70</td><td>7g</td><td>10g</td><td>0.5g</td><td style="color:var(--tm)">Calcium 240mg, Vit D, B12</td></tr>
+      <tr><td><strong>Avocado</strong></td><td>¼ (~40g)</td><td style="color:var(--r)">65</td><td>1g</td><td>3g</td><td>6g</td><td style="color:var(--tm)">Vit E, Potassium, healthy monounsaturated fat</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="div"></div>
+  <div class="section-title">Salami vs Ham — Why Salami Wins</div>
+  <div class="g2">
+    <div class="card">
+      <div class="tag g">✅ Chicken Salami — Use This</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">
+        <strong style="color:var(--tx)">9g protein</strong> per 50g (3 slices)<br>
+        Bolder flavor → more satisfying with eggs<br>
+        Works in scramble, omelette, and wrap<br>
+        Higher fat (8g) but those are healthy fats<br>
+        Rich in B12 and Zinc<br>
+        <span style="color:var(--y)">⚠️ Sodium ~400mg/50g — max 3× per week</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag r">❌ Ham — Removed</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">
+        ~8g protein per 45g<br>
+        Milder, less satisfying flavor<br>
+        Lower fat but also less nutritious<br>
+        Similar sodium levels<br>
+        Less versatile in Kerala-style cooking<br>
+        <span style="color:var(--r)">Removed from plan — salami replaces all uses</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 10K STEPS ═══ -->
+<div id="p-steps" class="page">
+  <div class="page-title">How to Hit 10,000 Steps</div>
+  <div class="page-sub">10,000 steps = ~7–8 km = ~80–100 minutes of total walking per day. You don't need to do it all at once — here's how to split it across your office day.</div>
+
+  <div class="g4" style="margin-bottom:22px">
+    <div class="card" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--g)">7–8 km</div><div style="font-size:11px;color:var(--tm)">Total distance</div></div>
+    <div class="card" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--b)">80–100 min</div><div style="font-size:11px;color:var(--tm)">Total time per day</div></div>
+    <div class="card" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--r)">300–400 kcal</div><div style="font-size:11px;color:var(--tm)">Extra calories burned</div></div>
+    <div class="card" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--y)">~1,350</div><div style="font-size:11px;color:var(--tm)">Steps per km</div></div>
+  </div>
+
+  <div class="section-title">Your Daily Step Schedule (Fits Around Office 9–6)</div>
+  <div class="steps-timeline">
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:14px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+      <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--g)">6:00 AM</div><div style="font-size:10px;color:var(--tdim)">Morning walk</div></div>
+      <div><div style="font-weight:700;font-size:13px">🌅 Morning Walk — 20 min (~2,500 steps)</div><div style="font-size:12px;color:var(--tm);font-weight:300;margin-top:3px;line-height:1.6">Walk to gym or around your area. Brisk pace. This also warms up your body before training. On rest days: still do this — it's active recovery, not extra stress.</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--bd)">
+      <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--b)">9–6 PM</div><div style="font-size:10px;color:var(--tdim)">Office hours</div></div>
+      <div><div style="font-weight:700;font-size:13px">🏢 Office Movement — ~3,500–4,000 steps</div><div style="font-size:12px;color:var(--tm);font-weight:300;margin-top:3px;line-height:1.6"><strong style="color:var(--tx)">Park further away</strong> or get off bus 1 stop early (+500 steps). <strong style="color:var(--tx)">Use stairs</strong> instead of lift (+300/day). <strong style="color:var(--tx)">Walk to colleagues</strong> instead of calling/messaging. <strong style="color:var(--tx)">Take calls standing</strong> and pacing. These passive steps add up to ~3,500–4,000 without any dedicated walk time.</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--bd)">
+      <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--y)">1:00 PM</div><div style="font-size:10px;color:var(--tdim)">Lunch break</div></div>
+      <div><div style="font-weight:700;font-size:13px">🍽️ Post-Lunch Walk — 15 min (~1,800 steps)</div><div style="font-size:12px;color:var(--tm);font-weight:300;margin-top:3px;line-height:1.6">Walk after eating lunch — this is scientifically proven to reduce post-meal blood sugar spikes by up to 30%. Improves insulin sensitivity which directly helps fat loss. Even 10 min around the office block counts.</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--bd)">
+      <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--p)">6:30 PM</div><div style="font-size:10px;color:var(--tdim)">Evening</div></div>
+      <div><div style="font-weight:700;font-size:13px">🌆 Evening Walk / Commute — 20 min (~2,500 steps)</div><div style="font-size:12px;color:var(--tm);font-weight:300;margin-top:3px;line-height:1.6">Walk home from office or after evening gym. If you gymmed in the evening, your gym session itself counts for ~2,000–3,000 steps. So this can be a 10 min walk instead. On office days: walk during commute back home.</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:14px;padding:16px 0">
+      <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--t)">After dinner</div><div style="font-size:10px;color:var(--tdim)">Optional</div></div>
+      <div><div style="font-weight:700;font-size:13px">🌙 Post-Dinner Walk — 10 min (~1,200 steps)</div><div style="font-size:12px;color:var(--tm);font-weight:300;margin-top:3px;line-height:1.6">Light 10 min walk after dinner = aids digestion, improves overnight fat burning, and reduces post-dinner blood sugar. Don't skip this — it's the easiest 1,200 steps of the day. Just outside your building is enough.</div></div>
+    </div>
+  </div>
+
+  <div style="background:var(--gd);border:1px solid rgba(46,204,113,.2);border-radius:12px;padding:16px;margin-top:16px">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--g);margin-bottom:8px">📊 Daily Step Total</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:12px">
+      <span>🌅 Morning: <strong style="color:var(--g)">~2,500</strong></span>
+      <span>🏢 Office passive: <strong style="color:var(--b)">~3,500–4,000</strong></span>
+      <span>🍽️ Lunch walk: <strong style="color:var(--y)">~1,800</strong></span>
+      <span>🌆 Evening: <strong style="color:var(--p)">~2,500</strong></span>
+      <span>🌙 After dinner: <strong style="color:var(--t)">~1,200</strong></span>
+    </div>
+    <div style="margin-top:10px;font-size:13px;color:var(--tx);font-weight:700">Total: ~11,500 steps/day — no dedicated "exercise walk" needed. All fits around your office schedule.</div>
+  </div>
+
+  <div class="div"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="tag b">Start Smart</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">If you're currently at ~3,000–4,000 steps, don't jump to 10,000 on day 1. Add 1,500 steps per week. Week 1: 5,000. Week 2: 6,500. Week 3: 8,000. Week 4: 10,000. This prevents knee and shin strain.</div>
+    </div>
+    <div class="card">
+      <div class="tag g">Track It</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">Use Google Fit (free), Apple Health, or a ₹500 Mi Band. Tracking increases your steps by ~2,500/day automatically — you unconsciously walk more when you can see the number. Cheap investment, huge result.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PUMPKIN SEEDS ═══ -->
+<div id="p-seeds" class="page">
+  <div class="page-title">Pumpkin Seeds — Best Time to Eat</div>
+  <div class="page-sub">Yes, evening/dinner is actually the best time. Here's the science behind it and how to use them in your plan.</div>
+
+  <div class="verdict-box">
+    <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--p);margin-bottom:10px">✅ Your Instinct is Correct — Dinner / Evening is the Best Time</div>
+    <div style="font-size:13px;color:var(--tm);font-weight:300;line-height:1.8">
+      Pumpkin seeds contain three sleep-promoting compounds that all work best when eaten 1–2 hours before bed:
+      <br><br>
+      🧠 <strong style="color:var(--tx)">Tryptophan</strong> — converts to serotonin → then melatonin (your sleep hormone). This conversion takes ~1–2 hours, so eating at dinner means it's working by sleep time.
+      <br><br>
+      💪 <strong style="color:var(--tx)">Zinc</strong> — supports tryptophan-to-melatonin conversion AND triggers overnight testosterone/muscle repair. Perfect timing: you go to sleep and zinc works all night rebuilding the muscles you trained.
+      <br><br>
+      😴 <strong style="color:var(--tx)">Magnesium</strong> — relaxes muscles and calms the nervous system. Reduces post-gym soreness overnight. Also lowers cortisol which would otherwise prevent fat burning during sleep.
+      <br><br>
+      <strong style="color:var(--p)">Bottom line: pumpkin seeds at dinner = better sleep + overnight muscle repair + lower cortisol + more fat burned during sleep. All four goals in one 85-calorie tbsp.</strong>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="tag p">🌙 BEST: At Dinner</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">
+        Sprinkle 1 tbsp on your thoran at dinner. Eaten ~1–2 hours before sleep. Tryptophan converts to melatonin by bedtime. Zinc triggers overnight muscle repair. Magnesium relaxes body for deep sleep.
+        <br><strong style="color:var(--g)">→ This is your plan going forward</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag b">✅ ALSO GOOD: Afternoon Snack</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">
+        If you can't have at dinner (e.g. eating very late), 4pm snack is the second-best option. Still provides Zinc and Magnesium throughout the evening. Not as optimal for sleep timing but still excellent for recovery.
+        <br><strong style="color:var(--y)">→ Backup option only</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag y">⚠️ OKAY: Morning</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">
+        Provides energy and immune boost. Good for Zinc and Magnesium but the tryptophan converts to serotonin (daytime energy) instead of melatonin. Misses the overnight sleep and muscle repair benefits.
+        <br><strong style="color:var(--tdim)">→ Not ideal for your goals</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag t">💡 Pro Tip</div>
+      <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.7">
+        For maximum absorption: pair pumpkin seeds with a small amount of carbs (your thoran has some) or Skyr. This helps tryptophan cross the blood-brain barrier more effectively. Unsalted seeds are better — salted ones disrupt sleep with sodium.
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-top:16px">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:10px">📋 Your Pumpkin Seed Plan</div>
+    <div style="font-size:12px;color:var(--tm);font-weight:300;line-height:1.9">
+      <strong style="color:var(--g)">Daily dose:</strong> 1 tbsp (15g) = 85 kcal · 4g protein · 7g fat · Zinc 2.5mg · Magnesium 75mg<br>
+      <strong style="color:var(--g)">When:</strong> Sprinkled on dinner thoran — every day<br>
+      <strong style="color:var(--g)">Type:</strong> Unsalted, dry roasted or raw — avoid salted/flavored varieties<br>
+      <strong style="color:var(--g)">Why at dinner specifically:</strong> You gym in morning or evening — either way, overnight is when muscles repair. Zinc and Magnesium from dinner seeds are available exactly when needed during deep sleep.
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RULES ═══ -->
+<div id="p-rules" class="page">
+  <div class="page-title">The Rules</div>
+  <div class="page-sub">Everything condensed. Simple and clear.</div>
+
+  <div class="rules-grid">
+    <div class="rule-card do">
+      <div class="rule-title">✅ Always Do</div>
+      <div class="rule-item"><div>⚡</div>Post-workout shake = water always. Drink within 45 min of gym.</div>
+      <div class="rule-item"><div>🥛</div>Afternoon shake = 200ml skimmed milk. Slower release, fills evening gap.</div>
+      <div class="rule-item"><div>🌱</div>Pumpkin seeds at dinner — every night. Sleep + muscle repair + fat burn.</div>
+      <div class="rule-item"><div>🍋</div>Squeeze lemon on every thoran. Iron from spinach/payar won't absorb without Vit C.</div>
+      <div class="rule-item"><div>🫘</div>Batch cook horse gram every Sunday. Soak Saturday night. 25 min = full week sorted.</div>
+      <div class="rule-item"><div>🥦</div>Cook 2 thorans Sunday + 2 thorans Wednesday. Never cook daily.</div>
+      <div class="rule-item"><div>⚖️</div>Weigh only Wednesday morning, after toilet, before eating.</div>
+      <div class="rule-item"><div>🚶</div>10,000 steps daily — split across morning/lunch/evening/post-dinner.</div>
+      <div class="rule-item"><div>😴</div>7–8 hrs sleep. Most fat burning and muscle building happens here.</div>
+      <div class="rule-item"><div>🍛</div>Saturday chicken curry is allowed — skip lunch rice that day to compensate.</div>
+    </div>
+    <div class="rule-card dn">
+      <div class="rule-title">❌ Never Do</div>
+      <div class="rule-item"><div>🍌</div>No banana. Use dates (4–5), apple, or seasonal mango instead.</div>
+      <div class="rule-item"><div>🍚</div>No matta rice at dinner. Carbs at lunch only.</div>
+      <div class="rule-item"><div>🧃</div>No fruit juice, sweet tea, cold drinks. Hidden calories destroy your deficit.</div>
+      <div class="rule-item"><div>🥩</div>No salami more than 3× per week. High sodium = water retention = belly bloat.</div>
+      <div class="rule-item"><div>📉</div>Never go below 1,350 kcal. Muscle breakdown starts below this.</div>
+      <div class="rule-item"><div>⏰</div>Don't skip the 4pm snack. You will overeat at dinner without it.</div>
+      <div class="rule-item"><div>😤</div>Don't panic at a plateau week. First add steps, then reduce carbs, then calories last.</div>
+      <div class="rule-item"><div>🍺</div>No alcohol. Wrecks sleep, spikes cortisol, stores belly fat directly.</div>
+      <div class="rule-item"><div>🔢</div>Don't weigh daily. Once a week (Wednesday) only. Daily fluctuations are just water.</div>
+      <div class="rule-item"><div>🥚</div>No egg bhurji. Use scramble, omelette, boiled, or wrap instead.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--gd);border:1px solid rgba(46,204,113,.2);border-radius:12px;padding:18px;margin-top:16px">
+    <div style="font-family:'Syne',sans-serif;font-weight:800;color:var(--g);margin-bottom:8px;font-size:1rem">🎯 The Daily Checklist</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px" id="checklist"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function pg(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.ntb').forEach(b=>b.classList.remove('act'));
+  document.getElementById('p-'+id).classList.add('act');
+  btn.classList.add('act');
+}
+function dayTab(id,btn){
+  document.querySelectorAll('.dc').forEach(d=>d.classList.remove('act'));
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('act'));
+  document.getElementById('d-'+id).classList.add('act');
+  btn.classList.add('act');
+}
+function toggleMeal(head){
+  head.parentElement.classList.toggle('open');
+}
+
+// Build checklist
+const checks=['💧 Drank 3.5L water','⚡ Post-workout shake with water','🌱 Pumpkin seeds at dinner','🍋 Lemon on thoran','🚶 10,000 steps tracked','😴 In bed by 10:30pm','📦 Tiffin packed for tomorrow','⚖️ Wednesday weigh-in (if Wed)','🥛 Afternoon shake done','✅ No rice at dinner'];
+const cl=document.getElementById('checklist');
+checks.forEach(c=>{cl.innerHTML+=`<label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 0"><input type="checkbox" style="accent-color:var(--g)"><span style="color:var(--tm)">${c}</span></label>`;});
+</script>
+</body>
+</html>
